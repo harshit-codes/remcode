@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { analyzeCommand } from './commands/analyze';
 import { vectorizeCommand } from './commands/vectorize';
+import { serveCommand } from './commands/serve';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 
@@ -19,6 +20,7 @@ program
 // Add commands
 analyzeCommand(program);
 vectorizeCommand(program);
+serveCommand(program); // Add the MCP server command
 
 // Add help information
 program.on('--help', () => {
@@ -27,6 +29,7 @@ program.on('--help', () => {
   console.log('  $ remcode analyze ./my-project');
   console.log('  $ remcode analyze https://github.com/username/repo --token <github-token>');
   console.log('  $ remcode vectorize ./my-project --pinecone-key <key> --pinecone-env <env>');
+  console.log('  $ remcode serve --port 3000 --pinecone-key <key> --pinecone-env <env>');
 });
 
 // Error handling
