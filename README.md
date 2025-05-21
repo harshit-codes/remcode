@@ -1,103 +1,164 @@
 # Remcode
 
-A sophisticated code vectorization and analysis tool for better understanding of codebases. Remcode helps developers analyze code quality, understand dependencies, and create semantic search capabilities through vector embeddings.
+A code vectorization and analysis tool for better understanding of codebases. Remcode helps developers create semantic search capabilities through vector embeddings, analyze code quality, and understand dependencies.
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Codebase Analysis**: Generate comprehensive reports about code quality, complexity, and structure
-- **Code Vectorization**: Create vector embeddings of your code using GraphCodeBERT
-- **Semantic Search**: Find semantically similar code across your repositories
-- **Adaptive Processing**: Intelligently handles both clean and messy codebases
-- **Dual-Layer Architecture**: Module-level and function-level understanding of code
-- **MCP Server**: Model Context Protocol integration for AI assistant interaction
+- **Codebase Analysis**: Generate reports about code quality and structure
+- **Code Vectorization**: Create vector embeddings of your code for semantic search
+- **MCP Server**: Model Context Protocol integration for AI assistants to interact with codebases
 
 ## 📋 Project Overview
 
 Remcode implements a two-step process:
 
-1. **Codebase Analyzer**: Scans your code repository and generates a detailed JSON report about its structure, quality, and characteristics.
+1. **Analysis**: Scans your code repository for structure, quality, and characteristics
+2. **Vectorization**: Creates embeddings that capture the semantics of your code
 
-2. **Codebase Vectorizer**: Uses the analysis report to implement an optimal vectorization strategy, creating embeddings that capture the semantics of your code.
+## ⚙️ Prerequisites
 
-The project leverages several key technologies:
-- **GraphCodeBERT**: For code-specific embeddings with semantic understanding
-- **LangChain**: For document processing and vector operations
-- **Pinecone**: For efficient storage and retrieval of vector embeddings
+- Node.js (v16+)
+- **Your own API keys** for:
+  - Pinecone - [Get one here](https://www.pinecone.io/)
+  - GitHub API Token (for GitHub repo access)
+  - Hugging Face API Token (for embedding models)
 
-## 🛠️ Installation
+## 🔑 Configuration
 
-### NPM
+Create a `.env` file in the project root with your personal API keys:
 
-```bash
-npm install -g remcode
+```
+GITHUB_TOKEN=your_github_token
+PINECONE_API_KEY=your_pinecone_api_key
+PINECONE_ENVIRONMENT=your_pinecone_environment
+HUGGINGFACE_TOKEN=your_huggingface_token
 ```
 
-### Docker
+**Important**: 
+- Never commit your API keys to the repository!
+- The MCP server requires you to provide your own API keys.
+- Each developer must create their own `.env` file locally.
+
+## 🚀 Getting Started
+
+### Local Development
 
 ```bash
-docker pull yourusername/remcode
+# Clone the repository
+git clone https://github.com/harshit-codes/remcode.git
+cd remcode
+
+# Install dependencies
+npm install
+
+# Start the MCP server in development mode
+npm run serve
 ```
 
-## 🏁 Quick Start
-
-### Analyze a codebase
+### Using the CLI (Development)
 
 ```bash
-remcode analyze ./my-project
+# Analyze a codebase
+npm run dev analyze ./my-project
+
+# Analyze a GitHub repository
+npm run dev analyze https://github.com/username/repo --token <github-token>
+
+# Vectorize a codebase
+npm run dev vectorize ./my-project --pinecone-key <key> --pinecone-env <env>
+
+# Start the MCP server
+npm run dev serve --port 3000
 ```
 
-### Analyze a GitHub repository
+## 🔍 MCP Server
+
+The MCP server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification, allowing AI assistants to interact with:
+- Codebase analysis tools
+- Code vectorization
+- Semantic search capabilities
 
 ```bash
-remcode analyze https://github.com/username/repo --token <github-token>
+# Start the MCP server
+npm run dev serve
+
+# Server available at: http://localhost:3000/v1/mcp
+# MCP spec available at: http://localhost:3000/v1/mcp/spec
 ```
 
-### Vectorize a codebase
+### MCP Endpoints
+
+The server exposes these main tools:
+
+- **GitHub Tools**:
+  - `github_get_repo`: Get repository metadata
+  - `github_list_files`: List files in a repository
+  - `github_get_file`: Get file contents
+  - `github_search_code`: Search code in repositories
+
+- **Pinecone Tools**:
+  - `pinecone_query`: Search for similar code
+  - `pinecone_upsert`: Add vectors to the database
+  - `pinecone_delete`: Remove vectors from the database
+  - `pinecone_list_indexes`: List available indexes
+
+## 🧪 Testing
+
+The MCP server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification and can be tested using the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) tool.
 
 ```bash
-remcode vectorize ./my-project --pinecone-key <key> --pinecone-env <env>
+# Start the MCP server
+npm run dev serve
+
+# Use the MCP Inspector in your browser
+# Visit: https://inspector.modelcontextprotocol.io/
 ```
 
-### Start the MCP server
-
-```bash
-remcode serve --port 3000 --pinecone-key <key> --pinecone-env <env>
-```
-
-## 📊 Analysis Report
-
-The codebase analysis generates a comprehensive JSON report including:
-
-- Repository structure and file distribution
-- Code quality metrics and complexity scores
-- Dependency graphs and relationships
-- Recommendations for vectorization strategies
-
-## 🔍 Vector Search
-
-Once your code is vectorized, you can perform semantic searches:
-
-```bash
-remcode search "implement authentication with JWT" --pinecone-key <key> --pinecone-env <env>
-```
-
-## 📚 Documentation
-
-For full documentation, visit [docs.remcode.io](https://docs.remcode.io).
+The MCP Inspector provides a user-friendly interface to:
+- Connect to your local MCP server
+- Explore available tools
+- Test various API endpoints
+- View request and response formats
 
 ## 📦 Tech Stack
 
-- **Node.js**: Core runtime
-- **Python**: For machine learning components
+- **Node.js & TypeScript**: Core runtime
 - **GraphCodeBERT**: For code embeddings
-- **LangChain**: For document processing and vector operations
 - **Pinecone**: For vector database storage
-- **Express.js**: For MCP server implementation
+- **Express.js**: For MCP server
 
-## 🤝 Contributing
+## 🛣️ Roadmap
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- [x] Initial project setup
+- [ ] MCP Server implementation
+- [ ] Core vectorization functionality
+- [ ] Semantic search capabilities
+- [ ] NPM package (coming later)
+- [ ] Docker container (coming later)
 
+## 📝 Todo List
+
+### Priority 1: MCP Server Implementation
+- [ ] Complete Pinecone MCP handler implementation:
+  - [ ] Implement vector query functionality with actual embeddings
+  - [ ] Connect to Pinecone for vector storage and retrieval
+  - [ ] Implement vector upsert and delete operations
+  - [ ] Add index management capabilities
+- [ ] Complete GitHub MCP handler implementation:
+  - [ ] Enhance repository fetching and analysis
+  - [ ] Implement file content retrieval and analysis
+  - [ ] Add code search functionality
+- [ ] Integrate analysis capabilities into MCP server:
+  - [ ] Connect code quality analysis to MCP endpoints
+  - [ ] Connect dependency analysis to MCP endpoints
+- [ ] Add authentication and security to MCP server
+- [ ] Implement comprehensive error handling and logging
+
+### Priority 2: Core Functionality
+- [ ] Implement actual chunking strategies in ChunkingManager
+- [ ] Connect to embedding models (GraphCodeBERT/CodeBERT)
+- [ ] Complete Pinecone storage integration
+- [ ] Enhance code quality analyzer with real metrics
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License

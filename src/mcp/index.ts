@@ -19,28 +19,36 @@ export interface MCPServerOptions {
   pineconeApiKey?: string;
   pineconeEnvironment?: string;
   githubToken?: string;
+  corsOrigins?: string;
 }
 
 export class MCPServer {
   private app: express.Application;
   private port: number;
   private host: string;
+  private options: MCPServerOptions;
   private pineconeHandler: PineconeMCPHandler;
   private githubHandler: GitHubMCPHandler;
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
-    this.port = options.port || 3000;
-    this.host = options.host || 'localhost';
+    this.port = options.port || process.env.MCP_PORT ? parseInt(process.env.MCP_PORT) : 3000;
+    this.host = options.host || process.env.MCP_HOST || 'localhost';
+    this.options = {
+      pineconeApiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
+      pineconeEnvironment: options.pineconeEnvironment || process.env.PINECONE_ENVIRONMENT || '',
+      githubToken: options.githubToken || process.env.GITHUB_TOKEN || '',
+      corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS || '*'
+    };
     
     // Initialize handlers
     this.pineconeHandler = new PineconeMCPHandler({
-      apiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
-      environment: options.pineconeEnvironment || process.env.PINECONE_ENVIRONMENT || ''
+      apiKey: this.options.pineconeApiKey,
+      environment: this.options.pineconeEnvironment
     });
     
     this.githubHandler = new GitHubMCPHandler({
-      token: options.githubToken || process.env.GITHUB_TOKEN || ''
+      token: this.options.githubToken
     });
     
     this.configureServer();
@@ -48,12 +56,76 @@ export class MCPServer {
 
   private configureServer(): void {
     // Configure middleware
-    this.app.use(cors());
+    const corsOptions = {
+      origin: this.options.corsOrigins?.split(',') || '*',
+      methods: ['GET', 'POST'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    };
+    this.app.use(cors(corsOptions));
     this.app.use(express.json());
     
     // Health check endpoint
     this.app.get('/health', (req, res) => {
       res.status(200).json({ status: 'OK' });
+    });
+    
+    // MCP Specification endpoint
+    this.app.get('/v1/mcp/spec', (req, res) => {
+      res.status(200).json({
+        name: 'remcode-mcp',
+        version: '0.1.0',
+        description: 'Remcode Model Context Protocol server for code analysis and vectorization',
+        tools: [
+          {
+            name: 'github_get_repo',
+            description: 'Get repository metadata from GitHub',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' }
+            }
+          },
+          {
+            name: 'github_list_files',
+            description: 'List files in a GitHub repository',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              path: { type: 'string', description: 'Path within repository (optional)', optional: true }
+            }
+          },
+          {
+            name: 'github_get_file',
+            description: 'Get a file from a GitHub repository',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              path: { type: 'string', description: 'File path within repository' }
+            }
+          },
+          {
+            name: 'github_search_code',
+            description: 'Search code in a GitHub repository',
+            parameters: {
+              query: { type: 'string', description: 'Search query' },
+              owner: { type: 'string', description: 'Repository owner (optional)', optional: true },
+              repo: { type: 'string', description: 'Repository name (optional)', optional: true }
+            }
+          },
+          {
+            name: 'pinecone_query',
+            description: 'Search for vectors in Pinecone',
+            parameters: {
+              text: { type: 'string', description: 'Search text to convert to embedding' },
+              topK: { type: 'number', description: 'Number of results to return', optional: true }
+            }
+          },
+          {
+            name: 'pinecone_list_indexes',
+            description: 'List available Pinecone indexes',
+            parameters: {}
+          }
+        ]
+      });
     });
     
     // Register MCP endpoints
@@ -82,8 +154,16 @@ export class MCPServer {
 
   public async start(): Promise<void> {
     try {
+      // Validate required API keys
+      this.validateApiKeys();
+      
       // Initialize handlers
       await this.pineconeHandler.initialize();
+      
+      // Initialize GitHub handler (no async initialization needed)
+      if (!this.options.githubToken) {
+        logger.warn('GitHub token not provided. GitHub-related functionality will be limited.');
+      }
       
       this.app.listen(this.port, this.host, () => {
         logger.info(`MCP Server listening at http://${this.host}:${this.port}`);
@@ -92,6 +172,30 @@ export class MCPServer {
       logger.error(`Failed to start MCP server: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
+  }
+  
+  private validateApiKeys(): void {
+    // Check Pinecone API Key
+    if (!this.options.pineconeApiKey) {
+      logger.warn('Pinecone API key not provided. Please set PINECONE_API_KEY environment variable or use --pinecone-key option.');
+    }
+    
+    // Check Pinecone Environment
+    if (!this.options.pineconeEnvironment) {
+      logger.warn('Pinecone environment not provided. Please set PINECONE_ENVIRONMENT environment variable or use --pinecone-env option.');
+    }
+    
+    // Check GitHub Token
+    if (!this.options.githubToken) {
+      logger.warn('GitHub token not provided. Please set GITHUB_TOKEN environment variable or use --github-token option for GitHub functionality.');
+    }
+    
+    // Log MCP server configuration
+    logger.info(`MCP Server configured with:
+      - Pinecone API Key: ${this.options.pineconeApiKey ? '✓ Provided' : '✗ Missing'}
+      - Pinecone Environment: ${this.options.pineconeEnvironment ? '✓ Provided' : '✗ Missing'}
+      - GitHub Token: ${this.options.githubToken ? '✓ Provided' : '✗ Missing'}
+    `);
   }
 
   public stop(): void {

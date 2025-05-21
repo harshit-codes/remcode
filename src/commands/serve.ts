@@ -22,6 +22,7 @@ export function serveCommand(program: Command): void {
     .option('--pinecone-key <key>', 'Pinecone API key')
     .option('--pinecone-env <env>', 'Pinecone environment')
     .option('--github-token <token>', 'GitHub token')
+    .option('--cors-origins <origins>', 'Allowed CORS origins (comma-separated)')
     .option('-v, --verbose', 'Enable verbose output')
     .action(async (options) => {
       const spinner = ora('Starting MCP server').start();
@@ -33,7 +34,8 @@ export function serveCommand(program: Command): void {
           host: options.host,
           pineconeApiKey: options.pineconeKey || process.env.PINECONE_API_KEY,
           pineconeEnvironment: options.pineconeEnv || process.env.PINECONE_ENVIRONMENT,
-          githubToken: options.githubToken || process.env.GITHUB_TOKEN
+          githubToken: options.githubToken || process.env.GITHUB_TOKEN,
+          corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS
         });
         
         // Start the server
