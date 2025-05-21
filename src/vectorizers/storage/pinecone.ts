@@ -6,7 +6,6 @@ const logger = getLogger('PineconeStorage');
 
 interface PineconeStorageOptions {
   apiKey: string;
-  environment: string;
   indexName: string;
   dimension?: number;
   metric?: 'cosine' | 'dotproduct' | 'euclidean';
@@ -29,8 +28,8 @@ export class PineconeStorage {
   async initialize(): Promise<void> {
     logger.info(`Initializing Pinecone index: ${this.options.indexName}`);
     
-    if (!this.options.apiKey || !this.options.environment) {
-      throw new Error('Pinecone API key and environment are required');
+    if (!this.options.apiKey) {
+      throw new Error('Pinecone API key is required');
     }
     
     try {

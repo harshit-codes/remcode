@@ -33,7 +33,6 @@ Create a `.env` file in the project root with your personal API keys:
 ```
 GITHUB_TOKEN=your_github_token
 PINECONE_API_KEY=your_pinecone_api_key
-PINECONE_ENVIRONMENT=your_pinecone_environment
 HUGGINGFACE_TOKEN=your_huggingface_token
 ```
 

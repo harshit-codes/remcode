@@ -18,7 +18,6 @@ export function vectorizeCommand(program: Command): void {
     .option('-o, --output <path>', 'Output path for vectorization report', './vectorization_report.md')
     .option('-c, --config <path>', 'Path to config file')
     .option('-p, --pinecone-key <key>', 'Pinecone API key')
-    .option('-e, --pinecone-env <env>', 'Pinecone environment')
     .option('-i, --index <name>', 'Pinecone index name')
     .option('-m, --model <name>', 'Embedding model to use', 'graphcodebert')
     .option('-b, --batch-size <number>', 'Batch size for processing', '16')
@@ -55,17 +54,15 @@ export function vectorizeCommand(program: Command): void {
         });
         
         const pineconeKey = options.pineconeKey || process.env.PINECONE_API_KEY;
-        const pineconeEnv = options.pineconeEnv || process.env.PINECONE_ENVIRONMENT;
         
-        if (!pineconeKey || !pineconeEnv) {
-          throw new Error('Pinecone API key and environment are required');
+        if (!pineconeKey) {
+          throw new Error('Pinecone API key is required');
         }
         
         const indexName = options.index || `remcode-${path.basename(resolvedSource.name)}`;
         
         const storageManager = new PineconeStorage({
           apiKey: pineconeKey,
-          environment: pineconeEnv,
           indexName: indexName
         });
         

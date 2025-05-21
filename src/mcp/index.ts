@@ -18,7 +18,6 @@ export interface MCPServerOptions {
   port?: number;
   host?: string;
   pineconeApiKey?: string;
-  pineconeEnvironment?: string;
   githubToken?: string;
   huggingfaceToken?: string;
   corsOrigins?: string;
@@ -39,7 +38,6 @@ export class MCPServer {
     this.host = options.host || process.env.MCP_HOST || 'localhost';
     this.options = {
       pineconeApiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
-      pineconeEnvironment: options.pineconeEnvironment || process.env.PINECONE_ENVIRONMENT || '',
       githubToken: options.githubToken || process.env.GITHUB_TOKEN || '',
       huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN || '',
       corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS || '*'
@@ -47,8 +45,7 @@ export class MCPServer {
     
     // Initialize handlers
     this.pineconeHandler = new PineconeMCPHandler({
-      apiKey: this.options.pineconeApiKey,
-      environment: this.options.pineconeEnvironment
+      apiKey: this.options.pineconeApiKey
     });
     
     this.githubHandler = new GitHubMCPHandler({
@@ -216,11 +213,6 @@ export class MCPServer {
       logger.warn('Pinecone API key not provided. Please set PINECONE_API_KEY environment variable or use --pinecone-key option.');
     }
     
-    // Check Pinecone Environment
-    if (!this.options.pineconeEnvironment) {
-      logger.warn('Pinecone environment not provided. Please set PINECONE_ENVIRONMENT environment variable or use --pinecone-env option.');
-    }
-    
     // Check GitHub Token
     if (!this.options.githubToken) {
       logger.warn('GitHub token not provided. Please set GITHUB_TOKEN environment variable or use --github-token option for GitHub functionality.');
@@ -234,7 +226,6 @@ export class MCPServer {
     // Log MCP server configuration
     logger.info(`MCP Server configured with:
       - Pinecone API Key: ${this.options.pineconeApiKey ? '✓ Provided' : '✗ Missing'}
-      - Pinecone Environment: ${this.options.pineconeEnvironment ? '✓ Provided' : '✗ Missing'}
       - GitHub Token: ${this.options.githubToken ? '✓ Provided' : '✗ Missing'}
       - HuggingFace Token: ${this.options.huggingfaceToken ? '✓ Provided' : '✗ Missing'}
     `);

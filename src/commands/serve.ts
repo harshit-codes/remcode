@@ -20,7 +20,6 @@ export function serveCommand(program: Command): void {
     .option('-p, --port <port>', 'Port to listen on', '3000')
     .option('-h, --host <host>', 'Host to bind to', 'localhost')
     .option('--pinecone-key <key>', 'Pinecone API key')
-    .option('--pinecone-env <env>', 'Pinecone environment')
     .option('--github-token <token>', 'GitHub token')
     .option('--huggingface-token <token>', 'HuggingFace API token')
     .option('--cors-origins <origins>', 'Allowed CORS origins (comma-separated)')
@@ -34,7 +33,6 @@ export function serveCommand(program: Command): void {
           port: parseInt(options.port),
           host: options.host,
           pineconeApiKey: options.pineconeKey || process.env.PINECONE_API_KEY,
-          pineconeEnvironment: options.pineconeEnv || process.env.PINECONE_ENVIRONMENT,
           githubToken: options.githubToken || process.env.GITHUB_TOKEN,
           huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN,
           corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS

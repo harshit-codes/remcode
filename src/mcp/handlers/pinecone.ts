@@ -13,7 +13,6 @@ const logger = getLogger('Pinecone-MCP');
 
 export interface PineconeMCPOptions {
   apiKey: string;
-  environment: string;
 }
 
 export class PineconeMCPHandler {
@@ -26,15 +25,14 @@ export class PineconeMCPHandler {
 
   async initialize(): Promise<void> {
     try {
-      if (!this.options.apiKey || !this.options.environment) {
-        logger.warn('Pinecone API key or environment not provided. Pinecone MCP handler will not be fully functional.');
+      if (!this.options.apiKey) {
+        logger.warn('Pinecone API key not provided. Pinecone MCP handler will not be fully functional.');
         return;
       }
 
       // Initialize Pinecone storage with the default index
       this.pineconeStorage = new PineconeStorage({
         apiKey: this.options.apiKey,
-        environment: this.options.environment,
         indexName: 'remcode-default'
       });
 
