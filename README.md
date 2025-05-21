@@ -138,12 +138,15 @@ npm run serve
   - GraphCodeBERT (primary model)
   - CodeBERT (fallback model)
 - Embeddings capture the semantic meaning of the code segments
+- Batch processing for improved performance
+- Fallback models ensure reliability
 
 ### 4. Vector Storage
 **Tools**: Pinecone API (via Pinecone handler)
 - Vector embeddings are stored in Pinecone vector database
 - Metadata (file path, language, etc.) is attached to each vector
 - Indexes are created for efficient similarity search
+- Advanced operations: vector deletion, namespace management, metadata filtering
 
 ### 5. Semantic Search
 **Tools**: Pinecone API + HuggingFace API
@@ -151,21 +154,42 @@ npm run serve
 - Query is converted to vector embedding (HuggingFace)
 - Similar code vectors are retrieved (Pinecone)
 - Results are ranked and returned to the user
+- Advanced querying with filters and namespaces
 
-## 📝 ToDo List
+## 🔒 Security & Performance
 
-### Priority 1: MCP Server Implementation
+The MCP server implementation includes:
+- Endpoint validation and consistent error responses
+- Request logging and monitoring
+- Proper startup and shutdown procedures
+- CORS configuration options
+- Health check endpoints
+- Optimized batch operations for performance
+
+## 📝 Implementation Roadmap
+
+### Phase 1: Core Functionality
 - [x] Add HuggingFace MCP handler implementation
-- [ ] Enhance GitHub MCP handler with full repository analysis
-- [ ] Complete Pinecone MCP handler implementation for vector operations
-- [ ] Implement the full end-to-end process flow
-- [ ] Add proper error handling and logging
+- [x] Implement vector storage with proper metadata
+- [x] Add query functionality with similarity search
+- [ ] Connect repository analysis to GitHub handler
+- [ ] Add deep file analysis capabilities
+- [ ] Enhance code search with better context
 
-### Priority 2: Integration Testing
+### Phase 2: Advanced Features
+- [ ] Add repository comparison capabilities
+- [ ] Implement code quality analysis integration
+- [ ] Add advanced querying capabilities (filters, namespaces)
+- [ ] Implement bulk operations and batching
+- [ ] Add model caching and token optimization
+- [ ] Add authentication and rate limiting
+
+### Phase 3: Testing & Optimization
 - [ ] Create end-to-end tests for the MCP server
 - [ ] Test with real GitHub repositories
 - [ ] Test embedding generation with real HuggingFace models
 - [ ] Test vector storage and retrieval with Pinecone
+- [ ] Optimize performance for large codebases
 - [ ] Create automated test suite
 
 ## 📄 License
