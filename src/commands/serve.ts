@@ -22,6 +22,7 @@ export function serveCommand(program: Command): void {
     .option('--pinecone-key <key>', 'Pinecone API key')
     .option('--pinecone-env <env>', 'Pinecone environment')
     .option('--github-token <token>', 'GitHub token')
+    .option('--huggingface-token <token>', 'HuggingFace API token')
     .option('--cors-origins <origins>', 'Allowed CORS origins (comma-separated)')
     .option('-v, --verbose', 'Enable verbose output')
     .action(async (options) => {
@@ -35,6 +36,7 @@ export function serveCommand(program: Command): void {
           pineconeApiKey: options.pineconeKey || process.env.PINECONE_API_KEY,
           pineconeEnvironment: options.pineconeEnv || process.env.PINECONE_ENVIRONMENT,
           githubToken: options.githubToken || process.env.GITHUB_TOKEN,
+          huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN,
           corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS
         });
         
@@ -58,6 +60,11 @@ export function serveCommand(program: Command): void {
         console.log('  • github_list_files     - List files in a repository');
         console.log('  • github_get_file       - Get file contents');
         console.log('  • github_search_code    - Search code in repositories');
+        console.log('');
+        console.log(chalk.yellow('HuggingFace Tools:'));
+        console.log('  • huggingface_embed_code  - Generate embeddings for code');
+        console.log('  • huggingface_embed_query - Generate embeddings for queries');
+        console.log('  • huggingface_list_models - List available embedding models');
         console.log('');
         console.log(chalk.cyan('Send MCP requests to:'));
         console.log(`  POST http://${options.host}:${options.port}/v1/mcp`);

@@ -9,6 +9,7 @@ import express from 'express';
 import cors from 'cors';
 import { PineconeMCPHandler } from './handlers/pinecone';
 import { GitHubMCPHandler } from './handlers/github';
+import { HuggingFaceMCPHandler } from './handlers/huggingface';
 import { getLogger } from '../utils/logger';
 
 const logger = getLogger('MCP-Server');
@@ -19,6 +20,7 @@ export interface MCPServerOptions {
   pineconeApiKey?: string;
   pineconeEnvironment?: string;
   githubToken?: string;
+  huggingfaceToken?: string;
   corsOrigins?: string;
 }
 
@@ -29,6 +31,7 @@ export class MCPServer {
   private options: MCPServerOptions;
   private pineconeHandler: PineconeMCPHandler;
   private githubHandler: GitHubMCPHandler;
+  private huggingfaceHandler: HuggingFaceMCPHandler;
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
@@ -38,6 +41,7 @@ export class MCPServer {
       pineconeApiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
       pineconeEnvironment: options.pineconeEnvironment || process.env.PINECONE_ENVIRONMENT || '',
       githubToken: options.githubToken || process.env.GITHUB_TOKEN || '',
+      huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN || '',
       corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS || '*'
     };
     
@@ -49,6 +53,10 @@ export class MCPServer {
     
     this.githubHandler = new GitHubMCPHandler({
       token: this.options.githubToken
+    });
+    
+    this.huggingfaceHandler = new HuggingFaceMCPHandler({
+      token: this.options.huggingfaceToken
     });
     
     this.configureServer();
@@ -123,6 +131,28 @@ export class MCPServer {
             name: 'pinecone_list_indexes',
             description: 'List available Pinecone indexes',
             parameters: {}
+          },
+          {
+            name: 'huggingface_embed_code',
+            description: 'Generate embeddings for code using HuggingFace models',
+            parameters: {
+              code: { type: 'string', description: 'Code content to embed' },
+              model: { type: 'string', description: 'Model to use (default: microsoft/graphcodebert-base)', optional: true },
+              batch: { type: 'boolean', description: 'Whether to process as batch (for array input)', optional: true }
+            }
+          },
+          {
+            name: 'huggingface_embed_query',
+            description: 'Generate embeddings for a search query',
+            parameters: {
+              query: { type: 'string', description: 'Query text to embed' },
+              model: { type: 'string', description: 'Model to use (default: microsoft/graphcodebert-base)', optional: true }
+            }
+          },
+          {
+            name: 'huggingface_list_models',
+            description: 'List available code embedding models',
+            parameters: {}
           }
         ]
       });
@@ -131,6 +161,7 @@ export class MCPServer {
     // Register MCP endpoints
     this.app.post('/v1/mcp/pinecone/:action', this.pineconeHandler.handleRequest.bind(this.pineconeHandler));
     this.app.post('/v1/mcp/github/:action', this.githubHandler.handleRequest.bind(this.githubHandler));
+    this.app.post('/v1/mcp/huggingface/:action', this.huggingfaceHandler.handleRequest.bind(this.huggingfaceHandler));
     
     // Main MCP endpoint that routes to the appropriate handler
     this.app.post('/v1/mcp', (req, res) => {
@@ -140,6 +171,8 @@ export class MCPServer {
         return this.pineconeHandler.handleToolRequest(req, res);
       } else if (tool && tool.startsWith('github_')) {
         return this.githubHandler.handleToolRequest(req, res);
+      } else if (tool && tool.startsWith('huggingface_')) {
+        return this.huggingfaceHandler.handleToolRequest(req, res);
       }
       
       res.status(400).json({ error: 'Unknown tool type' });
@@ -159,6 +192,9 @@ export class MCPServer {
       
       // Initialize handlers
       await this.pineconeHandler.initialize();
+      
+      // Initialize HuggingFace handler
+      await this.huggingfaceHandler.initialize();
       
       // Initialize GitHub handler (no async initialization needed)
       if (!this.options.githubToken) {
@@ -190,11 +226,17 @@ export class MCPServer {
       logger.warn('GitHub token not provided. Please set GITHUB_TOKEN environment variable or use --github-token option for GitHub functionality.');
     }
     
+    // Check HuggingFace Token
+    if (!this.options.huggingfaceToken) {
+      logger.warn('HuggingFace token not provided. Please set HUGGINGFACE_TOKEN environment variable or use --huggingface-token option for embedding functionality.');
+    }
+    
     // Log MCP server configuration
     logger.info(`MCP Server configured with:
       - Pinecone API Key: ${this.options.pineconeApiKey ? '✓ Provided' : '✗ Missing'}
       - Pinecone Environment: ${this.options.pineconeEnvironment ? '✓ Provided' : '✗ Missing'}
       - GitHub Token: ${this.options.githubToken ? '✓ Provided' : '✗ Missing'}
+      - HuggingFace Token: ${this.options.huggingfaceToken ? '✓ Provided' : '✗ Missing'}
     `);
   }
 

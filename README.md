@@ -4,16 +4,19 @@ A code vectorization and analysis tool for better understanding of codebases. Re
 
 ## 🚀 Key Features
 
-- **Codebase Analysis**: Generate reports about code quality and structure
+- **Code Analysis**: Generate reports about code quality and structure
 - **Code Vectorization**: Create vector embeddings of your code for semantic search
 - **MCP Server**: Model Context Protocol integration for AI assistants to interact with codebases
 
 ## 📋 Project Overview
 
-Remcode implements a two-step process:
+Remcode implements an end-to-end process for code analysis and vectorization via the Model Context Protocol (MCP) server:
 
-1. **Analysis**: Scans your code repository for structure, quality, and characteristics
-2. **Vectorization**: Creates embeddings that capture the semantics of your code
+1. **Code Repository Access & Analysis**: Using the GitHub API to access repository files and analyze code structure.
+2. **Code Chunking**: Breaking code files into meaningful segments based on code complexity.
+3. **Embedding Generation**: Converting code chunks to vector embeddings using models like GraphCodeBERT via HuggingFace.
+4. **Vector Storage**: Storing embeddings in Pinecone for efficient similarity search.
+5. **Semantic Search**: Finding code based on natural language queries through vector similarity.
 
 ## ⚙️ Prerequisites
 
@@ -21,7 +24,7 @@ Remcode implements a two-step process:
 - **Your own API keys** for:
   - Pinecone - [Get one here](https://www.pinecone.io/)
   - GitHub API Token (for GitHub repo access)
-  - Hugging Face API Token (for embedding models)
+  - HuggingFace API Token (for embedding models)
 
 ## 🔑 Configuration
 
@@ -55,22 +58,6 @@ npm install
 npm run serve
 ```
 
-### Using the CLI (Development)
-
-```bash
-# Analyze a codebase
-npm run dev analyze ./my-project
-
-# Analyze a GitHub repository
-npm run dev analyze https://github.com/username/repo --token <github-token>
-
-# Vectorize a codebase
-npm run dev vectorize ./my-project --pinecone-key <key> --pinecone-env <env>
-
-# Start the MCP server
-npm run dev serve --port 3000
-```
-
 ## 🔍 MCP Server
 
 The MCP server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification, allowing AI assistants to interact with:
@@ -80,7 +67,7 @@ The MCP server implements the [Model Context Protocol (MCP)](https://modelcontex
 
 ```bash
 # Start the MCP server
-npm run dev serve
+npm run serve
 
 # Server available at: http://localhost:3000/v1/mcp
 # MCP spec available at: http://localhost:3000/v1/mcp/spec
@@ -96,6 +83,11 @@ The server exposes these main tools:
   - `github_get_file`: Get file contents
   - `github_search_code`: Search code in repositories
 
+- **HuggingFace Tools**:
+  - `huggingface_embed_code`: Generate embeddings for code
+  - `huggingface_embed_query`: Generate embeddings for search queries
+  - `huggingface_list_models`: List available embedding models
+
 - **Pinecone Tools**:
   - `pinecone_query`: Search for similar code
   - `pinecone_upsert`: Add vectors to the database
@@ -108,57 +100,75 @@ The MCP server implements the [Model Context Protocol (MCP)](https://modelcontex
 
 ```bash
 # Start the MCP server
-npm run dev serve
+npm run serve
 
 # Use the MCP Inspector in your browser
 # Visit: https://inspector.modelcontextprotocol.io/
 ```
 
-The MCP Inspector provides a user-friendly interface to:
-- Connect to your local MCP server
-- Explore available tools
-- Test various API endpoints
-- View request and response formats
-
 ## 📦 Tech Stack
 
 - **Node.js & TypeScript**: Core runtime
-- **GraphCodeBERT**: For code embeddings
+- **GraphCodeBERT**: For code embeddings via HuggingFace
 - **Pinecone**: For vector database storage
 - **Express.js**: For MCP server
 
-## 🛣️ Roadmap
+## 🛣️ End-to-End Process
 
-- [x] Initial project setup
-- [ ] MCP Server implementation
-- [ ] Core vectorization functionality
-- [ ] Semantic search capabilities
-- [ ] NPM package (coming later)
-- [ ] Docker container (coming later)
+### 1. Code Repository Access and Analysis
+**Tools**: GitHub API (via GitHub handler)
+- AI assistant sends an MCP request to analyze a GitHub repository
+- MCP server uses the GitHub handler to:
+  - Clone/access the repository
+  - List files and directories
+  - Retrieve file contents
+- Repository structure is analyzed (languages, modules, files)
+- Code quality metrics are computed
 
-## 📝 Todo List
+### 2. Code Chunking
+**Tools**: Internal chunking logic (ChunkingManager)
+- Code files are broken down into meaningful chunks
+- Different chunking strategies applied based on file complexity:
+  - Function-level for clean code
+  - Module-level for standard complexity
+  - Sliding window for monolithic files
+
+### 3. Embedding Generation
+**Tools**: HuggingFace API (via HuggingFace handler)
+- Text chunks are converted to vector embeddings using code-specific models:
+  - GraphCodeBERT (primary model)
+  - CodeBERT (fallback model)
+- Embeddings capture the semantic meaning of the code segments
+
+### 4. Vector Storage
+**Tools**: Pinecone API (via Pinecone handler)
+- Vector embeddings are stored in Pinecone vector database
+- Metadata (file path, language, etc.) is attached to each vector
+- Indexes are created for efficient similarity search
+
+### 5. Semantic Search
+**Tools**: Pinecone API + HuggingFace API
+- User submits a natural language query via MCP
+- Query is converted to vector embedding (HuggingFace)
+- Similar code vectors are retrieved (Pinecone)
+- Results are ranked and returned to the user
+
+## 📝 ToDo List
 
 ### Priority 1: MCP Server Implementation
-- [ ] Complete Pinecone MCP handler implementation:
-  - [ ] Implement vector query functionality with actual embeddings
-  - [ ] Connect to Pinecone for vector storage and retrieval
-  - [ ] Implement vector upsert and delete operations
-  - [ ] Add index management capabilities
-- [ ] Complete GitHub MCP handler implementation:
-  - [ ] Enhance repository fetching and analysis
-  - [ ] Implement file content retrieval and analysis
-  - [ ] Add code search functionality
-- [ ] Integrate analysis capabilities into MCP server:
-  - [ ] Connect code quality analysis to MCP endpoints
-  - [ ] Connect dependency analysis to MCP endpoints
-- [ ] Add authentication and security to MCP server
-- [ ] Implement comprehensive error handling and logging
+- [x] Add HuggingFace MCP handler implementation
+- [ ] Enhance GitHub MCP handler with full repository analysis
+- [ ] Complete Pinecone MCP handler implementation for vector operations
+- [ ] Implement the full end-to-end process flow
+- [ ] Add proper error handling and logging
 
-### Priority 2: Core Functionality
-- [ ] Implement actual chunking strategies in ChunkingManager
-- [ ] Connect to embedding models (GraphCodeBERT/CodeBERT)
-- [ ] Complete Pinecone storage integration
-- [ ] Enhance code quality analyzer with real metrics
+### Priority 2: Integration Testing
+- [ ] Create end-to-end tests for the MCP server
+- [ ] Test with real GitHub repositories
+- [ ] Test embedding generation with real HuggingFace models
+- [ ] Test vector storage and retrieval with Pinecone
+- [ ] Create automated test suite
+
 ## 📄 License
 
 MIT License
