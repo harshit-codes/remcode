@@ -9,6 +9,7 @@ A sophisticated code vectorization and analysis tool for better understanding of
 - **Semantic Search**: Find semantically similar code across your repositories
 - **Adaptive Processing**: Intelligently handles both clean and messy codebases
 - **Dual-Layer Architecture**: Module-level and function-level understanding of code
+- **MCP Server**: Model Context Protocol integration for AI assistant interaction
 
 ## 📋 Project Overview
 
@@ -57,6 +58,12 @@ remcode analyze https://github.com/username/repo --token <github-token>
 remcode vectorize ./my-project --pinecone-key <key> --pinecone-env <env>
 ```
 
+### Start the MCP server
+
+```bash
+remcode serve --port 3000 --pinecone-key <key> --pinecone-env <env>
+```
+
 ## 📊 Analysis Report
 
 The codebase analysis generates a comprehensive JSON report including:
@@ -85,6 +92,7 @@ For full documentation, visit [docs.remcode.io](https://docs.remcode.io).
 - **GraphCodeBERT**: For code embeddings
 - **LangChain**: For document processing and vector operations
 - **Pinecone**: For vector database storage
+- **Express.js**: For MCP server implementation
 
 ## 🤝 Contributing
 
