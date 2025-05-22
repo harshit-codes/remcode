@@ -190,10 +190,25 @@ function generateMarkdownDoc(fileDoc) {
         markdown += `**Implements:** ${cls.implements.join(', ')}\n\n`;
       }
       
-      // Find the complete class definition including JSDoc comments
+      // Extract just the class description and signature
       const classWithJSDoc = extractWithJSDoc(fileDoc.content, cls.name, 'class');
       if (classWithJSDoc) {
-        markdown += `**Class Definition:**\n\n\`\`\`typescript\n${classWithJSDoc}\n\`\`\`\n\n`;
+        const jsDocMatch = classWithJSDoc.match(/\/\*\*([\s\S]*?)\*\//); 
+        const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
+        
+        // Extract just the description (first paragraph) from JSDoc
+        if (jsDoc) {
+          const description = jsDoc.split('\n\n')[0].split('@')[0].trim();
+          if (description) {
+            markdown += `${description}\n\n`;
+          }
+        }
+        
+        // Include just the class signature without full implementation
+        const classSignatureMatch = classWithJSDoc.match(/(class\s+[\w<>]+\s*(extends\s+[\w<>.]+)?\s*(implements\s+[\w<>.,\s]+)?\s*{)/);
+        if (classSignatureMatch) {
+          markdown += `\`\`\`typescript\n${classSignatureMatch[0]}\n// ... implementation\n}\n\`\`\`\n\n`;
+        }
       }
       
       // Find all methods with their JSDoc comments
@@ -255,10 +270,28 @@ function generateMarkdownDoc(fileDoc) {
         markdown += `**Extends:** ${intf.extends.join(', ')}\n\n`;
       }
       
-      // Extract the complete interface with JSDoc
+      // Extract just the interface description and signature
       const interfaceWithJSDoc = extractWithJSDoc(fileDoc.content, intf.name, 'interface');
       if (interfaceWithJSDoc) {
-        markdown += `**Interface Definition:**\n\n\`\`\`typescript\n${interfaceWithJSDoc}\n\`\`\`\n\n`;
+        const jsDocMatch = interfaceWithJSDoc.match(/\/\*\*([\s\S]*?)\*\//); 
+        const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
+        
+        // Extract just the description (first paragraph) from JSDoc
+        if (jsDoc) {
+          const description = jsDoc.split('\n\n')[0].split('@')[0].trim();
+          if (description) {
+            markdown += `${description}\n\n`;
+          }
+        }
+        
+        // Include just a summary of the interface
+        const interfaceStart = interfaceWithJSDoc.indexOf('interface');
+        const openingBraceIndex = interfaceWithJSDoc.indexOf('{', interfaceStart);
+        
+        if (interfaceStart !== -1 && openingBraceIndex !== -1) {
+          const interfaceSignature = interfaceWithJSDoc.substring(interfaceStart, openingBraceIndex + 1);
+          markdown += `\`\`\`typescript\n${interfaceSignature}\n// ... properties\n}\n\`\`\`\n\n`;
+        }
       } else {
         // Try to extract properties as fallback
         const interfaceRegex = new RegExp(`interface\\s+${intf.name}[\\s\\S]*?{([\\s\\S]*?)(?:^}|(?:^\\s*export\\s|^\\s*interface\\s))`, 'm');
@@ -291,22 +324,25 @@ function generateMarkdownDoc(fileDoc) {
     fileDoc.functions.forEach(func => {
       markdown += `### \`${func.name}()\`\n\n`;
       
-      // Extract the full function with JSDoc
+      // Extract just the function description from JSDoc if available
       const functionWithJSDoc = extractWithJSDoc(fileDoc.content, func.name, 'function');
       if (functionWithJSDoc) {
+        const jsDocMatch = functionWithJSDoc.match(/\/\*\*([\s\S]*?)\*\//); 
+        const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
+        
+        // Extract just the description (first paragraph) from JSDoc
+        if (jsDoc) {
+          const description = jsDoc.split('\n\n')[0].split('@')[0].trim();
+          if (description) {
+            markdown += `${description}\n\n`;
+          }
+        }
+        
         // Find the end of the function signature (before the body)
         const signatureEndIndex = functionWithJSDoc.indexOf('{');
         if (signatureEndIndex !== -1) {
           const signature = functionWithJSDoc.substring(0, signatureEndIndex + 1);
-          const jsDocMatch = functionWithJSDoc.match(/\/\*\*([\s\S]*?)\*\//); 
-          const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
-          
-          if (jsDoc) {
-            markdown += `${jsDoc}\n\n`;
-          }
-          
-          markdown += `**Function Signature:**\n\n\`\`\`typescript\n${signature.trim()}\n\`\`\`\n\n`;
-          markdown += `**Full Function:**\n\n\`\`\`typescript\n${functionWithJSDoc}\n\`\`\`\n\n`;
+          markdown += `\`\`\`typescript\n${signature.trim()}\n\`\`\`\n\n`;
         }
       } else {
         // Fallback to simpler extraction

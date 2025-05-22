@@ -153,31 +153,17 @@ cosineSimilarity(vector1: number[], vector2: number[]): number {
 
 ### `SimilarityResult`
 
-**Interface Definition:**
-
 ```typescript
-export interface SimilarityResult {
-  targetCode: string;
-  similarCode: SearchResult[];
-  similarityReasons: string[];
-  patternType: PatternType;
-  patternName?: string;
-  confidence: number;
+interface SimilarityResult {
+// ... properties
 }
 ```
 
 ### `SimilarityOptions`
 
-**Interface Definition:**
-
 ```typescript
-export interface SimilarityOptions {
-  semanticSearch?: SemanticSearch;
-  embeddingManager?: EmbeddingManager;
-  minSimilarity?: number;
-  enableSemanticSearch?: boolean;
-  enableSyntaxAnalysis?: boolean;
-  enablePatternDetection?: boolean;
+interface SimilarityOptions {
+// ... properties
 }
 ```
 

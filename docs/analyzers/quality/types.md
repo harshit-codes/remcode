@@ -14,148 +14,81 @@ Type definitions for code quality analysis
 
 ### `QualityAnalysis`
 
-**Interface Definition:**
-
 ```typescript
-export interface QualityAnalysis {
-  modules: Record<string, ModuleQuality>;
-  files: Record<string, FileQuality>;
-  problematic_files: ProblematicFile[];
-  overall_assessment: OverallAssessment;
+interface QualityAnalysis {
+// ... properties
 }
 ```
 
 ### `ModuleQuality`
 
-**Interface Definition:**
-
 ```typescript
-export interface ModuleQuality {
-  complexity_score: number;
-  test_coverage?: number;
-  quality_assessment: QualityAssessment;
-  total_lines: number;
-  comment_ratio: number;
-  files?: string[];
+interface ModuleQuality {
+// ... properties
 }
 ```
 
 ### `FileQuality`
 
-**Interface Definition:**
-
 ```typescript
-export interface FileQuality {
-  complexity_score: number;
-  test_coverage?: number;
-  quality_assessment: QualityAssessment;
-  classes: number;
-  functions: number;
-  longest_function_lines?: number;
-  comment_ratio: number;
-  cyclomatic_complexity?: number;
-  maintainability_index?: number;
-  recommended_chunking: ChunkingStrategy;
-  total_lines: number;
-  issues: string[];
+interface FileQuality {
+// ... properties
 }
 ```
 
 ### `ProblematicFile`
 
-**Interface Definition:**
-
 ```typescript
-export interface ProblematicFile {
-  file_path: string;
-  issues: string[];
-  handling_strategy: 'refactor' | 'ignore' | 'special_handling';
+interface ProblematicFile {
+// ... properties
 }
 ```
 
 ### `OverallAssessment`
 
-**Interface Definition:**
-
 ```typescript
-export interface OverallAssessment {
-  score: number; // 0-100
-  grade: 'A' | 'B' | 'C' | 'D' | 'F';
-  strengths: string[];
-  weaknesses: string[];
-  improvement_suggestions: string[];
+interface OverallAssessment {
+// ... properties
 }
 ```
 
 ### `CodeStructureAnalysis`
 
-**Interface Definition:**
-
 ```typescript
-export interface CodeStructureAnalysis {
-  classes: number;
-  functions: number;
-  longestFunction: number;
-  complexityScore: number;
-  issues: string[];
+interface CodeStructureAnalysis {
+// ... properties
 }
 ```
 
 ### `CommentAnalysis`
 
-**Interface Definition:**
-
 ```typescript
-export interface CommentAnalysis {
-  commentLines: number;
-  totalLines: number;
+interface CommentAnalysis {
+// ... properties
 }
 ```
 
 ### `ESLintAnalysisResult`
 
-**Interface Definition:**
-
 ```typescript
-export interface ESLintAnalysisResult {
-  issues: string[];
-  complexityScore: number;
-  classes: number;
-  functions: number;
-  longestFunction: number;
-  cyclomaticComplexity: number;
+interface ESLintAnalysisResult {
+// ... properties
 }
 ```
 
 ### `ComplexityThresholds`
 
-**Interface Definition:**
-
 ```typescript
-export interface ComplexityThresholds {
-  excellent: number;
-  good: number;
-  moderate: number;
-  poor: number;
+interface ComplexityThresholds {
+// ... properties
 }
 ```
 
 ### `ComplexityReport`
 
-**Interface Definition:**
-
 ```typescript
-export interface ComplexityReport {
-  aggregate: {
-    cyclomatic: number;
-    classes: number;
-  };
-  functions: Array<{
-    name: string;
-    sloc: {
-      physical: number;
-    };
-  }>;
+interface ComplexityReport {
+// ... properties
 }
 ```
 
