@@ -1,10 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
-
-// Using require instead of import to avoid module resolution issues
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const typescriptEstree = require('@typescript-eslint/typescript-estree');
 import { getLogger } from '../utils/logger';
+
+// Use require for TypeScript ESTree to avoid module resolution issues
+const { parse } = require('@typescript-eslint/typescript-estree');
 
 const logger = getLogger('ContextExtractor');
 
@@ -167,9 +166,10 @@ export class ContextExtractor {
    */
   private parseTypescript(content: string, isJsx: boolean): FileStructure {
     try {
-      const ast = typescriptEstree.parse(content, {
+      const ast = parse(content, {
         jsx: isJsx,
-        loc: true
+        loc: true,
+        errorOnUnknownASTType: false
       });
       
       const classes: ClassInfo[] = [];
@@ -255,9 +255,6 @@ export class ContextExtractor {
    * @param structure Structure being built
    */
   private traverseAst(ast: any, structure: FileStructure): void {
-    // This is a simplified implementation of AST traversal
-    // A real implementation would be more comprehensive
-    
     if (!ast || typeof ast !== 'object') return;
     
     // Process node based on its type
@@ -279,11 +276,16 @@ export class ContextExtractor {
         case 'FunctionExpression':
           this.processFunction(ast, structure.functions);
           break;
+        case 'MethodDefinition':
+          this.processMethod(ast, 'unknown', [], structure.functions);
+          break;
       }
     }
     
     // Recursively process all properties
     for (const key in ast) {
+      if (key === 'parent') continue; // Avoid circular references
+      
       if (Array.isArray(ast[key])) {
         ast[key].forEach((node: any) => this.traverseAst(node, structure));
       } else if (ast[key] && typeof ast[key] === 'object') {

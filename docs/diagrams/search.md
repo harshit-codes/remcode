@@ -21,6 +21,7 @@ classDiagram
     catch()
     String()
     parseTypescript(): FileStructure
+    parse()
     catch()
     String()
     parseGenericFile(): FileStructure
@@ -32,6 +33,7 @@ classDiagram
     if()
     switch()
     for()
+    if()
     if()
     if()
     processImport(): void
@@ -185,12 +187,11 @@ classDiagram
     excludePatterns: string[]
   }
   class SemanticSearch {
-    pineconeStorage: PineconeStorage | null = null
+    storage: PineconeStorage | null = null
     embeddingManager: EmbeddingManager | null = null
     options: SemanticSearchOptions
     initialized: boolean = false
     initialize(): Promise<void>
-    if()
     if()
     Error()
     if()
@@ -202,6 +203,7 @@ classDiagram
     Error()
     search(): Promise<SearchResult[]>
     if()
+    Error()
     if()
     Error()
     if()
@@ -210,10 +212,13 @@ classDiagram
     String()
     Error()
     searchSimilarCode(): Promise<SearchResult[]>
-    code()
     searchPatterns(): Promise<SearchResult[]>
     searchFunctionality(): Promise<SearchResult[]>
     formatSearchResults(): SearchResult[]
+    getStats(): Promise<any>
+    if()
+    Error()
+    isInitialized(): boolean
   }
   class SemanticSearchOptions {
     <<interface>>
@@ -255,6 +260,9 @@ classDiagram
     if()
     catch()
     String()
+    calculateOverallConfidence(): number
+    if()
+    if()
     score()
     compareCodeSimilarity(): Promise<number>
     similarity()

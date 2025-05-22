@@ -240,7 +240,15 @@ export class SimilarityAnalyzer {
     
     // If semantic search is enabled but not provided, create it
     if (this.options.enableSemanticSearch && !this.semanticSearch) {
-      this.semanticSearch = new SemanticSearch();
+      this.semanticSearch = new SemanticSearch({
+        pineconeApiKey: process.env.PINECONE_API_KEY,
+        pineconeIndexName: 'remcode-default',
+        pineconeEnvironment: process.env.PINECONE_ENVIRONMENT || 'gcp-starter',
+        pineconeNamespace: 'default',
+        huggingfaceToken: process.env.HUGGINGFACE_TOKEN,
+        embeddingModel: 'microsoft/graphcodebert-base',
+        fallbackModel: 'sentence-transformers/all-MiniLM-L6-v2'
+      });
       await this.semanticSearch.initialize();
     }
     
@@ -279,10 +287,8 @@ export class SimilarityAnalyzer {
     // Generate reasons for similarity based on detected patterns
     const similarityReasons = this.generateSimilarityReasons(codeSnippet, detectedPatterns);
     
-    // Determine overall confidence based on pattern detection
-    const confidence = detectedPatterns.length > 0 ? 
-      Math.min(1, 0.5 + (detectedPatterns.length * 0.1)) : 
-      (similarCode.length > 0 ? similarCode[0].score : 0.5);
+    // Determine overall confidence based on pattern detection and semantic results
+    const confidence = this.calculateOverallConfidence(detectedPatterns, similarCode);
     
     return {
       targetCode: codeSnippet,
@@ -292,6 +298,26 @@ export class SimilarityAnalyzer {
       patternName: detectedPatterns.length > 0 ? detectedPatterns[0] : undefined,
       confidence
     };
+  }
+
+  /**
+   * Calculate overall confidence score
+   */
+  private calculateOverallConfidence(detectedPatterns: string[], similarCode: SearchResult[]): number {
+    let confidence = 0.5; // Base confidence
+    
+    // Add confidence based on pattern detection
+    if (detectedPatterns.length > 0) {
+      confidence += Math.min(0.3, detectedPatterns.length * 0.1);
+    }
+    
+    // Add confidence based on semantic search results
+    if (similarCode.length > 0) {
+      const avgScore = similarCode.reduce((sum, result) => sum + result.score, 0) / similarCode.length;
+      confidence += avgScore * 0.2;
+    }
+    
+    return Math.min(1, confidence);
   }
 
   /**
@@ -331,10 +357,12 @@ export class SimilarityAnalyzer {
     let semanticSimilarity = 0;
     if (this.embeddingManager) {
       try {
-        const embeddings = await this.embeddingManager.embedChunks([
-          { content: code1 },
-          { content: code2 }
-        ]);
+        const chunks = [
+          { content: code1, metadata: { file_path: 'temp1', strategy: 'comparison', chunk_type: 'snippet' } },
+          { content: code2, metadata: { file_path: 'temp2', strategy: 'comparison', chunk_type: 'snippet' } }
+        ];
+        
+        const embeddings = await this.embeddingManager.embedChunks(chunks);
         
         if (embeddings[0].embedding && embeddings[1].embedding) {
           semanticSimilarity = this.cosineSimilarity(
@@ -366,7 +394,7 @@ export class SimilarityAnalyzer {
       );
     }
     
-    return combinedSimilarity;
+    return Math.max(0, Math.min(1, combinedSimilarity));
   }
 
   /**

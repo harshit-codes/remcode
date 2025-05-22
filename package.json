@@ -50,6 +50,7 @@
     "@octokit/rest": "^21.1.1",
     "@pinecone-database/pinecone": "^1.1.2",
     "@types/string-similarity": "^4.0.2",
+    "@typescript-eslint/typescript-estree": "^6.21.0",
     "axios": "^1.6.2",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",

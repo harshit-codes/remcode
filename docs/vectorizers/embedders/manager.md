@@ -12,6 +12,7 @@ Embeds code chunks using the specified model
 
 - `../../utils/logger`
 - `@huggingface/inference`
+- `../types`
 
 ## Classes
 
@@ -38,7 +39,6 @@ Embeds code chunks using the specified model
 - `getEmbeddingFromModel()`
 - `if()`
 - `if()`
-- `number()`
 - `if()`
 - `if()`
 - `if()`
@@ -46,7 +46,6 @@ Embeds code chunks using the specified model
 - `catch()`
 - `String()`
 - `if()`
-- `arrays()`
 - `if()`
 - `if()`
 - `Error()`

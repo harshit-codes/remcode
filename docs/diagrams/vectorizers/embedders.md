@@ -24,7 +24,6 @@ classDiagram
     getEmbeddingFromModel(): Promise<number[]>
     if()
     if()
-    number()
     if()
     if()
     if()
@@ -32,7 +31,6 @@ classDiagram
     catch()
     String()
     if()
-    arrays()
     if()
     if()
     Error()

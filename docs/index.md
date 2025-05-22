@@ -63,6 +63,10 @@ This documentation provides an overview of the Remcode codebase structure, entit
     - [logger](utils/logger.md)
     - [source](utils/source.md)
   - **vectorizers/**
+    - [index](vectorizers/index.md)
+    - [pipeline](vectorizers/pipeline.md)
+    - [simple](vectorizers/simple.md)
+    - [types](vectorizers/types.md)
     - **chunkers/**
       - [manager.test](vectorizers/chunkers/manager.test.md)
       - [manager](vectorizers/chunkers/manager.md)
@@ -89,6 +93,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
   - [setup Diagram](diagrams/setup.md)
   - [swe Diagram](diagrams/swe.md)
   - [utils Diagram](diagrams/utils.md)
+  - [vectorizers Diagram](diagrams/vectorizers.md)
     - [chunkers Diagram](diagrams/vectorizers/chunkers.md)
     - [embedders Diagram](diagrams/vectorizers/embedders.md)
     - [storage Diagram](diagrams/vectorizers/storage.md)

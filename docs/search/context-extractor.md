@@ -38,6 +38,7 @@ Extract code context from a file based on line range
 - `catch()`
 - `String()`
 - `parseTypescript()`
+- `parse()`
 - `catch()`
 - `String()`
 - `parseGenericFile()`
@@ -49,6 +50,7 @@ Extract code context from a file based on line range
 - `if()`
 - `switch()`
 - `for()`
+- `if()`
 - `if()`
 - `if()`
 - `processImport()`

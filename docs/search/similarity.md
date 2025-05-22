@@ -28,6 +28,9 @@ Known code patterns that can be detected
 - `if()`
 - `catch()`
 - `String()`
+- `calculateOverallConfidence()`
+- `if()`
+- `if()`
 - `score()`
 - `compareCodeSimilarity()`
 - `similarity()`

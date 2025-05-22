@@ -11,6 +11,7 @@ Configuration options for semantic search
 - `../utils/logger`
 - `../vectorizers/storage/pinecone`
 - `../vectorizers/embedders/manager`
+- `../vectorizers/types`
 
 ## Classes
 
@@ -19,7 +20,6 @@ Configuration options for semantic search
 **Methods:**
 
 - `initialize()`
-- `if()`
 - `if()`
 - `Error()`
 - `if()`
@@ -31,6 +31,7 @@ Configuration options for semantic search
 - `Error()`
 - `search()`
 - `if()`
+- `Error()`
 - `if()`
 - `Error()`
 - `if()`
@@ -39,10 +40,13 @@ Configuration options for semantic search
 - `String()`
 - `Error()`
 - `searchSimilarCode()`
-- `code()`
 - `searchPatterns()`
 - `searchFunctionality()`
 - `formatSearchResults()`
+- `getStats()`
+- `if()`
+- `Error()`
+- `isInitialized()`
 
 ## Interfaces
 

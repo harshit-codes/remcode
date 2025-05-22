@@ -5,46 +5,9 @@ import { Document } from 'langchain/document';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { SupportedTextSplitterLanguage } from 'langchain/text_splitter';
+import { CodeChunk, ChunkingStrategy, ChunkStrategyType } from '../types';
 
 const logger = getLogger('ChunkingManager');
-
-/**
- * Chunking strategies for different types of code files
- */
-interface ChunkingStrategy {
-  clean_modules: string; // Strategy for well-organized code
-  complex_modules: string; // Strategy for complex code with deep nesting
-  monolithic_files: string; // Strategy for large files without clear structure
-}
-
-/**
- * Types of chunking strategies available
- */
-type ChunkStrategyType = 
-  | 'function_level'      // Split by function boundaries
-  | 'class_level'         // Split by class boundaries
-  | 'file_level'          // Treat entire file as one chunk
-  | 'sliding_window'      // Sliding window with minimal overlap
-  | 'sliding_window_with_overlap' // Sliding window with significant overlap
-  | 'sliding_window_with_high_overlap'; // Sliding window with maximum overlap
-
-/**
- * Interface for code chunks produced by the chunking process
- */
-interface CodeChunk {
-  content: string;        // The code content
-  metadata: {            // Metadata about the chunk
-    file_path: string;   // Path to the source file
-    strategy: string;    // Chunking strategy used
-    language?: string;   // Programming language
-    start_line?: number; // Starting line in original file
-    end_line?: number;   // Ending line in original file
-    function_name?: string; // Function name if applicable
-    class_name?: string; // Class name if applicable
-    chunk_type?: string; // Type of chunk (function, class, etc.)
-    [key: string]: any;  // Additional metadata
-  }
-}
 
 /**
  * Manages code chunking with various strategies tailored to different code types
@@ -89,7 +52,6 @@ export class ChunkingManager {
       bash: 'markdown',
     };
   }
-
   /**
    * Chunks a file's content based on the specified strategy
    * @param content The file content to chunk
@@ -216,7 +178,7 @@ export class ChunkingManager {
     
     return chunks;
   }
-  
+
   /**
    * Chunks code by class boundaries
    */

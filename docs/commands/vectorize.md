@@ -11,9 +11,7 @@ No overview provided.
 - `commander`
 - `../utils/source`
 - `../utils/config`
-- `../vectorizers/chunkers/manager`
-- `../vectorizers/embedders/manager`
-- `../vectorizers/storage/pinecone`
+- `../vectorizers/pipeline`
 - `../utils/logger`
 
 ## Functions

@@ -2,26 +2,12 @@ import { getLogger } from '../../utils/logger';
 import axios from 'axios';
 import { HfInference } from '@huggingface/inference';
 import * as dotenv from 'dotenv';
+import { CodeChunk, EmbeddingManagerOptions } from '../types';
 
 // Load environment variables
 dotenv.config();
 
 const logger = getLogger('EmbeddingManager');
-
-interface EmbeddingManagerOptions {
-  primary: string; // Primary model to use for embeddings
-  fallback: string; // Fallback model if primary fails
-  batchSize: number; // Number of chunks to process in parallel
-  token?: string; // HuggingFace API token
-  dimension?: number; // Expected embedding dimension
-}
-
-interface CodeChunk {
-  content: string; // The code content to embed
-  metadata?: Record<string, any>; // Metadata about the chunk
-  id?: string; // Optional ID for the chunk
-  embedding?: number[]; // Will be populated with the embedding
-}
 
 interface ModelInfo {
   id: string;
@@ -163,26 +149,20 @@ export class EmbeddingManager {
         });
         
         // Handle different response formats based on HF API
-        // The result could be a number, number[], or number[][]        
         if (typeof result === 'number') {
-          // Single number (unlikely but handle it)
           return [result];
         } else if (Array.isArray(result)) {
-          // Check if we got a flat array of numbers
           if (typeof result[0] === 'number') {
             return result as number[];
           }
-          // If we got a nested array of arrays, average them
           else if (Array.isArray(result[0])) {
             return this.averageEmbeddings(result as number[][]);
           }
         }
         
-        // If we couldn't handle the result format, throw an error
         logger.error(`Unexpected result format from HF API: ${JSON.stringify(result).substring(0, 100)}...`);
         throw new Error(`Unexpected response format from HuggingFace Inference client`);
       } catch (error) {
-        // If client method fails, fall back to direct API call
         logger.warn(`HuggingFace client failed, falling back to direct API call: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
@@ -202,16 +182,12 @@ export class EmbeddingManager {
       
       // Handle different response formats
       if (Array.isArray(response.data)) {
-        // For models that return an array of arrays (sequence of token embeddings)
         if (Array.isArray(response.data[0])) {
           return this.averageEmbeddings(response.data);
         }
-        
-        // For models that return a single array
         return response.data;
       }
       
-      // Some models might return embeddings in a different format
       if (response.data && response.data.embeddings) {
         return response.data.embeddings;
       }
@@ -251,7 +227,7 @@ export class EmbeddingManager {
     
     return chunks.map(chunk => ({
       ...chunk,
-      embedding: new Array(dimension).fill(0).map(() => Math.random() * 2 - 1) // Random values between -1 and 1
+      embedding: new Array(dimension).fill(0).map(() => Math.random() * 2 - 1)
     }));
   }
 }

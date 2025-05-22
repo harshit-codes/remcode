@@ -4,7 +4,7 @@
 
 ## Overview
 
-Chunking strategies for different types of code files
+Manages code chunking with various strategies tailored to different code types
 
 ## Dependencies
 
@@ -13,6 +13,7 @@ Chunking strategies for different types of code files
 - `langchain/text_splitter`
 - `langchain/text_splitter`
 - `langchain/text_splitter`
+- `../types`
 
 ## Classes
 
