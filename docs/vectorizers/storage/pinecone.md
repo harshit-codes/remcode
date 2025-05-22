@@ -4,12 +4,7 @@
 
 ## Overview
 
-Delete vectors by metadata fields
-This is a convenience method for incremental updates when vectors need
-to be deleted by file path or other metadata criteria
-@param metadata Metadata field criteria to match
-@param namespace Optional namespace (uses default if not provided)
-@returns A promise that resolves when deletion is complete
+No overview provided.
 
 ## Dependencies
 
@@ -20,10 +15,6 @@ to be deleted by file path or other metadata criteria
 ## Classes
 
 ### `PineconeStorage`
-
-Delete vectors by metadata fields
-This is a convenience method for incremental updates when vectors need
-to be deleted by file path or other metadata criteria
 
 ```typescript
 class PineconeStorage {
@@ -58,13 +49,6 @@ deleteVectors(ids?: string[], deleteAll: boolean = false, filter?: Record<string
 ```
 
 #### `deleteVectorsByMetadata()`
-
-Delete vectors by metadata fields
-This is a convenience method for incremental updates when vectors need
-to be deleted by file path or other metadata criteria
-@param metadata Metadata field criteria to match
-@param namespace Optional namespace (uses default if not provided)
-@returns A promise that resolves when deletion is complete
 
 ```typescript
 deleteVectorsByMetadata(metadata: Record<string, any>, namespace?: string): Promise<number> {

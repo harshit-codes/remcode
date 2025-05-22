@@ -33,7 +33,7 @@ initialize(): Promise<void> {
 Process a single file and return its vectorized chunks
 
 ```typescript
-processFile(filePath: string): Promise<CodeChunk[]> {
+processFile(filePath: string, relativePath?: string): Promise<CodeChunk[]> {
 ```
 
 #### `searchSimilarCode()`
@@ -50,6 +50,14 @@ Get storage statistics
 
 ```typescript
 getStats(): Promise<any> {
+```
+
+#### `deleteFileVectors()`
+
+Delete vectors for a specific file (useful for incremental updates)
+
+```typescript
+deleteFileVectors(filePath: string): Promise<number> {
 ```
 
 #### `createFileInfo()`

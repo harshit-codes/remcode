@@ -46,9 +46,10 @@
   "homepage": "https://github.com/harshit-codes/remcode#readme",
   "dependencies": {
     "@huggingface/inference": "^2.6.1",
+    "@huggingface/transformers": "^3.5.1",
     "@octokit/plugin-rest-endpoint-methods": "^15.0.0",
     "@octokit/rest": "^21.1.1",
-    "@pinecone-database/pinecone": "^1.1.2",
+    "@pinecone-database/pinecone": "^6.0.1",
     "@types/string-similarity": "^4.0.2",
     "@typescript-eslint/typescript-estree": "^6.21.0",
     "axios": "^1.6.2",

@@ -38,10 +38,30 @@ Embeds code chunks using the specified model
 embedChunks(chunks: CodeChunk[]): Promise<CodeChunk[]> {
 ```
 
-#### `if()`
+#### `processEmbeddingResult()`
+
+Process embedding result from API based on model type
 
 ```typescript
-if (Array.isArray(result[0])) {
+processEmbeddingResult(result: any, modelInfo: ModelInfo): number[] {
+    // Handle CodeBERT/GraphCodeBERT response format
+```
+
+#### `preprocessText()`
+
+Preprocess text for better embedding quality
+
+```typescript
+preprocessText(text: string): string {
+    // Remove excessive whitespace but preserve code structure
+```
+
+#### `getDimensionForModel()`
+
+Get dimension for a specific model
+
+```typescript
+getDimensionForModel(modelId: string): number {
 ```
 
 #### `averageEmbeddings()`

@@ -14,35 +14,49 @@ classDiagram
     catch()
     String()
     if()
+    Promise()
     catch()
     String()
     embedSingleChunk(): Promise<CodeChunk>
+    embedSingleChunkWithFallback(): Promise<CodeChunk>
+    if()
     catch()
     String()
-    embedWithModel(): Promise<CodeChunk[]>
-    for()
+    Array()
     getEmbeddingFromModel(): Promise<number[]>
+    getEmbeddingViaDirectAPI(): Promise<number[]>
+    for()
+    if()
+    models()
+    catch()
+    if()
+    String()
+    if()
+    Error()
+    Promise()
+    Error()
+    processEmbeddingResult(): number[]
     if()
     if()
     if()
     if()
     if()
     Error()
-    catch()
-    String()
+    preprocessText(): string
+    limits()
     if()
-    if()
-    if()
-    Error()
-    catch()
-    String()
+    getDimensionForModel(): number
     averageEmbeddings(): number[]
+    if()
+    Error()
     Array()
     for()
     for()
     for()
     generateRandomEmbeddings(): CodeChunk[]
     Array()
+    getModelInfo(): ModelInfo
+    getAvailableModels(): ModelInfo[]
   }
 
   %% Inheritance relationships

@@ -13,14 +13,39 @@ interface ModelInfo {
   id: string;
   name: string;
   embeddingDimension: number;
+  strategy: 'code' | 'text';
+  apiType: 'feature_extraction' | 'sentence_similarity';
 }
 
-// GraphCodeBERT model info
-const DEFAULT_MODEL: ModelInfo = {
-  id: 'microsoft/graphcodebert-base',
-  name: 'GraphCodeBERT',
-  embeddingDimension: 768
+// Working embedding models with their configurations
+const EMBEDDING_MODELS: Record<string, ModelInfo> = {
+  // Code-specific models (working)
+  'microsoft/codebert-base': {
+    id: 'microsoft/codebert-base', 
+    name: 'CodeBERT',
+    embeddingDimension: 768,
+    strategy: 'code',
+    apiType: 'feature_extraction'
+  },
+  'microsoft/graphcodebert-base': {
+    id: 'microsoft/graphcodebert-base',
+    name: 'GraphCodeBERT',
+    embeddingDimension: 768,
+    strategy: 'code',
+    apiType: 'feature_extraction'
+  },
+  // Text models with sentence-transformers API
+  'sentence-transformers/all-MiniLM-L6-v2': {
+    id: 'sentence-transformers/all-MiniLM-L6-v2',
+    name: 'MiniLM-L6',
+    embeddingDimension: 384,
+    strategy: 'text',
+    apiType: 'sentence_similarity'
+  }
 };
+
+const DEFAULT_MODEL = EMBEDDING_MODELS['microsoft/codebert-base'];
+const FALLBACK_MODEL = EMBEDDING_MODELS['microsoft/graphcodebert-base'];
 
 export class EmbeddingManager {
   private options: EmbeddingManagerOptions;
@@ -60,34 +85,32 @@ export class EmbeddingManager {
     }
     
     try {
-      // Process chunks in batches to avoid overwhelming the API
-      const batchSize = this.options.batchSize || 10;
+      // Process chunks sequentially to avoid rate limits
       const result: CodeChunk[] = [];
       
-      for (let i = 0; i < chunks.length; i += batchSize) {
-        const batch = chunks.slice(i, i + batchSize);
-        logger.debug(`Processing batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(chunks.length/batchSize)}`);
+      for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        logger.debug(`Processing chunk ${i + 1}/${chunks.length}`);
         
-        // Process each chunk in the batch in parallel
-        const embedPromises = batch.map(chunk => this.embedSingleChunk(chunk));
-        const embeddedChunks = await Promise.all(embedPromises);
+        try {
+          const embeddedChunk = await this.embedSingleChunk(chunk);
+          result.push(embeddedChunk);
+        } catch (error) {
+          logger.error(`Error embedding chunk ${i + 1}: ${error instanceof Error ? error.message : String(error)}`);
+          // Try fallback for this specific chunk
+          const fallbackChunk = await this.embedSingleChunkWithFallback(chunk);
+          result.push(fallbackChunk);
+        }
         
-        result.push(...embeddedChunks);
+        // Small delay between chunks to respect rate limits
+        if (i < chunks.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       }
       
       return result;
     } catch (error) {
-      logger.error(`Error embedding chunks with ${this.options.primary}: ${error instanceof Error ? error.message : String(error)}`);
-      
-      // Try fallback model if primary fails
-      if (this.options.fallback && this.options.fallback !== this.options.primary) {
-        logger.info(`Trying fallback model: ${this.options.fallback}`);
-        try {
-          return await this.embedWithModel(chunks, this.options.fallback);
-        } catch (fallbackError) {
-          logger.error(`Fallback model failed too: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`);
-        }
-      }
+      logger.error(`Error embedding chunks: ${error instanceof Error ? error.message : String(error)}`);
       
       // Return random embeddings as last resort
       logger.warn('Falling back to random embeddings');
@@ -99,110 +122,169 @@ export class EmbeddingManager {
    * Embeds a single code chunk
    */
   private async embedSingleChunk(chunk: CodeChunk): Promise<CodeChunk> {
-    try {
-      const embedding = await this.getEmbeddingFromModel(chunk.content, this.options.primary);
-      return {
-        ...chunk,
-        embedding
-      };
-    } catch (error) {
-      logger.error(`Error embedding chunk: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
-    }
+    const embedding = await this.getEmbeddingFromModel(chunk.content, this.options.primary);
+    return {
+      ...chunk,
+      embedding
+    };
   }
 
   /**
-   * Embeds chunks using a specific model
+   * Embeds a single chunk with fallback strategy
    */
-  private async embedWithModel(chunks: CodeChunk[], modelId: string): Promise<CodeChunk[]> {
-    const batchSize = this.options.batchSize || 10;
-    const result: CodeChunk[] = [];
-    
-    for (let i = 0; i < chunks.length; i += batchSize) {
-      const batch = chunks.slice(i, i + batchSize);
-      
-      const embedPromises = batch.map(async chunk => {
-        const embedding = await this.getEmbeddingFromModel(chunk.content, modelId);
-        return {
-          ...chunk,
-          embedding
-        };
-      });
-      
-      const embeddedChunks = await Promise.all(embedPromises);
-      result.push(...embeddedChunks);
+  private async embedSingleChunkWithFallback(chunk: CodeChunk): Promise<CodeChunk> {
+    try {
+      // Try fallback model
+      if (this.options.fallback && this.options.fallback !== this.options.primary) {
+        logger.debug(`Trying fallback model for chunk: ${this.options.fallback}`);
+        const embedding = await this.getEmbeddingFromModel(chunk.content, this.options.fallback);
+        return { ...chunk, embedding };
+      }
+    } catch (fallbackError) {
+      logger.warn(`Fallback model also failed: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`);
     }
     
-    return result;
+    // Generate random embedding as final fallback
+    const dimension = this.getDimensionForModel(this.options.primary);
+    const embedding = new Array(dimension).fill(0).map(() => Math.random() * 2 - 1);
+    logger.debug('Using random embedding for chunk');
+    return { ...chunk, embedding };
   }
 
   /**
    * Gets an embedding from the HuggingFace model
    */
   private async getEmbeddingFromModel(text: string, modelId: string): Promise<number[]> {
-    if (this.hfClient) {
+    // Preprocess text for better embedding quality
+    const processedText = this.preprocessText(text);
+    
+    // Get model info to determine API type
+    const modelInfo = EMBEDDING_MODELS[modelId] || DEFAULT_MODEL;
+    
+    // Use direct API call for better control
+    return await this.getEmbeddingViaDirectAPI(processedText, modelId, modelInfo);
+  }
+
+  /**
+   * Get embedding via direct API call
+   */
+  private async getEmbeddingViaDirectAPI(text: string, modelId: string, modelInfo: ModelInfo, retries = 2): Promise<number[]> {
+    for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        // Try using the HuggingFace Inference client first
-        const result = await this.hfClient.featureExtraction({
-          model: modelId,
-          inputs: text
-        });
+        let requestBody: any;
         
-        // Handle different response formats based on HF API
-        if (typeof result === 'number') {
-          return [result];
-        } else if (Array.isArray(result)) {
-          if (typeof result[0] === 'number') {
-            return result as number[];
-          }
-          else if (Array.isArray(result[0])) {
-            return this.averageEmbeddings(result as number[][]);
-          }
+        // Format request based on model type
+        if (modelInfo.apiType === 'sentence_similarity') {
+          // Sentence transformers expect 'sentences' array
+          requestBody = { 
+            inputs: {
+              source_sentence: text,
+              sentences: [text] // Self-similarity to get embedding
+            },
+            options: { wait_for_model: true }
+          };
+        } else {
+          // Feature extraction models (CodeBERT) expect 'inputs' string
+          requestBody = { 
+            inputs: text,
+            options: { wait_for_model: true }
+          };
         }
         
-        logger.error(`Unexpected result format from HF API: ${JSON.stringify(result).substring(0, 100)}...`);
-        throw new Error(`Unexpected response format from HuggingFace Inference client`);
+        const response = await axios.post(
+          `${this.apiBaseUrl}/${modelId}`,
+          requestBody,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.options.token}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 30000
+          }
+        );
+        
+        return this.processEmbeddingResult(response.data, modelInfo);
       } catch (error) {
-        logger.warn(`HuggingFace client failed, falling back to direct API call: ${error instanceof Error ? error.message : String(error)}`);
+        if (attempt === retries) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          if (axios.isAxiosError(error) && error.response) {
+            logger.error(`API Error ${error.response.status} for ${modelId}: ${JSON.stringify(error.response.data)}`);
+          } else {
+            logger.error(`Final attempt failed for ${modelId}: ${errorMessage}`);
+          }
+          throw new Error(`Failed to get embeddings after ${retries} attempts: ${errorMessage}`);
+        }
+        
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        logger.debug(`Retrying ${modelId} (attempt ${attempt + 1}/${retries})`);
       }
     }
     
-    // Fall back to direct API call
-    try {
-      const response = await axios.post(
-        `${this.apiBaseUrl}/${modelId}`,
-        { inputs: text },
-        {
-          headers: {
-            'Authorization': `Bearer ${this.options.token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
-      // Handle different response formats
-      if (Array.isArray(response.data)) {
-        if (Array.isArray(response.data[0])) {
-          return this.averageEmbeddings(response.data);
-        }
-        return response.data;
+    throw new Error('All embedding attempts failed');
+  }
+
+  /**
+   * Process embedding result from API based on model type
+   */
+  private processEmbeddingResult(result: any, modelInfo: ModelInfo): number[] {
+    // Handle CodeBERT/GraphCodeBERT response format
+    if (Array.isArray(result) && result.length > 0) {
+      // CodeBERT returns array of token embeddings
+      if (typeof result[0] === 'object' && Array.isArray(result[0])) {
+        // Average all token embeddings to get sentence embedding
+        return this.averageEmbeddings(result as number[][]);
       }
       
-      if (response.data && response.data.embeddings) {
-        return response.data.embeddings;
+      // If it's already a flat array of numbers
+      if (typeof result[0] === 'number') {
+        return result as number[];
       }
-      
-      throw new Error('Unexpected response format from HuggingFace API');
-    } catch (error) {
-      logger.error(`Error generating embeddings: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
     }
+    
+    // Handle sentence transformers response
+    if (result && Array.isArray(result.embeddings)) {
+      return result.embeddings;
+    }
+    
+    // Handle direct embedding response
+    if (typeof result === 'object' && result.embedding) {
+      return result.embedding;
+    }
+    
+    throw new Error(`Unexpected embedding result format for ${modelInfo.name}: ${JSON.stringify(result).substring(0, 200)}...`);
+  }
+
+  /**
+   * Preprocess text for better embedding quality
+   */
+  private preprocessText(text: string): string {
+    // Remove excessive whitespace but preserve code structure
+    let processed = text.replace(/\s+/g, ' ').trim();
+    
+    // Limit length to avoid API limits (CodeBERT works well with 512 tokens)
+    if (processed.length > 400) {
+      processed = processed.substring(0, 400);
+    }
+    
+    return processed;
+  }
+
+  /**
+   * Get dimension for a specific model
+   */
+  private getDimensionForModel(modelId: string): number {
+    return EMBEDDING_MODELS[modelId]?.embeddingDimension || this.options.dimension || DEFAULT_MODEL.embeddingDimension;
   }
 
   /**
    * Averages token embeddings to get a single vector
    */
   private averageEmbeddings(embeddings: number[][]): number[] {
+    if (embeddings.length === 0) {
+      throw new Error('Cannot average empty embeddings array');
+    }
+    
     const dim = embeddings[0].length;
     const avg = new Array(dim).fill(0);
     
@@ -223,11 +305,25 @@ export class EmbeddingManager {
    * Generates random embeddings as a fallback
    */
   private generateRandomEmbeddings(chunks: CodeChunk[]): CodeChunk[] {
-    const dimension = this.options.dimension || DEFAULT_MODEL.embeddingDimension;
+    const dimension = this.getDimensionForModel(this.options.primary);
     
     return chunks.map(chunk => ({
       ...chunk,
       embedding: new Array(dimension).fill(0).map(() => Math.random() * 2 - 1)
     }));
+  }
+
+  /**
+   * Get model information
+   */
+  getModelInfo(modelId?: string): ModelInfo {
+    return EMBEDDING_MODELS[modelId || this.options.primary] || DEFAULT_MODEL;
+  }
+
+  /**
+   * List available models
+   */
+  getAvailableModels(): ModelInfo[] {
+    return Object.values(EMBEDDING_MODELS);
   }
 }

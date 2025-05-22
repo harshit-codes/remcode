@@ -15,18 +15,11 @@ classDiagram
     catch()
     String()
     Error()
-    waitForIndexReady(): Promise<void>
-    for()
-    if()
-    catch()
-    String()
-    Promise()
-    Error()
     storeVectors(): Promise<void>
     if()
     Error()
     uuidv4()
-    Pinecone()
+    upsert()
     for()
     catch()
     String()
@@ -48,14 +41,8 @@ classDiagram
     catch()
     String()
     Error()
-    namespace()
     deleteVectorsByMetadata(): Promise<number>
     if()
-    Error()
-    if()
-    Error()
-    catch()
-    String()
     Error()
     listIndexes(): Promise<any[]>
     if()
@@ -66,6 +53,7 @@ classDiagram
     getIndexStats(): Promise<any>
     if()
     Error()
+    if()
     catch()
     String()
     Error()

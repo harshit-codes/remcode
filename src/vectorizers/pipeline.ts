@@ -24,10 +24,10 @@ export class VectorizationPipeline {
 
   constructor(options: VectorizationOptions) {
     this.options = {
-      // Default values
-      embeddingModel: 'microsoft/graphcodebert-base',
-      fallbackModel: 'sentence-transformers/all-MiniLM-L6-v2',
-      batchSize: 10,
+      // Default values with working models
+      embeddingModel: 'microsoft/codebert-base',
+      fallbackModel: 'microsoft/graphcodebert-base',
+      batchSize: 5, // Reduced for stability
       maxFileSize: 1024 * 1024, // 1MB
       includeExtensions: ['.ts', '.js', '.py', '.java', '.go', '.rb', '.php', '.cpp', '.c', '.cs', '.rs'],
       excludeExtensions: ['.min.js', '.bundle.js', '.test.js', '.spec.js'],
@@ -38,11 +38,10 @@ export class VectorizationPipeline {
         monolithic_files: 'sliding_window_with_overlap'
       },
       pineconeNamespace: 'default',
-      pineconeEnvironment: 'gcp-starter',
       ...options
     };
 
-    // Initialize managers
+    // Initialize managers with correct configurations
     this.chunkingManager = new ChunkingManager(this.options.chunkingStrategy!);
     
     this.embeddingManager = new EmbeddingManager({
@@ -50,14 +49,13 @@ export class VectorizationPipeline {
       fallback: this.options.fallbackModel!,
       batchSize: this.options.batchSize!,
       token: this.options.huggingfaceToken,
-      dimension: 768 // GraphCodeBERT dimension
+      dimension: 768 // CodeBERT dimension
     });
 
     this.storage = new PineconeStorage({
       apiKey: this.options.pineconeApiKey,
       indexName: this.options.pineconeIndexName,
       namespace: this.options.pineconeNamespace,
-      environment: this.options.pineconeEnvironment,
       dimension: 768,
       metric: 'cosine'
     });
@@ -85,7 +83,7 @@ export class VectorizationPipeline {
   /**
    * Process a single file and return its vectorized chunks
    */
-  async processFile(filePath: string): Promise<CodeChunk[]> {
+  async processFile(filePath: string, relativePath?: string): Promise<CodeChunk[]> {
     if (!this.initialized) {
       throw new Error('Pipeline not initialized. Call initialize() first.');
     }
@@ -97,7 +95,7 @@ export class VectorizationPipeline {
       const content = await fs.promises.readFile(filePath, 'utf8');
       
       // 2. Create file info
-      const fileInfo = this.createFileInfo(filePath);
+      const fileInfo = this.createFileInfo(filePath, relativePath);
       
       // 3. Determine chunking strategy based on file characteristics
       const strategy = this.determineChunkingStrategy(content, fileInfo);
@@ -110,18 +108,28 @@ export class VectorizationPipeline {
         return [];
       }
 
+      logger.debug(`Created ${chunks.length} chunks for file: ${filePath}`);
+
       // 5. Generate embeddings for chunks
       const embeddedChunks = await this.embeddingManager.embedChunks(chunks);
       
       // 6. Store vectors in Pinecone
-      const vectorData = embeddedChunks.map(chunk => ({
-        embedding: chunk.embedding!,
-        metadata: chunk.metadata
-      }));
+      const vectorData = embeddedChunks
+        .filter(chunk => chunk.embedding) // Only store chunks with embeddings
+        .map(chunk => ({
+          embedding: chunk.embedding!,
+          metadata: {
+            ...chunk.metadata,
+            processed_at: new Date().toISOString()
+          }
+        }));
       
-      await this.storage.storeVectors(vectorData);
+      if (vectorData.length > 0) {
+        await this.storage.storeVectors(vectorData);
+        logger.debug(`Stored ${vectorData.length} vectors for file: ${filePath}`);
+      }
       
-      logger.debug(`Successfully processed file: ${filePath} (${chunks.length} chunks)`);
+      logger.info(`Successfully processed file: ${filePath} (${chunks.length} chunks, ${vectorData.length} stored)`);
       return embeddedChunks;
       
     } catch (error) {
@@ -140,8 +148,18 @@ export class VectorizationPipeline {
     }
 
     try {
+      logger.info(`Searching for similar code with query: "${query.substring(0, 50)}..."`);
+      
       // 1. Generate embedding for the query
-      const queryChunk: CodeChunk = { content: query, metadata: { file_path: '', strategy: 'query', chunk_type: 'query' } };
+      const queryChunk: CodeChunk = { 
+        content: query, 
+        metadata: { 
+          file_path: '', 
+          strategy: 'query', 
+          chunk_type: 'query' 
+        } 
+      };
+      
       const embeddedQuery = await this.embeddingManager.embedChunks([queryChunk]);
       
       if (!embeddedQuery[0].embedding) {
@@ -156,6 +174,7 @@ export class VectorizationPipeline {
         this.options.pineconeNamespace
       );
 
+      logger.info(`Found ${results.length} similar code matches`);
       return results;
       
     } catch (error) {
@@ -174,6 +193,26 @@ export class VectorizationPipeline {
     }
 
     return await this.storage.getIndexStats(this.options.pineconeNamespace);
+  }
+
+  /**
+   * Delete vectors for a specific file (useful for incremental updates)
+   */
+  async deleteFileVectors(filePath: string): Promise<number> {
+    if (!this.initialized) {
+      throw new Error('Pipeline not initialized. Call initialize() first.');
+    }
+
+    try {
+      return await this.storage.deleteVectorsByMetadata(
+        { file_path: filePath },
+        this.options.pineconeNamespace
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`Error deleting vectors for file ${filePath}: ${errorMessage}`);
+      throw new Error(`Vector deletion failed: ${errorMessage}`);
+    }
   }
 
   // Private helper methods
@@ -226,7 +265,7 @@ export class VectorizationPipeline {
 
   private estimateComplexity(content: string): 'low' | 'medium' | 'high' {
     const lines = content.split('\n').length;
-    const functions = (content.match(/function|def |class /g) || []).length;
+    const functions = (content.match(/function|def |class |const |let |var /g) || []).length;
     const nesting = (content.match(/\{|\[|\(/g) || []).length;
     
     const complexityScore = (functions * 2) + (nesting * 0.1) + (lines * 0.01);

@@ -59,6 +59,8 @@ classDiagram
     if()
     Error()
     if()
+    Date()
+    if()
     catch()
     String()
     Error()
@@ -72,6 +74,13 @@ classDiagram
     Error()
     getStats(): Promise<any>
     if()
+    Error()
+    file()
+    deleteFileVectors(): Promise<number>
+    if()
+    Error()
+    catch()
+    String()
     Error()
     createFileInfo(): FileInfo
     determineChunkingStrategy(): string
