@@ -1,99 +1,138 @@
 # Contributing to Remcode
 
-## Quick Start
+Welcome to Remcode! We're excited to have you contribute to making AI assistants more codebase-aware. This guide will help you understand how to contribute effectively across different domains.
 
-1. Fork and clone the repo
-2. Run `npm install && npm run build`
-3. Create `.env` with your API keys
-4. Make changes and test with `npm run serve`
+## 🚀 Quick Start
 
-## Adding New MCP Tools
+1. **Fork and clone the repo**
+   ```bash
+   git clone https://github.com/your-username/remcode.git
+   cd remcode
+   ```
 
-### 1. Choose Handler Category
-- **GitHub** (`src/mcp/handlers/github.ts`) - Repository operations
-- **Pinecone** (`src/mcp/handlers/pinecone.ts`) - Vector operations
-- **HuggingFace** (`src/mcp/handlers/huggingface.ts`) - AI models
+2. **Install dependencies**
+   ```bash
+   npm install && npm run build
+   ```
 
-### 2. Add Tool Method
-```typescript
-private async handleYourTool(req: Request, res: Response, params?: any): Promise<void> {
-  const { param1, param2 } = params || req.body;
-  
-  if (!param1) {
-    res.status(400).json({ error: 'param1 is required' });
-    return;
-  }
+3. **Set up environment**
+   ```bash
+   cp .env.example .env
+   # Add your API keys
+   ```
 
-  try {
-    // Your implementation
-    const result = await this.doSomething(param1, param2);
-    res.status(200).json({ result });
-  } catch (error) {
-    logger.error(`Error: ${error.message}`);
-    res.status(500).json({ error: error.message });
-  }
-}
+4. **Run tests**
+   ```bash
+   npm test
+   npm run test:mcp-inspector
+   ```
+
+## 📂 Contributing Domains
+
+Choose your area of contribution:
+
+### 🤖 [MCP Tools Development](./docs/contributing/mcp-tools.md)
+**Perfect for:** Developers familiar with APIs, HTTP servers, and AI tool integration
+- Add new MCP tools for AI assistants
+- Improve existing tool functionality
+- Enhance tool specifications and documentation
+- **Skill Level:** Intermediate to Advanced
+
+### 🧠 [SWE Best Practices & Prompts](./docs/contributing/swe-prompts.md)
+**Perfect for:** Software engineers, prompt engineers, and AI practitioners
+- Improve software engineering prompts
+- Add context-aware scenarios
+- Enhance code quality guidelines
+- **Skill Level:** Beginner to Intermediate
+
+### 🔧 [External Integrations & Local Support](./docs/contributing/external-integrations.md)
+**Perfect for:** DevOps engineers, infrastructure developers, and integration specialists
+- Add support for new vector databases
+- Integrate additional embedding models
+- Support local deployments and custom setups
+- **Skill Level:** Advanced
+
+### ⚙️ [Core Logic Improvements](./docs/contributing/core-logic.md)
+**Perfect for:** Algorithm developers, ML engineers, and performance optimization experts
+- Enhance code analysis algorithms
+- Improve chunking strategies
+- Optimize embedding and vectorization
+- **Skill Level:** Advanced
+
+### 🚀 [Platform Extensions](./docs/contributing/platform-extensions.md)
+**Perfect for:** Full-stack developers, DevOps engineers, and product developers
+- Create standalone applications
+- Build IDE plugins
+- Develop custom frontends
+- **Skill Level:** Intermediate to Advanced
+
+### 🧪 [Testing & Quality Assurance](./docs/contributing/testing.md)
+**Perfect for:** QA engineers, test automation specialists, and reliability engineers
+- Expand test coverage
+- Add domain-specific test cases
+- Improve testing infrastructure
+- **Skill Level:** Beginner to Advanced
+
+## 📋 General Guidelines
+
+### Code Standards
+- **TypeScript**: All code must be properly typed
+- **ESLint**: Follow the existing linting rules
+- **Testing**: Include tests for all new functionality
+- **Documentation**: Update relevant documentation
+
+### Commit Message Format
+```
+type(scope): description
+
+feat(mcp): add new search_similar_patterns tool
+fix(setup): resolve GitHub token validation issue
+docs(contributing): update MCP tools guide
+test(search): add semantic search edge cases
 ```
 
-### 3. Register Tool
-Add to both handler methods:
-```typescript
-// In handleRequest
-case 'your-tool':
-  await this.handleYourTool(req, res);
-  break;
+### Pull Request Process
+1. Create a feature branch: `git checkout -b feature/your-feature-name`
+2. Make your changes with tests
+3. Run the full test suite: `npm test`
+4. Test with MCP Inspector: `npm run test:mcp-inspector`
+5. Update documentation as needed
+6. Submit a pull request with clear description
 
-// In handleToolRequest  
-case 'service_your_tool':
-  await this.handleYourTool(req, res, parameters);
-  break;
-```
+### Review Criteria
+- **Functionality**: Does it work as intended?
+- **Tests**: Are there comprehensive test cases?
+- **Documentation**: Is it properly documented?
+- **Performance**: Does it maintain/improve performance?
+- **Security**: Are there any security implications?
 
-### 4. Add to MCP Spec
-In `src/mcp/index.ts`, add to tools array:
-```typescript
-{
-  name: 'service_your_tool',
-  description: 'Clear description of what this tool does',
-  parameters: {
-    param1: { type: 'string', description: 'Required parameter' },
-    param2: { type: 'string', description: 'Optional parameter', optional: true }
-  }
-}
-```
+## 🏆 Recognition
 
-## Available MCP Tools
+Contributors will be recognized in:
+- README.md acknowledgments
+- Release notes for significant contributions
+- GitHub contributor graphs
+- Special mentions for innovative features
 
-### GitHub Tools
-- `github_get_repo` - Get repository metadata
-- `github_list_files` - List files in repository  
-- `github_get_file` - Get file contents
-- `github_search_code` - Search code in repository
+## 🤝 Community
 
-### Pinecone Tools  
-- `pinecone_query` - Search vectors
-- `pinecone_list_indexes` - List available indexes
+- **Discussions**: Use GitHub Discussions for questions
+- **Issues**: Report bugs and request features via GitHub Issues
+- **Discord**: Join our developer community [link to be added]
 
-### HuggingFace Tools
-- `huggingface_embed_code` - Generate code embeddings
-- `huggingface_embed_query` - Generate query embeddings
-- `huggingface_list_models` - List embedding models
+## 📄 Legal
 
-### Remcode Tools
-- `remcode_status` - Check processing status
-- `remcode_search` - Semantic code search
+By contributing to Remcode, you agree that your contributions will be licensed under the MIT License.
 
-## Testing
-```bash
-# Test your tool
-curl -X POST http://localhost:3000/v1/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"tool": "your_tool", "parameters": {"param1": "test"}}'
-```
+---
 
-## Best Practices
-- Use clear, descriptive tool names
-- Validate all required parameters
-- Return consistent error formats
-- Add proper logging
-- Test manually before submitting
+## Domain-Specific Guides
+
+Click on any domain above to access detailed contribution guidelines, including:
+- Technical requirements and setup
+- Step-by-step implementation guides
+- Testing requirements and examples
+- Code style and architectural patterns
+- Example contributions and templates
+
+Thank you for contributing to Remcode! 🚀

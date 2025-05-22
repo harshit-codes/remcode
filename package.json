@@ -9,6 +9,13 @@
   "scripts": {
     "start": "node bin/remcode.js",
     "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:mcp": "jest tests/mcp",
+    "test:e2e": "jest tests/e2e",
+    "test:mcp-inspector": "ts-node tests/mcp/run-inspector.ts",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint .",
     "build": "tsc",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
@@ -62,7 +69,7 @@
     "nodemon": "^3.0.1",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=16"

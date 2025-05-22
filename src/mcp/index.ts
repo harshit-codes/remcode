@@ -10,6 +10,11 @@ import cors from 'cors';
 import { PineconeMCPHandler } from './handlers/pinecone';
 import { GitHubMCPHandler } from './handlers/github';
 import { HuggingFaceMCPHandler } from './handlers/huggingface';
+import { SetupMCPHandler } from './handlers/setup';
+import { SearchMCPHandler } from './handlers/search';
+import { ProcessingMCPHandler } from './handlers/processing';
+import { RepositoryMCPHandler } from './handlers/repository';
+import { RemcodeMCPHandler } from './handlers/remcode';
 import { getLogger } from '../utils/logger';
 
 const logger = getLogger('MCP-Server');
@@ -27,14 +32,19 @@ export class MCPServer {
   private app: express.Application;
   private port: number;
   private host: string;
-  private options: MCPServerOptions;
+  public options: MCPServerOptions;
   private pineconeHandler: PineconeMCPHandler;
   private githubHandler: GitHubMCPHandler;
   private huggingfaceHandler: HuggingFaceMCPHandler;
+  private setupHandler: SetupMCPHandler;
+  private searchHandler: SearchMCPHandler;
+  private processingHandler: ProcessingMCPHandler;
+  private repositoryHandler: RepositoryMCPHandler;
+  private remcodeHandler: RemcodeMCPHandler;
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
-    this.port = options.port || process.env.MCP_PORT ? parseInt(process.env.MCP_PORT) : 3000;
+    this.port = options.port || (process.env.MCP_PORT ? parseInt(process.env.MCP_PORT) : 3000);
     this.host = options.host || process.env.MCP_HOST || 'localhost';
     this.options = {
       pineconeApiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
@@ -45,16 +55,23 @@ export class MCPServer {
     
     // Initialize handlers
     this.pineconeHandler = new PineconeMCPHandler({
-      apiKey: this.options.pineconeApiKey
+      apiKey: this.options.pineconeApiKey || ''
     });
     
     this.githubHandler = new GitHubMCPHandler({
-      token: this.options.githubToken
+      token: this.options.githubToken || ''
     });
     
     this.huggingfaceHandler = new HuggingFaceMCPHandler({
-      token: this.options.huggingfaceToken
+      token: this.options.huggingfaceToken || ''
     });
+
+    // Initialize new handlers
+    this.setupHandler = new SetupMCPHandler();
+    this.searchHandler = new SearchMCPHandler();
+    this.processingHandler = new ProcessingMCPHandler();
+    this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
+    this.remcodeHandler = new RemcodeMCPHandler();
     
     this.configureServer();
   }
@@ -81,6 +98,74 @@ export class MCPServer {
         version: '0.1.0',
         description: 'Remcode Model Context Protocol server for code analysis and vectorization',
         tools: [
+          {
+            name: 'setup_repository',
+            description: 'Automated first-time setup of remcode for a repository',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              confirm: { type: 'boolean', description: 'Confirm setup (default: false)', optional: true }
+            }
+          },
+          {
+            name: 'get_repository_status',
+            description: 'Check if repository is initialized and get processing status',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' }
+            }
+          },
+          {
+            name: 'list_repositories',
+            description: 'Show accessible GitHub repositories',
+            parameters: {}
+          },
+          {
+            name: 'search_code',
+            description: 'Semantic search across vectorized codebase',
+            parameters: {
+              query: { type: 'string', description: 'Natural language search query' },
+              topK: { type: 'number', description: 'Number of results to return (default: 10)', optional: true },
+              filters: { type: 'object', description: 'Search filters', optional: true }
+            }
+          },
+          {
+            name: 'get_code_context',
+            description: 'Get surrounding context for specific code snippets',
+            parameters: {
+              filePath: { type: 'string', description: 'Path to the file' },
+              startLine: { type: 'number', description: 'Start line number' },
+              endLine: { type: 'number', description: 'End line number' }
+            }
+          },
+          {
+            name: 'trigger_reprocessing',
+            description: 'Force full or incremental reprocessing',
+            parameters: {
+              type: { type: 'string', description: 'Processing type: incremental or full (default: incremental)', optional: true },
+              force: { type: 'boolean', description: 'Force reprocessing (default: false)', optional: true }
+            }
+          },
+          {
+            name: 'get_processing_status',
+            description: 'Check GitHub Actions workflow status',
+            parameters: {}
+          },
+          {
+            name: 'default_prompt',
+            description: 'Auto-injected SWE best practices and guidelines',
+            parameters: {
+              scenario: { type: 'string', description: 'Development scenario (optional)', optional: true },
+              context: { type: 'string', description: 'Additional context (optional)', optional: true }
+            }
+          },
+          {
+            name: 'get_scenarios',
+            description: 'Context-aware system prompt selection',
+            parameters: {
+              userInput: { type: 'string', description: 'User input to detect scenario from (optional)', optional: true }
+            }
+          },
           {
             name: 'github_get_repo',
             description: 'Get repository metadata from GitHub',
@@ -188,6 +273,24 @@ export class MCPServer {
         return this.githubHandler.handleToolRequest(req, res);
       } else if (tool && tool.startsWith('huggingface_')) {
         return this.huggingfaceHandler.handleToolRequest(req, res);
+      } else if (tool === 'setup_repository') {
+        return this.setupHandler.handleSetupRepository(req, res, req.body.parameters);
+      } else if (tool === 'search_code') {
+        return this.searchHandler.handleSearchCode(req, res, req.body.parameters);
+      } else if (tool === 'get_code_context') {
+        return this.searchHandler.handleGetCodeContext(req, res, req.body.parameters);
+      } else if (tool === 'trigger_reprocessing') {
+        return this.processingHandler.handleTriggerReprocessing(req, res, req.body.parameters);
+      } else if (tool === 'get_processing_status') {
+        return this.processingHandler.handleGetProcessingStatus(req, res, req.body.parameters);
+      } else if (tool === 'get_repository_status') {
+        return this.repositoryHandler.handleGetRepositoryStatus(req, res, req.body.parameters);
+      } else if (tool === 'list_repositories') {
+        return this.repositoryHandler.handleListRepositories(req, res, req.body.parameters);
+      } else if (tool === 'default_prompt') {
+        return this.remcodeHandler.handleDefaultPrompt(req, res, req.body.parameters);
+      } else if (tool === 'get_scenarios') {
+        return this.remcodeHandler.handleGetScenarios(req, res, req.body.parameters);
       }
       
       res.status(400).json({ error: 'Unknown tool type' });
