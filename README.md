@@ -1,197 +1,367 @@
 # Remcode
 
-A code vectorization and analysis tool for better understanding of codebases. Remcode helps developers create semantic search capabilities through vector embeddings, analyze code quality, and understand dependencies.
+**AI-Powered Codebase Understanding Tool**
+
+Remcode transforms any codebase into an intelligent, searchable knowledge base through automated vector embeddings and semantic search. Using GitHub Actions for processing and the Model Context Protocol (MCP) for AI integration, Remcode enables natural language queries about your code.
 
 ## 🚀 Key Features
 
-- **Code Analysis**: Generate reports about code quality and structure
-- **Code Vectorization**: Create vector embeddings of your code for semantic search
-- **MCP Server**: Model Context Protocol integration for AI assistants to interact with codebases
+- **🤖 Zero-Setup AI Integration**: Automatic processing via GitHub Actions - no local setup required
+- **🔍 Semantic Code Search**: Ask questions in natural language, get relevant code snippets
+- **📊 Incremental Updates**: Only processes changed files for efficient continuous integration
+- **🔗 MCP Protocol Support**: Direct integration with AI assistants like Claude, ChatGPT, and others
+- **⚡ GitHub-Powered Processing**: Uses GitHub's compute for analysis, chunking, and vectorization
 
-## 📋 Project Overview
+## 🏗️ Architecture Overview
 
-Remcode implements an end-to-end process for code analysis and vectorization via the Model Context Protocol (MCP) server:
+```
+Developer pushes code → GitHub Actions → Analysis & Vectorization → Pinecone Storage
+                                                                          ↓
+   AI Assistant ← MCP Server ← Developer's IDE ← Semantic Search ← Vector Database
+```
 
-1. **Code Repository Access & Analysis**: Using the GitHub API to access repository files and analyze code structure.
-2. **Code Chunking**: Breaking code files into meaningful segments based on code complexity.
-3. **Embedding Generation**: Converting code chunks to vector embeddings using models like GraphCodeBERT via HuggingFace.
-4. **Vector Storage**: Storing embeddings in Pinecone for efficient similarity search.
-5. **Semantic Search**: Finding code based on natural language queries through vector similarity.
+## 🔄 Complete Workflow
+
+### **Phase 1: Automated Setup (GitHub Actions)**
+When you first push to your repository:
+
+1. **Automatic Detection**: GitHub Action detects no `.remcode` file exists
+2. **Repository Analysis**: Analyzes code structure, languages, and complexity
+3. **Smart Chunking**: Breaks code into semantic chunks (functions, classes, modules)
+4. **Vector Generation**: Creates embeddings using GraphCodeBERT via HuggingFace
+5. **Database Storage**: Stores vectors in Pinecone with metadata
+6. **Configuration Creation**: Generates `.remcode` file with project settings
+
+### **Phase 2: Continuous Updates (Incremental Processing)**
+On subsequent pushes:
+
+1. **Change Detection**: Compares current commit with last processed commit
+2. **File Analysis**: Identifies added, modified, and deleted files
+3. **Selective Processing**: Only processes changed code files
+4. **Vector Updates**: Updates, adds, or removes vectors as needed
+5. **State Management**: Updates `.remcode` with latest processing status
+
+### **Phase 3: AI-Powered Code Assistance (MCP Integration)**
+During development:
+
+1. **Local MCP Server**: Developer runs `remcode serve` locally
+2. **AI Assistant Connection**: AI tools connect via MCP protocol
+3. **Semantic Queries**: Natural language questions about the codebase
+4. **Intelligent Responses**: AI gets context-aware code snippets and explanations
 
 ## ⚙️ Prerequisites
 
-- Node.js (v16+)
-- **Your own API keys** for:
-  - Pinecone - [Get one here](https://www.pinecone.io/)
-  - GitHub API Token (for GitHub repo access)
-  - HuggingFace API Token (for embedding models)
+- GitHub repository (public or private)
+- **Required API keys** (stored as GitHub Secrets):
+  - **Pinecone API Key** - [Get one here](https://www.pinecone.io/)
+  - **HuggingFace Token** - [Get one here](https://huggingface.co/settings/tokens)
+  - **GitHub Token** - Automatically provided by GitHub Actions
 
-## 🔑 Configuration
+## 🚀 Quick Start
 
-Create a `.env` file in the project root with your personal API keys:
+### 1. **Repository Setup** (One-time)
 
+Add the required API keys to your GitHub repository secrets:
+
+1. Go to your GitHub repository
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**
+3. Add these repository secrets:
+   ```
+   PINECONE_API_KEY=your_pinecone_key
+   HUGGINGFACE_TOKEN=your_huggingface_token
+   ```
+
+### 2. **Add GitHub Action** (One-time)
+
+Create `.github/workflows/remcode.yml` in your repository:
+
+```yaml
+# Copy the workflow from our GitHub Actions artifact below
 ```
-GITHUB_TOKEN=your_github_token
-PINECONE_API_KEY=your_pinecone_api_key
-HUGGINGFACE_TOKEN=your_huggingface_token
-```
 
-**Important**: 
-- Never commit your API keys to the repository!
-- The MCP server requires you to provide your own API keys.
-- Each developer must create their own `.env` file locally.
+### 3. **Initialize Remcode** (Automatic)
 
-## 🚀 Getting Started
-
-### Local Development
+Simply push to your main branch:
 
 ```bash
-# Clone the repository
+git add .
+git commit -m "Add Remcode workflow"
+git push origin main
+```
+
+The GitHub Action will automatically:
+- ✅ Analyze your entire codebase
+- ✅ Create optimized code chunks  
+- ✅ Generate vector embeddings
+- ✅ Store vectors in Pinecone
+- ✅ Create `.remcode` configuration file
+
+### 4. **Start Using AI Assistance**
+
+On your local machine:
+
+```bash
+# Install Remcode globally
+npm install -g remcode
+
+# Create local .env with your tokens
+echo "PINECONE_API_KEY=your_pinecone_key
+HUGGINGFACE_TOKEN=your_huggingface_token
+GITHUB_TOKEN=your_github_token" > .env
+
+# Start the MCP server
+remcode serve --port 3000
+```
+
+### 5. **Connect AI Assistant**
+
+Configure your AI assistant (Claude, ChatGPT, etc.) to connect to:
+```
+http://localhost:3000/v1/mcp
+```
+
+### 6. **Ask Questions About Your Code**
+
+```
+"How does user authentication work in this codebase?"
+"Show me the error handling patterns used"
+"Where is the database connection logic?"
+"Find functions related to payment processing"
+```
+
+## 🔧 How It Works
+
+### **Automated Processing Pipeline**
+
+1. **Code Analysis** (GitHub Actions)
+   - Scans repository for code files
+   - Identifies languages, frameworks, and patterns
+   - Calculates complexity metrics
+   - Determines optimal chunking strategies
+
+2. **Smart Chunking** (GitHub Actions)
+   - **Function-level**: For clean, well-structured code
+   - **Module-level**: For standard complexity code
+   - **Sliding-window**: For complex or monolithic files
+   - Preserves semantic context and relationships
+
+3. **Vector Generation** (GitHub Actions + HuggingFace)
+   - Uses GraphCodeBERT for code-specific embeddings
+   - Generates 768-dimensional vectors
+   - Maintains code semantics and context
+   - Batch processing for efficiency
+
+4. **Vector Storage** (GitHub Actions + Pinecone)
+   - Stores vectors with rich metadata
+   - Organizes by file, function, and context
+   - Enables fast similarity search
+   - Supports incremental updates
+
+5. **Semantic Search** (Local MCP Server)
+   - Converts natural language queries to vectors
+   - Performs similarity search in Pinecone
+   - Returns ranked, relevant code snippets
+   - Provides context and explanations
+
+### **Incremental Update System**
+
+Remcode optimizes for ongoing development:
+
+- **Tracks Changes**: Monitors Git commits since last processing
+- **Selective Processing**: Only analyzes modified files
+- **Vector Updates**: Adds, updates, or removes vectors as needed
+- **Efficient Storage**: Minimizes redundant processing and storage
+
+### **Example Query Flow**
+
+```
+User: "How does authentication work?"
+  ↓
+MCP Server: Converts query to vector embedding
+  ↓
+Pinecone: Finds similar code vectors
+  ↓
+MCP Server: Retrieves relevant code snippets
+  ↓
+AI Assistant: Provides explanation with code examples
+```
+
+## 📊 Real-World Usage Examples
+
+### **For New Team Members**
+```
+"What are the main architectural patterns in this codebase?"
+"Show me how data flows through the application"
+"Where should I look to understand the API structure?"
+```
+
+### **For Code Reviews**
+```
+"Find similar error handling patterns to this function"
+"Show me other places where we validate user input" 
+"Are there examples of how we handle database transactions?"
+```
+
+### **For Debugging**
+```
+"Where might this type of error be coming from?"
+"Show me functions that interact with the payment service"
+"Find code that handles timeout scenarios"
+```
+
+### **For Feature Development**
+```
+"How do we typically implement caching in this codebase?"
+"Show me examples of API endpoint implementations"
+"Where do we handle user permissions?"
+```
+
+## 🔧 Configuration
+
+### **.remcode File Structure**
+
+After initialization, your repository will contain a `.remcode` file:
+
+```json
+{
+  "version": "0.1.0",
+  "initialized": "2025-05-22T10:30:45Z",
+  "repository": {
+    "name": "my-awesome-project",
+    "owner": "my-username",
+    "url": "https://github.com/my-username/my-awesome-project"
+  },
+  "resources": {
+    "pinecone": {
+      "index": "remcode-my-awesome-project",
+      "namespace": "main"
+    },
+    "huggingface": {
+      "model": "microsoft/graphcodebert-base",
+      "embedding_dimension": 768
+    }
+  },
+  "lastCommit": "abc123...",
+  "lastUpdate": "2025-05-22T10:35:20Z",
+  "stats": {
+    "filesProcessed": 143,
+    "chunksCreated": 426,
+    "vectorsStored": 426
+  }
+}
+```
+
+## 🛠️ Advanced Usage
+
+### **Manual Reprocessing**
+
+To force a complete reprocessing of your codebase:
+
+1. Go to your GitHub repository
+2. Navigate to **Actions** tab
+3. Select **Remcode Processing** workflow
+4. Click **Run workflow**
+5. Check **Force full reprocessing**
+6. Click **Run workflow**
+
+### **Branch-Specific Processing**
+
+Remcode automatically processes pushes to main branches (`main`, `master`, `develop`). For other branches:
+
+```yaml
+# Modify .github/workflows/remcode.yml
+on:
+  push:
+    branches: [ main, master, develop, feature/* ]  # Add your patterns
+```
+
+### **Local Development**
+
+For local testing and development:
+
+```bash
+# Clone and setup
 git clone https://github.com/harshit-codes/remcode.git
 cd remcode
-
-# Install dependencies
 npm install
+npm run build
 
-# Start the MCP server in development mode
+# Local MCP server
 npm run serve
 ```
 
-## 🔍 MCP Server
+## 🔍 MCP Integration
 
-The MCP server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification, allowing AI assistants to interact with:
-- Codebase analysis tools
-- Code vectorization
-- Semantic search capabilities
+### **Available MCP Tools**
 
-```bash
-# Start the MCP server
-npm run serve
+- **Code Search Tools**:
+  - `search_code`: Semantic search across the codebase
+  - `find_functions`: Find specific functions or methods
+  - `get_context`: Get surrounding context for code snippets
 
-# Server available at: http://localhost:3000/v1/mcp
-# MCP spec available at: http://localhost:3000/v1/mcp/spec
+- **Repository Tools**:
+  - `get_file_summary`: Get AI-generated summaries of files
+  - `list_similar_files`: Find files with similar functionality
+  - `analyze_dependencies`: Understand code dependencies
+
+### **Connecting AI Assistants**
+
+The MCP server provides a standard interface for AI assistants:
+
 ```
-
-### MCP Endpoints
-
-The server exposes these main tools:
-
-- **GitHub Tools**:
-  - `github_get_repo`: Get repository metadata
-  - `github_list_files`: List files in a repository
-  - `github_get_file`: Get file contents
-  - `github_search_code`: Search code in repositories
-
-- **HuggingFace Tools**:
-  - `huggingface_embed_code`: Generate embeddings for code
-  - `huggingface_embed_query`: Generate embeddings for search queries
-  - `huggingface_list_models`: List available embedding models
-
-- **Pinecone Tools**:
-  - `pinecone_query`: Search for similar code
-  - `pinecone_upsert`: Add vectors to the database
-  - `pinecone_delete`: Remove vectors from the database
-  - `pinecone_list_indexes`: List available indexes
-
-## 🧪 Testing
-
-The MCP server implements the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification and can be tested using the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) tool.
-
-```bash
-# Start the MCP server
-npm run serve
-
-# Use the MCP Inspector in your browser
-# Visit: https://inspector.modelcontextprotocol.io/
+Endpoint: http://localhost:3000/v1/mcp
+Protocol: Model Context Protocol v1.0
+Authentication: API key-based (your tokens)
 ```
 
 ## 📦 Tech Stack
 
-- **Node.js & TypeScript**: Core runtime
-- **GraphCodeBERT**: For code embeddings via HuggingFace
-- **Pinecone**: For vector database storage
-- **Express.js**: For MCP server
+- **GitHub Actions**: Automated processing and CI/CD
+- **Node.js & TypeScript**: Core runtime and tooling
+- **GraphCodeBERT**: Code-specific embeddings via HuggingFace
+- **Pinecone**: Scalable vector database storage
+- **Model Context Protocol**: AI assistant integration
+- **Express.js**: Local MCP server
 
-## 🛣️ End-to-End Process
+## 🔒 Security & Privacy
 
-### 1. Code Repository Access and Analysis
-**Tools**: GitHub API (via GitHub handler)
-- AI assistant sends an MCP request to analyze a GitHub repository
-- MCP server uses the GitHub handler to:
-  - Clone/access the repository
-  - List files and directories
-  - Retrieve file contents
-- Repository structure is analyzed (languages, modules, files)
-- Code quality metrics are computed
+- **API Keys**: Stored securely in GitHub Secrets
+- **Code Privacy**: Processing happens in your GitHub environment
+- **Vector Storage**: Your code vectors are isolated in your Pinecone account
+- **Local MCP**: Server runs on your machine, you control access
 
-### 2. Code Chunking
-**Tools**: Internal chunking logic (ChunkingManager)
-- Code files are broken down into meaningful chunks
-- Different chunking strategies applied based on file complexity:
-  - Function-level for clean code
-  - Module-level for standard complexity
-  - Sliding window for monolithic files
+## ⚡ Performance & Efficiency
 
-### 3. Embedding Generation
-**Tools**: HuggingFace API (via HuggingFace handler)
-- Text chunks are converted to vector embeddings using code-specific models:
-  - GraphCodeBERT (primary model)
-  - CodeBERT (fallback model)
-- Embeddings capture the semantic meaning of the code segments
-- Batch processing for improved performance
-- Fallback models ensure reliability
+- **Incremental Updates**: Only processes changed files
+- **Batch Processing**: Efficient embedding generation
+- **Smart Chunking**: Optimized for code semantics
+- **Caching**: GitHub Actions cache for faster builds
+- **Selective Processing**: Ignores non-code files automatically
 
-### 4. Vector Storage
-**Tools**: Pinecone API (via Pinecone handler)
-- Vector embeddings are stored in Pinecone vector database
-- Metadata (file path, language, etc.) is attached to each vector
-- Indexes are created for efficient similarity search
-- Advanced operations: vector deletion, namespace management, metadata filtering
+## 🚀 Roadmap
 
-### 5. Semantic Search
-**Tools**: Pinecone API + HuggingFace API
-- User submits a natural language query via MCP
-- Query is converted to vector embedding (HuggingFace)
-- Similar code vectors are retrieved (Pinecone)
-- Results are ranked and returned to the user
-- Advanced querying with filters and namespaces
+### **Current (v0.1.0)**
+- ✅ GitHub Actions automation
+- ✅ Incremental processing
+- ✅ MCP server implementation
+- ✅ Basic semantic search
 
-## 🔒 Security & Performance
+### **Planned (v0.2.0)**
+- 🔄 Multi-language support enhancement
+- 🔄 Code change impact analysis  
+- 🔄 Advanced query capabilities
+- 🔄 Performance optimizations
 
-The MCP server implementation includes:
-- Endpoint validation and consistent error responses
-- Request logging and monitoring
-- Proper startup and shutdown procedures
-- CORS configuration options
-- Health check endpoints
-- Optimized batch operations for performance
+### **Future (v1.0.0)**
+- 🔮 Real-time code suggestions
+- 🔮 Integration with popular IDEs
+- 🔮 Team collaboration features
+- 🔮 Enterprise deployment options
 
-## 📝 Implementation Roadmap
+## 🤝 Contributing
 
-### Phase 1: Core Functionality
-- [x] Add HuggingFace MCP handler implementation
-- [x] Implement vector storage with proper metadata
-- [x] Add query functionality with similarity search
-- [ ] Connect repository analysis to GitHub handler
-- [ ] Add deep file analysis capabilities
-- [ ] Enhance code search with better context
-
-### Phase 2: Advanced Features
-- [ ] Add repository comparison capabilities
-- [ ] Implement code quality analysis integration
-- [ ] Add advanced querying capabilities (filters, namespaces)
-- [ ] Implement bulk operations and batching
-- [ ] Add model caching and token optimization
-- [ ] Add authentication and rate limiting
-
-### Phase 3: Testing & Optimization
-- [ ] Create end-to-end tests for the MCP server
-- [ ] Test with real GitHub repositories
-- [ ] Test embedding generation with real HuggingFace models
-- [ ] Test vector storage and retrieval with Pinecone
-- [ ] Optimize performance for large codebases
-- [ ] Create automated test suite
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## 📄 License
 
-MIT License
+MIT License - see [LICENSE](LICENSE) for details.

@@ -117,6 +117,24 @@ export class MCPServer {
             }
           },
           {
+            name: 'remcode_status',
+            description: 'Check the status of remcode processing for a repository',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' }
+            }
+          },
+          {
+            name: 'remcode_search',
+            description: 'Search for code using natural language queries',
+            parameters: {
+              query: { type: 'string', description: 'Natural language search query' },
+              topK: { type: 'number', description: 'Number of results to return (default: 5)', optional: true },
+              owner: { type: 'string', description: 'Repository owner (optional)', optional: true },
+              repo: { type: 'string', description: 'Repository name (optional)', optional: true }
+            }
+          },
+          {
             name: 'pinecone_query',
             description: 'Search for vectors in Pinecone',
             parameters: {

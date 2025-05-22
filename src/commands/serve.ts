@@ -37,6 +37,28 @@ export function serveCommand(program: Command): void {
           huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN,
           corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS
         });
+
+        // Validate required tokens
+        if (!server.options.githubToken) {
+          spinner.fail('GitHub token is required');
+          console.error(chalk.red('Error: GitHub token is required for MCP server operation'));
+          console.error(chalk.yellow('Set GITHUB_TOKEN environment variable or use --github-token option'));
+          process.exit(1);
+        }
+
+        if (!server.options.pineconeApiKey) {
+          spinner.fail('Pinecone API key is required');
+          console.error(chalk.red('Error: Pinecone API key is required for vector operations'));
+          console.error(chalk.yellow('Set PINECONE_API_KEY environment variable or use --pinecone-key option'));
+          process.exit(1);
+        }
+
+        if (!server.options.huggingfaceToken) {
+          spinner.fail('HuggingFace token is required');
+          console.error(chalk.red('Error: HuggingFace token is required for embedding generation'));
+          console.error(chalk.yellow('Set HUGGINGFACE_TOKEN environment variable or use --huggingface-token option'));
+          process.exit(1);
+        }
         
         // Start the server
         await server.start();
