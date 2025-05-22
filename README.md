@@ -231,6 +231,36 @@ After initialization, your repository will contain a `.remcode` file:
 - ✅ Basic semantic search
 - ✅ Automated setup on first tool call
 
+### **Implementation Priorities**
+- 🔄 **Complete Vectorization Engine**: Implement production-ready chunking and embedding strategies
+- 🔄 **Pinecone Integration**: Finalize production Pinecone client for vector storage and retrieval
+- 🔄 **Semantic Search Capabilities**: Complete the semantic search implementation with actual embeddings
+- 🔄 **Code Similarity Analysis**: Implement advanced code pattern detection and similarity scoring
+- 🔄 **MCP Handler Completion**: Finalize all MCP handler implementations for full AI assistant integration
+
+### **Implementation Roadmap (v0.1.x)**
+
+#### Phase 1: Core Vectorization Infrastructure
+- [ ] **P1-1: Pinecone Client** - Complete Pinecone vector database integration in `src/vectorizers/storage/pinecone.ts`
+- [ ] **P1-2: Embedding Manager** - Implement actual embedding generation in `src/vectorizers/embedders/manager.ts`
+- [ ] **P1-3: Chunking Manager** - Replace stub in `src/vectorizers/chunkers/manager.ts` with production implementation
+
+#### Phase 2: Search Capabilities
+- [ ] **P2-1: Semantic Search** - Implement actual vector search in `src/search/semantic.ts`
+- [ ] **P2-2: Similarity Analysis** - Add code pattern detection in `src/search/similarity.ts`
+
+#### Phase 3: MCP Handler Implementation
+- [ ] **P3-1: Search Handlers** - Complete search and context handlers in `src/mcp/handlers/search.ts`
+- [ ] **P3-2: Processing Handlers** - Implement processing functionality in `src/mcp/handlers/processing.ts`
+- [ ] **P3-3: Repository Handlers** - Finalize repository integration in `src/mcp/handlers/repository.ts`
+- [ ] **P3-4: Remaining Handlers** - Complete all other handlers in `src/mcp/handlers/`
+
+#### Phase 4: Testing & Quality Assurance
+- [ ] **P4-1: Unit Tests** - Expand unit tests to cover all implemented components
+- [ ] **P4-2: Integration Tests** - Add tests for complete workflows from processing to search
+- [ ] **P4-3: MCP Inspector Tests** - Create comprehensive test suite for all MCP tools
+- [ ] **P4-4: Performance Benchmarks** - Add tests to ensure performance meets targets
+
 ### **Planned (v0.2.0)**
 - 🔄 **Code Optimization MCP Tools**: AI assistant tools to help write code optimized for chunking, embedding, and vectorization
 - 🔄 **SWE Best Practices Auto-Selection**: Basic implementation of context-aware best practices guidance

@@ -1,116 +1,39 @@
+# Remcode workflow version: 0.2.0
+# Generated: 2025-05-22T10:44:20.088Z
 name: Remcode Processing
 
 on:
   push:
     branches: [ main, master, develop ]
-    paths-ignore:
-      - '.remcode'
-      - 'README.md'
-      - '.github/**'
-  
   workflow_dispatch:
     inputs:
       force_full_reprocess:
-        description: 'Force full reprocessing (ignore .remcode state)'
+        description: 'Force full reprocessing'
         type: boolean
         default: false
 
-  schedule:
-    - cron: '0 2 * * 0'  # Every Sunday at 2 AM UTC
-
-env:
-  NODE_VERSION: '18'
-  REMCODE_INDEX_PREFIX: 'remcode'
-
 jobs:
-  determine-processing:
+  process:
     runs-on: ubuntu-latest
-    outputs:
-      needs_processing: ${{ steps.check.outputs.needs_processing }}
-      processing_type: ${{ steps.check.outputs.processing_type }}
-      changed_files_count: ${{ steps.check.outputs.changed_files_count }}
-      index_name: ${{ steps.check.outputs.index_name }}
-    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Determine processing requirements
-      id: check
-      run: |
-        echo "🔍 Determining processing requirements..."
-        
-        # Generate unique index name based on repo
-        REPO_NAME="${GITHUB_REPOSITORY##*/}"
-        INDEX_NAME="${REMCODE_INDEX_PREFIX}-${REPO_NAME,,}"
-        echo "index_name=${INDEX_NAME}" >> $GITHUB_OUTPUT
-        
-        # Check if .remcode exists and is valid
-        if [ -f ".remcode" ]; then
-          echo "📄 Found .remcode file"
-          
-          if jq empty .remcode 2>/dev/null; then
-            LAST_COMMIT=$(jq -r '.lastCommit // ""' .remcode)
-            echo "📋 Last processed commit: ${LAST_COMMIT}"
-          else
-            echo "⚠️  Invalid .remcode file, will reinitialize"
-            LAST_COMMIT=""
-          fi
-        else
-          echo "🆕 No .remcode file found - initialization needed"
-          LAST_COMMIT=""
-        fi
-        
-        CURRENT_COMMIT="${GITHUB_SHA}"
-        echo "📋 Current commit: ${CURRENT_COMMIT}"
-        
-        # Determine processing type
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.force_full_reprocess }}" == "true" ]; then
-          echo "🔄 Manual full reprocessing requested"
-          PROCESSING_TYPE="full"
-          NEEDS_PROCESSING="true"
-          CHANGED_FILES_COUNT="all"
-        elif [ "${{ github.event_name }}" == "schedule" ]; then
-          echo "⏰ Scheduled full reprocessing"
-          PROCESSING_TYPE="full"
-          NEEDS_PROCESSING="true"
-          CHANGED_FILES_COUNT="all"
-        elif [ -z "$LAST_COMMIT" ]; then
-          echo "🚀 Initialization required"
-          PROCESSING_TYPE="initialization"
-          NEEDS_PROCESSING="true"
-          CHANGED_FILES_COUNT="all"
-        elif [ "$LAST_COMMIT" == "$CURRENT_COMMIT" ]; then
-          echo "✅ No changes detected"
-          PROCESSING_TYPE="none"
-          NEEDS_PROCESSING="false"
-          CHANGED_FILES_COUNT="0"
-        else
-          echo "🔍 Checking for incremental changes..."
-          
-          # Get changed files since last commit
-          CHANGED_FILES=$(git diff --name-only "${LAST_COMMIT}" "${CURRENT_COMMIT}" | grep -E '\.(js|ts|jsx|tsx|py|java|cpp|c|h|go|rs|php|rb|swift|kt|cs)$' || true)
-          
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "📝 No code files changed"
-            PROCESSING_TYPE="none"
-            NEEDS_PROCESSING="false"
-            CHANGED_FILES_COUNT="0"
-          else
-            CHANGED_FILES_COUNT=$(echo "$CHANGED_FILES" | wc -l)
-            echo "📝 Found $CHANGED_FILES_COUNT changed code files"
-            echo "Changed files:"
-            echo "$CHANGED_FILES"
-            
-            PROCESSING_TYPE="incremental"
-            NEEDS_PROCESSING="true"
-          fi
-        fi
-        
-        echo "processing_type=${PROCESSING_TYPE}" >> $GITHUB_OUTPUT
-        echo "needs_processing=${NEEDS_PROCESSING}" >> $GITHUB_OUTPUT
-        echo "changed_files_count=${CHANGED_FILES_COUNT}" >> $GITHUB_OUTPUT
-        
-        echo "🎯 Processing decision: ${PROCESSING_TYPE} (${CHANGED_FILES_COUNT} files)"
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Process with Remcode
+      run: npx remcode@latest process
+      env:
+        PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+        HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO_NAME: test-repo

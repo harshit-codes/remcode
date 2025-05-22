@@ -1,11 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import * as child_process from 'child_process';
+import * as util from 'util';
 import axios from 'axios';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { getLogger } from './logger';
 
-const execAsync = promisify(exec);
+const logger = getLogger('Source');
+const execAsync = util.promisify(child_process.exec);
 
 interface SourceOptions {
   token?: string;
@@ -23,20 +25,225 @@ interface ResolvedSource {
 }
 
 /**
+ * Source types supported by the resolver
+ */
+export enum SourceType {
+  LOCAL_PATH = 'local_path',
+  GITHUB_REPO = 'github_repo',
+  GITLAB_REPO = 'gitlab_repo',
+  BITBUCKET_REPO = 'bitbucket_repo',
+  GIT_REPO = 'git_repo',
+  HTTP_URL = 'http_url',
+  UNKNOWN = 'unknown'
+}
+
+/**
+ * Parsed source information
+ */
+export interface ParsedSource {
+  type: SourceType;
+  // For Git repositories
+  owner?: string;
+  repo?: string;
+  branch?: string;
+  path?: string;
+  // For HTTP URLs
+  url?: string;
+  // For local paths
+  localPath?: string;
+  // Original source string
+  originalSource: string;
+}
+
+/**
  * Resolve a source path or URL to a local directory
  */
 export async function resolveSource(source: string, options: SourceOptions = {}): Promise<ResolvedSource> {
-  if (isGitHubUrl(source)) {
-    return resolveGitHubSource(source, options);
-  } else {
-    return resolveLocalSource(source);
+  const parsedSource = parseSource(source);
+  
+  if (!parsedSource) {
+    throw new Error(`Unsupported source type: ${source}`);
+  }
+  
+  switch (parsedSource.type) {
+    case SourceType.GITHUB_REPO:
+      return resolveGitHubSource(parsedSource, options);
+    case SourceType.LOCAL_PATH:
+      return resolveLocalSource(parsedSource.localPath);
+    default:
+      throw new Error(`Unsupported source type: ${parsedSource.type}`);
   }
 }
 
 /**
- * Check if a string is a GitHub URL
+ * Parse a source string into its components
  */
-function isGitHubUrl(source: string): boolean {
+function parseSource(source: string): ParsedSource | null {
+  const parsers = [
+    parseGitHubUrl,
+    parseGitLabUrl,
+    parseBitbucketUrl,
+    parseGenericGitUrl,
+    parseHttpUrl,
+    parseLocalPath
+  ];
+  
+  for (const parser of parsers) {
+    const parsedSource = parser(source);
+    if (parsedSource) return parsedSource;
+  }
+  
+  return null;
+}
+
+/**
+ * Parse a GitHub URL into its components
+ */
+function parseGitHubUrl(url: string): ParsedSource | null {
+  // GitHub URL formats:
+  // https://github.com/owner/repo
+  // https://github.com/owner/repo/tree/branch
+  // https://github.com/owner/repo/tree/branch/path/to/dir
+  // https://github.com/owner/repo/blob/branch/path/to/file
+
+  const githubRegex = /github\.com\/([\w.-]+)\/([\w.-]+)(?:\/(?:tree|blob)\/([\w.-]+)(?:\/(.+))?)?/i;
+  const match = url.match(githubRegex);
+
+  if (!match) return null;
+
+  const [, owner, repo, branch = 'main', path = ''] = match;
+  
+  logger.debug(`Parsed GitHub URL: owner=${owner}, repo=${repo}, branch=${branch}, path=${path}`);
+  
+  return { 
+    type: SourceType.GITHUB_REPO, 
+    owner, 
+    repo, 
+    branch, 
+    path,
+    originalSource: url 
+  };
+}
+
+/**
+ * Parse a GitLab URL into its components
+ */
+function parseGitLabUrl(url: string): ParsedSource | null {
+  // GitLab URL formats:
+  // https://gitlab.com/owner/repo
+  // https://gitlab.com/owner/repo/-/tree/branch
+  // https://gitlab.com/owner/repo/-/tree/branch/path/to/dir
+  // https://gitlab.com/owner/repo/-/blob/branch/path/to/file
+
+  const gitlabRegex = /gitlab\.com\/([\w.-]+)\/([\w.-]+)(?:\/-\/(?:tree|blob)\/([\w.-]+)(?:\/(.+))?)?/i;
+  const match = url.match(gitlabRegex);
+
+  if (!match) return null;
+
+  const [, owner, repo, branch = 'main', path = ''] = match;
+  
+  logger.debug(`Parsed GitLab URL: owner=${owner}, repo=${repo}, branch=${branch}, path=${path}`);
+  
+  return { 
+    type: SourceType.GITLAB_REPO, 
+    owner, 
+    repo, 
+    branch, 
+    path,
+    originalSource: url 
+  };
+}
+
+/**
+ * Parse a Bitbucket URL into its components
+ */
+function parseBitbucketUrl(url: string): ParsedSource | null {
+  // Bitbucket URL formats:
+  // https://bitbucket.org/owner/repo
+  // https://bitbucket.org/owner/repo/src/branch
+  // https://bitbucket.org/owner/repo/src/branch/path/to/file
+
+  const bitbucketRegex = /bitbucket\.org\/([\w.-]+)\/([\w.-]+)(?:\/src\/([\w.-]+)(?:\/(.+))?)?/i;
+  const match = url.match(bitbucketRegex);
+
+  if (!match) return null;
+
+  const [, owner, repo, branch = 'main', path = ''] = match;
+  
+  logger.debug(`Parsed Bitbucket URL: owner=${owner}, repo=${repo}, branch=${branch}, path=${path}`);
+  
+  return { 
+    type: SourceType.BITBUCKET_REPO, 
+    owner, 
+    repo, 
+    branch, 
+    path,
+    originalSource: url 
+  };
+}
+
+/**
+ * Parse a generic Git URL into its components
+ */
+function parseGenericGitUrl(url: string): ParsedSource | null {
+  // Git URL formats:
+  // https://example.com/repo.git
+  // git@example.com:owner/repo.git
+  
+  const gitRegex = /(?:https?:\/\/|git@)([\w.-]+)(?::|\/)([\w.-]+\/[\w.-]+)(?:\.git)?(?:\/?|#([\w.-]+))?/i;
+  const match = url.match(gitRegex);
+
+  if (!match) return null;
+
+  const [, domain, repoPath, branch = 'main'] = match;
+  // Split owner/repo if possible
+  const pathParts = repoPath.split('/');
+  const repo = pathParts.pop() || '';
+  const owner = pathParts.join('/');
+  
+  logger.debug(`Parsed Git URL: domain=${domain}, owner=${owner}, repo=${repo}, branch=${branch}`);
+  
+  return { 
+    type: SourceType.GIT_REPO, 
+    owner, 
+    repo, 
+    branch,
+    originalSource: url 
+  };
+}
+
+/**
+ * Parse an HTTP URL
+ */
+function parseHttpUrl(url: string): ParsedSource | null {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    logger.debug(`Parsed HTTP URL: ${url}`);
+    return {
+      type: SourceType.HTTP_URL,
+      url,
+      originalSource: url
+    };
+  }
+  
+  return null;
+}
+
+/**
+ * Parse a local path
+ */
+function parseLocalPath(source: string): ParsedSource | null {
+  // Check if it's an absolute path or a relative path that exists
+  if (path.isAbsolute(source) || fs.existsSync(path.resolve(process.cwd(), source))) {
+    const resolvedPath = path.resolve(process.cwd(), source);
+    logger.debug(`Parsed local path: ${resolvedPath}`);
+    return {
+      type: SourceType.LOCAL_PATH,
+      localPath: resolvedPath,
+      originalSource: source
+    };
+  }
+  
+  return null;
   return source.startsWith('https://github.com/') || source.startsWith('git@github.com:');
 }
 

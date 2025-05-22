@@ -1,0 +1,95 @@
+# Remcode Codebase Documentation
+
+This documentation provides an overview of the Remcode codebase structure, entities, and relationships.
+
+## Folder Structure
+
+- **src/**
+  - [index](index.md)
+  - **analyzers/**
+    - [dependency](analyzers/dependency.md)
+    - [quality](analyzers/quality.md)
+    - [repository](analyzers/repository.md)
+    - **quality/**
+      - [complexity-analyzer](analyzers/quality/complexity-analyzer.md)
+      - [eslint-analyzer](analyzers/quality/eslint-analyzer.md)
+      - [index](analyzers/quality/index.md)
+      - [language-utils](analyzers/quality/language-utils.md)
+      - [quality-assessment](analyzers/quality/quality-assessment.md)
+      - [types](analyzers/quality/types.md)
+  - **commands/**
+    - [analyze](commands/analyze.md)
+    - [serve](commands/serve.md)
+    - [update](commands/update.md)
+    - [vectorize](commands/vectorize.md)
+  - **github/**
+    - [actions](github/actions.md)
+    - [client](github/client.md)
+    - [repository](github/repository.md)
+  - **mcp/**
+    - [index](mcp/index.md)
+    - **handlers/**
+      - [github](mcp/handlers/github.md)
+      - [huggingface](mcp/handlers/huggingface.md)
+      - [pinecone](mcp/handlers/pinecone.md)
+      - [processing](mcp/handlers/processing.md)
+      - [remcode](mcp/handlers/remcode.md)
+      - [repository](mcp/handlers/repository.md)
+      - [search](mcp/handlers/search.md)
+      - [setup](mcp/handlers/setup.md)
+  - **processing/**
+    - [change-detector](processing/change-detector.md)
+    - [file-analyzer](processing/file-analyzer.md)
+    - [incremental](processing/incremental.md)
+    - [state-manager](processing/state-manager.md)
+  - **search/**
+    - [context-extractor](search/context-extractor.md)
+    - [query-processor](search/query-processor.md)
+    - [semantic](search/semantic.md)
+    - [similarity](search/similarity.md)
+  - **setup/**
+    - [detector](setup/detector.md)
+    - [initializer](setup/initializer.md)
+    - [prerequisites](setup/prerequisites.md)
+    - [remcode-config](setup/remcode-config.md)
+    - [secrets](setup/secrets.md)
+    - [workflow-generator](setup/workflow-generator.md)
+  - **swe/**
+    - [guidelines](swe/guidelines.md)
+    - [prompts](swe/prompts.md)
+    - [scenarios](swe/scenarios.md)
+  - **utils/**
+    - [config](utils/config.md)
+    - [logger](utils/logger.md)
+    - [source](utils/source.md)
+  - **vectorizers/**
+    - **chunkers/**
+      - [manager.test](vectorizers/chunkers/manager.test.md)
+      - [manager](vectorizers/chunkers/manager.md)
+    - **embedders/**
+      - [manager](vectorizers/embedders/manager.md)
+    - **storage/**
+      - [pinecone](vectorizers/storage/pinecone.md)
+  - **workflows/**
+    - [generator](workflows/generator.md)
+    - [monitor](workflows/monitor.md)
+    - [templates](workflows/templates.md)
+
+## Entity Relationship Diagrams
+
+- [src Diagram](diagrams/src.md)
+  - [analyzers Diagram](diagrams/analyzers.md)
+    - [quality Diagram](diagrams/analyzers/quality.md)
+  - [commands Diagram](diagrams/commands.md)
+  - [github Diagram](diagrams/github.md)
+  - [mcp Diagram](diagrams/mcp.md)
+    - [handlers Diagram](diagrams/mcp/handlers.md)
+  - [processing Diagram](diagrams/processing.md)
+  - [search Diagram](diagrams/search.md)
+  - [setup Diagram](diagrams/setup.md)
+  - [swe Diagram](diagrams/swe.md)
+  - [utils Diagram](diagrams/utils.md)
+    - [chunkers Diagram](diagrams/vectorizers/chunkers.md)
+    - [embedders Diagram](diagrams/vectorizers/embedders.md)
+    - [storage Diagram](diagrams/vectorizers/storage.md)
+  - [workflows Diagram](diagrams/workflows.md)

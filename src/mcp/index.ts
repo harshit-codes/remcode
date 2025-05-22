@@ -66,10 +66,10 @@ export class MCPServer {
       token: this.options.huggingfaceToken || ''
     });
 
-    // Initialize new handlers
-    this.setupHandler = new SetupMCPHandler();
+    // Initialize new handlers with GitHub token for authorization
+    this.setupHandler = new SetupMCPHandler(this.options.githubToken);
     this.searchHandler = new SearchMCPHandler();
-    this.processingHandler = new ProcessingMCPHandler();
+    this.processingHandler = new ProcessingMCPHandler(this.options.githubToken);
     this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
     this.remcodeHandler = new RemcodeMCPHandler();
     
@@ -99,12 +99,48 @@ export class MCPServer {
         description: 'Remcode Model Context Protocol server for code analysis and vectorization',
         tools: [
           {
-            name: 'setup_repository',
-            description: 'Automated first-time setup of remcode for a repository',
+            name: 'setup-repository',
+            description: 'Set up a repository with Remcode',
             parameters: {
               owner: { type: 'string', description: 'Repository owner' },
               repo: { type: 'string', description: 'Repository name' },
-              confirm: { type: 'boolean', description: 'Confirm setup (default: false)', optional: true }
+              token: { type: 'string', description: 'GitHub token (optional)' },
+              branch: { type: 'string', description: 'Repository branch (default: main)' },
+              configOverrides: { type: 'object', description: 'Remcode config overrides' },
+              workflowType: { type: 'string', description: 'Type of workflow to generate: basic, scheduled, advanced, all' },
+              skipWorkflows: { type: 'boolean', description: 'Skip workflow generation' },
+              skipSecrets: { type: 'boolean', description: 'Skip secrets setup' },
+              confirm: { type: 'boolean', description: 'Confirm setup' }
+            }
+          },
+          {
+            name: 'check-prerequisites',
+            description: 'Check repository prerequisites',
+            parameters: {}
+          },
+          {
+            name: 'configure-repository',
+            description: 'Configure repository settings',
+            parameters: {
+              config: { type: 'object', description: 'Configuration settings' }
+            }
+          },
+          {
+            name: 'setup-secrets',
+            description: 'Set up repository secrets',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              secrets: { type: 'object', description: 'Secrets to configure' }
+            }
+          },
+          {
+            name: 'generate-workflows',
+            description: 'Generate repository workflows',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              type: { type: 'string', description: 'Workflow type: basic, scheduled, advanced, all' }
             }
           },
           {
@@ -139,17 +175,34 @@ export class MCPServer {
             }
           },
           {
-            name: 'trigger_reprocessing',
-            description: 'Force full or incremental reprocessing',
+            name: 'trigger-reprocessing',
+            description: 'Trigger repository reprocessing',
             parameters: {
-              type: { type: 'string', description: 'Processing type: incremental or full (default: incremental)', optional: true },
-              force: { type: 'boolean', description: 'Force reprocessing (default: false)', optional: true }
+              type: { type: 'string', description: 'Reprocessing type: incremental, full, vectorize, analyze' },
+              force: { type: 'boolean', description: 'Force reprocessing' },
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              branch: { type: 'string', description: 'Branch to process (default: main)' },
+              token: { type: 'string', description: 'GitHub token (optional)' }
             }
           },
           {
-            name: 'get_processing_status',
-            description: 'Check GitHub Actions workflow status',
-            parameters: {}
+            name: 'get-processing-status',
+            description: 'Get processing status',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner (optional)' },
+              repo: { type: 'string', description: 'Repository name (optional)' },
+              runId: { type: 'string', description: 'Workflow run ID (optional)' }
+            }
+          },
+          {
+            name: 'get-processing-history',
+            description: 'Get processing history',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              limit: { type: 'number', description: 'Number of history items to return' }
+            }
           },
           {
             name: 'default_prompt',
@@ -273,16 +326,26 @@ export class MCPServer {
         return this.githubHandler.handleToolRequest(req, res);
       } else if (tool && tool.startsWith('huggingface_')) {
         return this.huggingfaceHandler.handleToolRequest(req, res);
-      } else if (tool === 'setup_repository') {
+      } else if (tool === 'setup-repository') {
         return this.setupHandler.handleSetupRepository(req, res, req.body.parameters);
+      } else if (tool === 'check-prerequisites') {
+        return this.setupHandler.handleCheckPrerequisites(req, res, req.body.parameters);
+      } else if (tool === 'configure-repository') {
+        return this.setupHandler.handleConfigureRepository(req, res, req.body.parameters);
+      } else if (tool === 'setup-secrets') {
+        return this.setupHandler.handleSetupSecrets(req, res, req.body.parameters);
+      } else if (tool === 'generate-workflows') {
+        return this.setupHandler.handleGenerateWorkflows(req, res, req.body.parameters);
       } else if (tool === 'search_code') {
         return this.searchHandler.handleSearchCode(req, res, req.body.parameters);
       } else if (tool === 'get_code_context') {
         return this.searchHandler.handleGetCodeContext(req, res, req.body.parameters);
-      } else if (tool === 'trigger_reprocessing') {
+      } else if (tool === 'trigger-reprocessing') {
         return this.processingHandler.handleTriggerReprocessing(req, res, req.body.parameters);
-      } else if (tool === 'get_processing_status') {
+      } else if (tool === 'get-processing-status') {
         return this.processingHandler.handleGetProcessingStatus(req, res, req.body.parameters);
+      } else if (tool === 'get-processing-history') {
+        return this.processingHandler.handleGetProcessingHistory(req, res, req.body.parameters);
       } else if (tool === 'get_repository_status') {
         return this.repositoryHandler.handleGetRepositoryStatus(req, res, req.body.parameters);
       } else if (tool === 'list_repositories') {
