@@ -60,28 +60,10 @@ export function serveCommand(program: Command): void {
           process.exit(1);
         }
         
-        // Enable verbose logging if requested
-        if (options.verbose) {
-          logger.info('Verbose logging enabled');
-        }
+        // Start the server
+        await server.start();
         
-        logger.info(`Starting MCP server on http://${options.host}:${options.port}`);
-        
-        // Set up a timeout for server start
-        const startTimeout = 30000; // 30 seconds
-        const startTimeoutPromise = new Promise((_, reject) => {
-          setTimeout(() => reject(new Error(`Server failed to start within ${startTimeout/1000} seconds`)), startTimeout);
-        });
-        
-        // Start the server with timeout
-        spinner.text = 'Initializing MCP server and connecting to services';
-        try {
-          await Promise.race([server.start(), startTimeoutPromise]);
-          logger.info('MCP server started successfully');
-          spinner.succeed(chalk.green(`MCP server started on http://${options.host}:${options.port}`));
-        } catch (startError) {
-          throw new Error(`Failed to start MCP server: ${startError instanceof Error ? startError.message : String(startError)}`);
-        }
+        spinner.succeed(chalk.green(`MCP server started on http://${options.host}:${options.port}`));
         
         // Print tool information
         console.log('');
@@ -126,20 +108,7 @@ export function serveCommand(program: Command): void {
         });
       } catch (error) {
         spinner.fail('Failed to start MCP server');
-        logger.error('Server startup failed with error', error);
-        console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
-        
-        if (error instanceof Error && error.stack && options.verbose) {
-          console.error(chalk.gray(error.stack));
-        }
-        
-        console.log(chalk.yellow('\nTroubleshooting tips:'));
-        console.log(' - Check that the Pinecone API key is valid and has appropriate permissions');
-        console.log(' - Ensure the GitHub token has the necessary scopes');
-        console.log(' - Verify that the HuggingFace token is valid');
-        console.log(' - Make sure the specified port is available and not in use');
-        console.log(' - Run with --verbose for more detailed error information');
-        
+        logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
         process.exit(1);
       }
     });

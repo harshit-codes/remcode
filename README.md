@@ -4,12 +4,12 @@
 
 Remcode creates a codebase-aware autopilot trained on software engineering best practices. Your AI assistant gains deep understanding of your code patterns, architecture, and conventions. Use alongside other MCP tools to build an intelligent development workflow that follows your project's standards.
 
-## 🚀 Key Features
+## 🚀 Key Features in Basic Version
 
 - **🚀 One-Click Automated Setup**: First MCP call handles everything - secrets, workflows, processing
 - **🤖 Zero-Setup AI Integration**: Automatic processing via GitHub Actions - no local setup required
 - **🔗 MCP Protocol Support**: Direct integration with AI assistants like Claude, ChatGPT, and others
-- **🧠 Codebase-Aware Intelligence**: Understands your specific code patterns, architecture, and conventions
+- **🧠 Codebase-Aware Intelligence**: Analyzes and understands your specific code patterns, architecture, and conventions
 - **📊 Incremental Processing**: Only analyzes changed files for efficient continuous integration
 - **🔍 Semantic Code Search**: Ask questions in natural language, get relevant code snippets
 - **🎯 SWE Best Practices**: Auto-injected software engineering guidelines and context-aware assistance
@@ -224,65 +224,174 @@ After initialization, your repository will contain a `.remcode` file:
 
 ## 🚀 Roadmap
 
-### **Current (v0.1.0)**
-- ✅ GitHub Actions automation
-- ✅ Incremental processing  
-- ✅ MCP server implementation
-- ✅ Basic semantic search
-- ✅ Automated setup on first tool call
+### **Basic Version - TODO**
 
-### **Implementation Priorities**
-- 🔄 **Complete Vectorization Engine**: Implement production-ready chunking and embedding strategies
-- 🔄 **Pinecone Integration**: Finalize production Pinecone client for vector storage and retrieval
-- 🔄 **Semantic Search Capabilities**: Complete the semantic search implementation with actual embeddings
-- 🔄 **Code Similarity Analysis**: Implement advanced code pattern detection and similarity scoring
-- 🔄 **MCP Handler Completion**: Finalize all MCP handler implementations for full AI assistant integration
+Complete the basic version features to deliver the core value proposition. Progress tracked in real-time:
 
-### **Implementation Roadmap (v0.1.x)**
+#### 🎯 **PHASE 1: Core Vectorization Engine** `[0/5 Complete]`
+**Goal**: Make codebase vectorization and embedding generation functional
 
-#### Phase 1: Core Vectorization Infrastructure
-- [ ] **P1-1: Pinecone Client** - Complete Pinecone vector database integration in `src/vectorizers/storage/pinecone.ts`
-- [ ] **P1-2: Embedding Manager** - Implement actual embedding generation in `src/vectorizers/embedders/manager.ts`
-- [ ] **P1-3: Chunking Manager** - Replace stub in `src/vectorizers/chunkers/manager.ts` with production implementation
+- [ ] **TODO-1.1**: Fix Pinecone Integration
+  - [ ] Complete `src/vectorizers/storage/pinecone.ts` implementation
+  - [ ] Fix index creation, connection, and vector operations (upsert, query, delete)
+  - [ ] Add proper error handling and retries
+  - [ ] Test with actual Pinecone API
 
-#### Phase 2: Search Capabilities
-- [ ] **P2-1: Semantic Search** - Implement actual vector search in `src/search/semantic.ts`
-- [ ] **P2-2: Similarity Analysis** - Add code pattern detection in `src/search/similarity.ts`
+- [ ] **TODO-1.2**: Complete Embedding Manager
+  - [ ] Fix HuggingFace embedding generation in `src/vectorizers/embedders/manager.ts`
+  - [ ] Replace random embedding fallback with real GraphCodeBERT embeddings
+  - [ ] Add batch processing for large codebases
+  - [ ] Implement embedding caching for performance
 
-#### Phase 3: MCP Handler Implementation
-- [ ] **P3-1: Search Handlers** - Complete search and context handlers in `src/mcp/handlers/search.ts`
-- [ ] **P3-2: Processing Handlers** - Implement processing functionality in `src/mcp/handlers/processing.ts`
-- [ ] **P3-3: Repository Handlers** - Finalize repository integration in `src/mcp/handlers/repository.ts`
-- [ ] **P3-4: Remaining Handlers** - Complete all other handlers in `src/mcp/handlers/`
+- [ ] **TODO-1.3**: Production-Ready Chunking
+  - [ ] Complete chunking strategies in `src/vectorizers/chunkers/manager.ts`
+  - [ ] Implement function-level, class-level, and sliding window chunking
+  - [ ] Add language-specific chunking logic (TypeScript, Python, Java, etc.)
+  - [ ] Optimize chunk size and overlap parameters
 
-#### Phase 4: Testing & Quality Assurance
-- [ ] **P4-1: Unit Tests** - Expand unit tests to cover all implemented components
-- [ ] **P4-2: Integration Tests** - Add tests for complete workflows from processing to search
-- [ ] **P4-3: MCP Inspector Tests** - Create comprehensive test suite for all MCP tools
-- [ ] **P4-4: Performance Benchmarks** - Add tests to ensure performance meets targets
+- [ ] **TODO-1.4**: End-to-End Vectorization Pipeline
+  - [ ] Complete `src/vectorizers/pipeline.ts` integration
+  - [ ] Connect chunking → embedding → storage pipeline
+  - [ ] Add pipeline error recovery and rollback
+  - [ ] Implement vectorization progress tracking
 
-### **Planned (v0.2.0)**
-- 🔄 **Code Optimization MCP Tools**: AI assistant tools to help write code optimized for chunking, embedding, and vectorization
-- 🔄 **SWE Best Practices Auto-Selection**: Basic implementation of context-aware best practices guidance
-- 🔄 **Multi-language support enhancement**
-- 🔄 **Code change impact analysis**
-- 🔄 **Performance optimizations**
+- [ ] **TODO-1.5**: Integration Testing
+  - [ ] Create vectorization integration tests
+  - [ ] Test full pipeline: code file → chunks → embeddings → Pinecone storage
+  - [ ] Validate vector quality and retrieval accuracy
+  - [ ] Performance benchmarking (target: <5s for 1000 files)
 
-### **Advanced Features (v1.0.0)**
+#### 🔍 **PHASE 2: Semantic Search Engine** `[0/4 Complete]`
+**Goal**: Enable natural language code search and similarity analysis
+
+- [ ] **TODO-2.1**: Functional Semantic Search
+  - [ ] Complete `src/search/semantic.ts` implementation
+  - [ ] Convert user queries to embeddings and search Pinecone
+  - [ ] Rank and filter search results by relevance score
+  - [ ] Add search result formatting and metadata extraction
+
+- [ ] **TODO-2.2**: Code Context Extraction
+  - [ ] Complete `src/search/context-extractor.ts` functionality
+  - [ ] Extract surrounding code context for search results
+  - [ ] Parse file structure (functions, classes, imports) for better context
+  - [ ] Add line-by-line context window expansion
+
+- [ ] **TODO-2.3**: Code Similarity Analysis
+  - [ ] Implement actual similarity detection in `src/search/similarity.ts`
+  - [ ] Add pattern recognition (design patterns, code structures)
+  - [ ] Calculate semantic similarity between code snippets
+  - [ ] Provide similarity explanations and reasoning
+
+- [ ] **TODO-2.4**: Search Quality & Performance
+  - [ ] Add search query optimization and preprocessing
+  - [ ] Implement search result ranking algorithms
+  - [ ] Add search filters (language, file type, complexity)
+  - [ ] Performance optimization (target: <500ms per search)
+
+#### 🔗 **PHASE 3: MCP Integration Completion** `[2/4 Complete]`
+**Goal**: Complete AI assistant integration for all features
+
+- [x] **TODO-3.1**: ✅ MCP Server Foundation (COMPLETE)
+  - [x] Basic MCP server structure in `src/mcp/index.ts`
+  - [x] Tool definitions and routing
+  - [x] Express.js server setup
+
+- [x] **TODO-3.2**: ✅ Setup & Repository Handlers (COMPLETE)
+  - [x] Repository setup and configuration tools
+  - [x] GitHub integration for secrets and workflows
+  - [x] Prerequisites checking and validation
+
+- [ ] **TODO-3.3**: Complete Search MCP Handlers
+  - [ ] Fix `src/mcp/handlers/search.ts` to use working vectorization
+  - [ ] Connect search handlers to functional semantic search engine
+  - [ ] Add proper error handling and response formatting
+  - [ ] Test search tools with MCP Inspector
+
+- [ ] **TODO-3.4**: Complete Processing MCP Handlers
+  - [ ] Fix `src/mcp/handlers/processing.ts` integration
+  - [ ] Connect to working incremental processing pipeline
+  - [ ] Add status monitoring and progress tracking
+  - [ ] Test processing triggers and status reporting
+
+#### 🔄 **PHASE 4: GitHub Actions Integration** `[1/3 Complete]`
+**Goal**: Automated processing via GitHub Actions with zero setup
+
+- [x] **TODO-4.1**: ✅ Workflow Generation (COMPLETE)
+  - [x] GitHub Actions workflow templates
+  - [x] Automatic workflow file creation and commits
+
+- [ ] **TODO-4.2**: Processing Integration
+  - [ ] Connect GitHub Actions to working vectorization pipeline
+  - [ ] Add environment setup in workflows (dependencies, API keys)
+  - [ ] Implement incremental processing triggers on push/PR
+  - [ ] Add processing status reporting back to GitHub
+
+- [ ] **TODO-4.3**: End-to-End Automation
+  - [ ] Test complete workflow: setup → processing → search availability
+  - [ ] Add workflow monitoring and failure notifications
+  - [ ] Implement automatic retry logic for failed processing
+  - [ ] Create workflow debugging and troubleshooting tools
+
+#### 🧪 **PHASE 5: Testing & Quality Assurance** `[0/4 Complete]`
+**Goal**: Comprehensive testing for production readiness
+
+- [ ] **TODO-5.1**: Core Component Testing
+  - [ ] Unit tests for vectorization pipeline components
+  - [ ] Integration tests for search functionality
+  - [ ] End-to-end workflow testing
+  - [ ] Performance benchmarking and optimization
+
+- [ ] **TODO-5.2**: MCP Tools Testing
+  - [ ] Test all MCP tools with MCP Inspector
+  - [ ] Claude Desktop integration testing
+  - [ ] Error handling and edge case testing
+  - [ ] API rate limiting and timeout handling
+
+- [ ] **TODO-5.3**: Real Codebase Testing
+  - [ ] Test with various repository sizes (small, medium, large)
+  - [ ] Multi-language codebase support validation
+  - [ ] Complex project structure testing (monorepos, microservices)
+  - [ ] Performance testing with 10k+ files
+
+- [ ] **TODO-5.4**: User Experience Testing
+  - [ ] Setup flow testing (new user onboarding)
+  - [ ] Search quality validation (relevance, accuracy)
+  - [ ] Documentation and error message clarity
+  - [ ] Production deployment and monitoring
+
+#### 📋 **Success Criteria for Basic Version**
+To mark the Basic Version as complete, all features must be functional:
+
+1. **🚀 One-Click Setup**: Users can trigger setup with first MCP call
+2. **🧠 Codebase Intelligence**: Vector search returns relevant code snippets
+3. **🔍 Semantic Search**: Natural language queries work accurately
+4. **📊 Incremental Processing**: Only changed files are reprocessed
+5. **🤖 Zero-Setup Integration**: GitHub Actions automatically process code
+6. **🔗 MCP Protocol**: All tools work with Claude Desktop/other assistants
+7. **🎯 SWE Best Practices**: Context-aware guidance is provided
+8. **🛡️ Privacy & Security**: Processing happens in user's GitHub environment
+
+#### 📊 **Current Progress Summary**
+- **Infrastructure & Setup**: ✅ 95% Complete (MCP, GitHub, workflows)
+- **Core Vectorization**: ❌ 30% Complete ⚠️ **BLOCKING**
+- **Semantic Search**: ❌ 25% Complete ⚠️ **BLOCKING** 
+- **Processing Integration**: 🔄 60% Complete
+- **Testing & QA**: ❌ 10% Complete
+
+**Next Priority**: Complete Phase 1 (Core Vectorization Engine) to unblock semantic search functionality.
+
+### **Advanced Version - GOALS**
 - 🔮 **Customizable Tool Selection**: Choose your preferred embedding models, vector storage providers, and workflow runners
 - 🔮 **Fine-grained AI Control**: Advanced parameters and attributes control for AI models and processing pipelines
 - 🔮 **Advanced SWE Best Practices Control**: User control over SWE guidelines, scenario selection, and prompt customization
 - 🔮 **Manual Processing Controls**: Force reprocessing, branch-specific processing, local development tools
-- 🔮 **Advanced query capabilities**
+- 🔮 **Better distribution channels**: More IDEs plugins and clients interface support.
 
-### **Enterprise & Local (v2.0.0)**
+### **Enterprise Version - GOALS**
 - 🌟 **Fully Local Processing**: Complete offline operation with local LLMs, embeddings, and workflow execution
 - 🌟 **Custom Best Practices Creation**: Users can create and manage their own SWE best practices and coding standards
 - 🌟 **Language-Specific Optimizations**: Tech stack specific boilerplates and optimization templates
-- 🌟 **Team collaboration features**
-- 🌟 **Enterprise deployment options**
-- 🌟 **Real-time code suggestions**
-- 🌟 **IDE integrations**
+- 🌟 **Team collaboration and deployment features**
 
 ## 🤝 Contributing
 
