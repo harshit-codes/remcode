@@ -11,6 +11,8 @@ No overview provided.
 - `express`
 - `../../utils/logger`
 - `../../search/semantic`
+- `../../search/context-extractor`
+- `../../search/similarity`
 
 ## Classes
 
@@ -19,9 +21,25 @@ No overview provided.
 **Methods:**
 
 - `SemanticSearch()`
+- `ContextExtractor()`
+- `SimilarityAnalyzer()`
 - `handleSearchCode()`
 - `if()`
+- `if()`
+- `Date()`
 - `catch()`
+- `String()`
+- `String()`
 - `handleGetCodeContext()`
+- `if()`
+- `Date()`
 - `catch()`
+- `String()`
+- `String()`
+- `handleFindSimilarPatterns()`
+- `if()`
+- `Date()`
+- `catch()`
+- `String()`
+- `String()`
 

@@ -192,12 +192,30 @@ classDiagram
   }
   class SearchMCPHandler {
     semanticSearch: SemanticSearch
+    contextExtractor: ContextExtractor
+    similarityAnalyzer: SimilarityAnalyzer
     SemanticSearch()
+    ContextExtractor()
+    SimilarityAnalyzer()
     handleSearchCode(): Promise<void>
     if()
+    if()
+    Date()
     catch()
+    String()
+    String()
     handleGetCodeContext(): Promise<void>
+    if()
+    Date()
     catch()
+    String()
+    String()
+    handleFindSimilarPatterns(): Promise<void>
+    if()
+    Date()
+    catch()
+    String()
+    String()
   }
   class SetupMCPHandler {
     setupDetector: SetupDetector
