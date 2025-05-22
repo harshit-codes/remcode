@@ -20,36 +20,53 @@ Main vectorization pipeline that orchestrates chunking, embedding, and storage
 
 **Methods:**
 
-- `ChunkingManager()`
-- `EmbeddingManager()`
-- `PineconeStorage()`
-- `initialize()`
-- `catch()`
-- `String()`
-- `Error()`
-- `processFile()`
-- `if()`
-- `Error()`
-- `if()`
-- `catch()`
-- `String()`
-- `Error()`
-- `searchSimilarCode()`
-- `if()`
-- `Error()`
-- `if()`
-- `Error()`
-- `catch()`
-- `String()`
-- `Error()`
-- `getStats()`
-- `if()`
-- `Error()`
-- `createFileInfo()`
-- `determineChunkingStrategy()`
-- `if()`
-- `if()`
-- `estimateComplexity()`
-- `if()`
-- `if()`
+#### `initialize()`
+
+Initialize the vectorization pipeline
+
+```typescript
+initialize(): Promise<void> {
+```
+
+#### `processFile()`
+
+Process a single file and return its vectorized chunks
+
+```typescript
+processFile(filePath: string): Promise<CodeChunk[]> {
+```
+
+#### `searchSimilarCode()`
+
+Search for similar code using vector similarity
+
+```typescript
+searchSimilarCode(query: string, topK: number = 10, filter?: Record<string, any>): Promise<any[]> {
+```
+
+#### `getStats()`
+
+Get storage statistics
+
+```typescript
+getStats(): Promise<any> {
+```
+
+#### `createFileInfo()`
+
+```typescript
+createFileInfo(filePath: string, relativePath?: string): FileInfo {
+```
+
+#### `determineChunkingStrategy()`
+
+```typescript
+determineChunkingStrategy(content: string, fileInfo: FileInfo): string {
+```
+
+#### `estimateComplexity()`
+
+```typescript
+estimateComplexity(content: string): 'low' | 'medium' | 'high' {
+```
 

@@ -164,7 +164,7 @@ function generateMarkdownDoc(fileDoc) {
   markdown += `**File Path:** \`${relativePath}\`\n\n`;
   
   // Overview - extract from comment at the top of the file
-  const firstComment = fileDoc.content.match(/\/\*\*([\s\S]*?)\*\//);
+  const firstComment = fileDoc.content.match(/\/\*\*([\s\S]*?)\*\//); 
   const overview = firstComment ? firstComment[1].replace(/^\s*\*\s?/gm, '').trim() : 'No overview provided.';
   markdown += `## Overview\n\n${overview}\n\n`;
   
@@ -190,30 +190,54 @@ function generateMarkdownDoc(fileDoc) {
         markdown += `**Implements:** ${cls.implements.join(', ')}\n\n`;
       }
       
-      // Find methods of this class
+      // Find the complete class definition including JSDoc comments
+      const classWithJSDoc = extractWithJSDoc(fileDoc.content, cls.name, 'class');
+      if (classWithJSDoc) {
+        markdown += `**Class Definition:**\n\n\`\`\`typescript\n${classWithJSDoc}\n\`\`\`\n\n`;
+      }
+      
+      // Find all methods with their JSDoc comments
       const classDefinitionRegex = new RegExp(`class\\s+${cls.name}[\\s\\S]*?{([\\s\\S]*?)(?:^}|(?:^\\s*export\\s|^\\s*class\\s))`, 'm');
       const classBodyMatch = classDefinitionRegex.exec(fileDoc.content);
       
       if (classBodyMatch && classBodyMatch[1]) {
         const classBody = classBodyMatch[1];
         
-        // Extract methods
-        const methodPattern = /(?:public|private|protected)?\s+(?:async\s+)?(\w+)\s*\([^)]*\)/g;
-        let methodMatch;
-        const methods = [];
+        // Extract methods with their JSDoc comments
+        markdown += `**Methods:**\n\n`;
         
-        while ((methodMatch = methodPattern.exec(classBody)) !== null) {
-          const methodName = methodMatch[1];
-          if (methodName !== 'constructor') {
-            methods.push(methodName);
-          }
-        }
+        // Use regex to find methods including their JSDoc comments
+        const methodsWithComments = extractMethodsWithComments(classBody);
         
-        if (methods.length > 0) {
-          markdown += `**Methods:**\n\n`;
-          methods.forEach(method => {
-            markdown += `- \`${method}()\`\n`;
+        if (methodsWithComments.length > 0) {
+          methodsWithComments.forEach((method, index) => {
+            if (method.name !== 'constructor') { // Skip constructors for brevity
+              markdown += `#### \`${method.name}()\`\n\n`;
+              if (method.jsDoc) {
+                markdown += `${method.jsDoc.trim()}\n\n`;
+              }
+              markdown += `\`\`\`typescript\n${method.signature.trim()}\n\`\`\`\n\n`;
+            }
           });
+        } else {
+          // Fallback to simple method extraction
+          const methodPattern = /(?:public|private|protected)?\s+(?:async\s+)?(\w+)\s*\([^)]*\)/g;
+          let methodMatch;
+          const methods = [];
+          
+          while ((methodMatch = methodPattern.exec(classBody)) !== null) {
+            const methodName = methodMatch[1];
+            if (methodName !== 'constructor') {
+              methods.push(methodName);
+            }
+          }
+          
+          if (methods.length > 0) {
+            methods.forEach(method => {
+              markdown += `- \`${method}()\`\n`;
+            });
+          }
+          
           markdown += '\n';
         }
       }
@@ -231,24 +255,30 @@ function generateMarkdownDoc(fileDoc) {
         markdown += `**Extends:** ${intf.extends.join(', ')}\n\n`;
       }
       
-      // Try to extract properties
-      const interfaceRegex = new RegExp(`interface\\s+${intf.name}[\\s\\S]*?{([\\s\\S]*?)(?:^}|(?:^\\s*export\\s|^\\s*interface\\s))`, 'm');
-      const interfaceBodyMatch = interfaceRegex.exec(fileDoc.content);
-      
-      if (interfaceBodyMatch && interfaceBodyMatch[1]) {
-        const interfaceBody = interfaceBodyMatch[1];
-        const propertyLines = interfaceBody.split('\n').filter(line => 
-          line.trim() !== '' && 
-          !line.trim().startsWith('//') && 
-          !line.trim().startsWith('/*')
-        );
+      // Extract the complete interface with JSDoc
+      const interfaceWithJSDoc = extractWithJSDoc(fileDoc.content, intf.name, 'interface');
+      if (interfaceWithJSDoc) {
+        markdown += `**Interface Definition:**\n\n\`\`\`typescript\n${interfaceWithJSDoc}\n\`\`\`\n\n`;
+      } else {
+        // Try to extract properties as fallback
+        const interfaceRegex = new RegExp(`interface\\s+${intf.name}[\\s\\S]*?{([\\s\\S]*?)(?:^}|(?:^\\s*export\\s|^\\s*interface\\s))`, 'm');
+        const interfaceBodyMatch = interfaceRegex.exec(fileDoc.content);
         
-        if (propertyLines.length > 0) {
-          markdown += `**Properties:**\n\n`;
-          propertyLines.forEach(line => {
-            markdown += `- \`${line.trim()}\`\n`;
-          });
-          markdown += '\n';
+        if (interfaceBodyMatch && interfaceBodyMatch[1]) {
+          const interfaceBody = interfaceBodyMatch[1];
+          const propertyLines = interfaceBody.split('\n').filter(line => 
+            line.trim() !== '' && 
+            !line.trim().startsWith('//') && 
+            !line.trim().startsWith('/*')
+          );
+          
+          if (propertyLines.length > 0) {
+            markdown += `**Properties:**\n\n`;
+            propertyLines.forEach(line => {
+              markdown += `- \`${line.trim()}\`\n`;
+            });
+            markdown += '\n';
+          }
         }
       }
     });
@@ -261,23 +291,42 @@ function generateMarkdownDoc(fileDoc) {
     fileDoc.functions.forEach(func => {
       markdown += `### \`${func.name}()\`\n\n`;
       
-      // Try to extract function parameters and return type
-      const functionRegex = new RegExp(`function\\s+${func.name}\\s*\\(([^)]*)\\)(?:\\s*:\\s*([^{]+))?`);
-      const functionMatch = functionRegex.exec(fileDoc.content);
-      
-      if (functionMatch) {
-        const params = functionMatch[1].split(',').map(p => p.trim()).filter(p => p !== '');
-        
-        if (params.length > 0) {
-          markdown += `**Parameters:**\n\n`;
-          params.forEach(param => {
-            markdown += `- \`${param}\`\n`;
-          });
-          markdown += '\n';
+      // Extract the full function with JSDoc
+      const functionWithJSDoc = extractWithJSDoc(fileDoc.content, func.name, 'function');
+      if (functionWithJSDoc) {
+        // Find the end of the function signature (before the body)
+        const signatureEndIndex = functionWithJSDoc.indexOf('{');
+        if (signatureEndIndex !== -1) {
+          const signature = functionWithJSDoc.substring(0, signatureEndIndex + 1);
+          const jsDocMatch = functionWithJSDoc.match(/\/\*\*([\s\S]*?)\*\//); 
+          const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
+          
+          if (jsDoc) {
+            markdown += `${jsDoc}\n\n`;
+          }
+          
+          markdown += `**Function Signature:**\n\n\`\`\`typescript\n${signature.trim()}\n\`\`\`\n\n`;
+          markdown += `**Full Function:**\n\n\`\`\`typescript\n${functionWithJSDoc}\n\`\`\`\n\n`;
         }
+      } else {
+        // Fallback to simpler extraction
+        const functionRegex = new RegExp(`function\\s+${func.name}\\s*\\(([^)]*)\\)(?:\\s*:\\s*([^{]+))?`);
+        const functionMatch = functionRegex.exec(fileDoc.content);
         
-        if (functionMatch[2]) {
-          markdown += `**Returns:** \`${functionMatch[2].trim()}\`\n\n`;
+        if (functionMatch) {
+          const params = functionMatch[1].split(',').map(p => p.trim()).filter(p => p !== '');
+          
+          if (params.length > 0) {
+            markdown += `**Parameters:**\n\n`;
+            params.forEach(param => {
+              markdown += `- \`${param}\`\n`;
+            });
+            markdown += '\n';
+          }
+          
+          if (functionMatch[2]) {
+            markdown += `**Returns:** \`${functionMatch[2].trim()}\`\n\n`;
+          }
         }
       }
     });
@@ -294,6 +343,157 @@ function generateMarkdownDoc(fileDoc) {
   }
   
   return markdown;
+}
+
+/**
+ * Extract JSDoc comments and associated code blocks without using complex regex
+ * @param {string} content - The file content
+ * @param {string} entityName - Name of the entity to extract (class, function, etc.)
+ * @param {string} entityType - Type of entity ('class', 'function', 'interface')
+ * @returns {string|null} - The extracted entity with its JSDoc or null if not found
+ */
+function extractWithJSDoc(content, entityName, entityType) {
+  try {
+    // Find the entity definition start point
+    let searchPattern;
+    switch (entityType) {
+      case 'class':
+        searchPattern = `class ${entityName}`;
+        break;
+      case 'function':
+        searchPattern = `function ${entityName}`;
+        break;
+      case 'interface':
+        searchPattern = `interface ${entityName}`;
+        break;
+      default:
+        searchPattern = entityName;
+    }
+    
+    // Find the position of the entity definition
+    const entityPos = content.indexOf(searchPattern);
+    if (entityPos === -1) return null;
+    
+    // Look for JSDoc comment before the entity
+    let jsDocStart = -1;
+    let jsDocEnd = -1;
+    
+    // Search backwards from the entity position to find JSDoc
+    const beforeEntity = content.substring(0, entityPos).trim();
+    const jsDocEndPos = beforeEntity.lastIndexOf('*/');
+    
+    if (jsDocEndPos !== -1) {
+      jsDocEnd = jsDocEndPos + 2; // Include the */
+      jsDocStart = beforeEntity.lastIndexOf('/**');
+      
+      if (jsDocStart === -1) return null;
+      
+      // Check if there's only whitespace between JSDoc and entity
+      const betweenJSDocAndEntity = beforeEntity.substring(jsDocEnd).trim();
+      if (betweenJSDocAndEntity.length > 0 && !betweenJSDocAndEntity.match(/^\s*export\s+$/)) {
+        // There's something other than whitespace or 'export' between JSDoc and entity
+        jsDocStart = -1;
+        jsDocEnd = -1;
+      }
+    }
+    
+    // Find the entity end by tracking braces
+    let braceCount = 0;
+    let inEntity = false;
+    let entityEnd = -1;
+    
+    for (let i = entityPos; i < content.length; i++) {
+      if (content[i] === '{') {
+        if (!inEntity) inEntity = true;
+        braceCount++;
+      } else if (content[i] === '}') {
+        braceCount--;
+        if (inEntity && braceCount === 0) {
+          entityEnd = i + 1;
+          break;
+        }
+      }
+    }
+    
+    if (entityEnd === -1) return null;
+    
+    // Extract the JSDoc and entity
+    const jsDoc = jsDocStart !== -1 ? content.substring(jsDocStart, jsDocEnd) : '';
+    const entity = content.substring(entityPos, entityEnd);
+    
+    // Check if the entity is exported
+    const exportCheck = beforeEntity.substring(jsDocEnd > 0 ? jsDocEnd : 0).trim();
+    const isExported = exportCheck.endsWith('export') || exportCheck.includes('export ');
+    
+    return (jsDoc ? jsDoc + '\n' : '') + (isExported ? 'export ' : '') + entity;
+  } catch (error) {
+    console.error(`Error extracting entity ${entityName}: ${error.message}`);
+    return null;
+  }
+}
+
+/**
+ * Extract methods with their JSDoc comments from a class body
+ * @param {string} classBody - The class body content
+ * @returns {Array<{name: string, jsDoc: string, signature: string}>} - Array of methods with their JSDoc comments
+ */
+function extractMethodsWithComments(classBody) {
+  const methodsWithComments = [];
+  
+  try {
+    // Safer method for extracting methods with their JSDoc comments
+    // First, split the class body into potential method blocks
+    const methodBlocks = classBody.split(/\n\s*(?:public|private|protected|async|static|\w+)\s*/);
+    
+    for (let i = 1; i < methodBlocks.length; i++) {
+      // Find the preceding block that might contain JSDoc
+      const precedingText = i > 0 ? methodBlocks[i-1] : '';
+      const currentBlock = methodBlocks[i];
+      
+      // Only process if this looks like a method
+      if (currentBlock.match(/^\s*\w+\s*\(/)) {
+        // Extract method name
+        const methodNameMatch = currentBlock.match(/^\s*(\w+)\s*\(/);
+        if (!methodNameMatch) continue;
+        
+        const methodName = methodNameMatch[1];
+        if (methodName === 'constructor') continue; // Skip constructors
+        
+        // Look for JSDoc in the preceding text
+        const jsDocMatch = precedingText.match(/\/\*\*([\s\S]*?)\*\/\s*$/);
+        const jsDoc = jsDocMatch ? jsDocMatch[1].replace(/^\s*\*\s?/gm, '').trim() : null;
+        
+        // Get method signature up to the first curly brace
+        let signature = currentBlock;
+        const openBraceIndex = currentBlock.indexOf('{');
+        if (openBraceIndex > -1) {
+          // Find the matching closing brace
+          let braceCount = 1;
+          let closingIndex = openBraceIndex + 1;
+          
+          while (braceCount > 0 && closingIndex < currentBlock.length) {
+            if (currentBlock[closingIndex] === '{') braceCount++;
+            if (currentBlock[closingIndex] === '}') braceCount--;
+            closingIndex++;
+          }
+          
+          if (closingIndex <= currentBlock.length) {
+            signature = currentBlock.substring(0, closingIndex);
+          }
+        }
+        
+        methodsWithComments.push({
+          name: methodName,
+          jsDoc,
+          signature: signature.trim()
+        });
+      }
+    }
+  } catch (error) {
+    console.error(`Error extracting methods: ${error.message}`);
+  }
+  
+  return methodsWithComments;
 }
 
 /**

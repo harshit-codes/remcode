@@ -6,112 +6,156 @@
 
 Type definitions for code quality analysis
 
+## Dependencies
+
+- `../../vectorizers/types`
+
 ## Interfaces
 
 ### `QualityAnalysis`
 
-**Properties:**
+**Interface Definition:**
 
-- `modules: Record<string, ModuleQuality>;`
-- `files: Record<string, FileQuality>;`
-- `problematic_files: ProblematicFile[];`
-- `overall_assessment: OverallAssessment;`
+```typescript
+export interface QualityAnalysis {
+  modules: Record<string, ModuleQuality>;
+  files: Record<string, FileQuality>;
+  problematic_files: ProblematicFile[];
+  overall_assessment: OverallAssessment;
+}
+```
 
 ### `ModuleQuality`
 
-**Properties:**
+**Interface Definition:**
 
-- `complexity_score: number;`
-- `test_coverage?: number;`
-- `quality_assessment: QualityAssessment;`
-- `total_lines: number;`
-- `comment_ratio: number;`
-- `files?: string[];`
+```typescript
+export interface ModuleQuality {
+  complexity_score: number;
+  test_coverage?: number;
+  quality_assessment: QualityAssessment;
+  total_lines: number;
+  comment_ratio: number;
+  files?: string[];
+}
+```
 
 ### `FileQuality`
 
-**Properties:**
+**Interface Definition:**
 
-- `complexity_score: number;`
-- `test_coverage?: number;`
-- `quality_assessment: QualityAssessment;`
-- `classes: number;`
-- `functions: number;`
-- `longest_function_lines?: number;`
-- `comment_ratio: number;`
-- `cyclomatic_complexity?: number;`
-- `maintainability_index?: number;`
-- `recommended_chunking: ChunkingStrategy;`
-- `total_lines: number;`
-- `issues: string[];`
+```typescript
+export interface FileQuality {
+  complexity_score: number;
+  test_coverage?: number;
+  quality_assessment: QualityAssessment;
+  classes: number;
+  functions: number;
+  longest_function_lines?: number;
+  comment_ratio: number;
+  cyclomatic_complexity?: number;
+  maintainability_index?: number;
+  recommended_chunking: ChunkingStrategy;
+  total_lines: number;
+  issues: string[];
+}
+```
 
 ### `ProblematicFile`
 
-**Properties:**
+**Interface Definition:**
 
-- `file_path: string;`
-- `issues: string[];`
-- `handling_strategy: 'refactor' | 'ignore' | 'special_handling';`
+```typescript
+export interface ProblematicFile {
+  file_path: string;
+  issues: string[];
+  handling_strategy: 'refactor' | 'ignore' | 'special_handling';
+}
+```
 
 ### `OverallAssessment`
 
-**Properties:**
+**Interface Definition:**
 
-- `score: number; // 0-100`
-- `grade: 'A' | 'B' | 'C' | 'D' | 'F';`
-- `strengths: string[];`
-- `weaknesses: string[];`
-- `improvement_suggestions: string[];`
+```typescript
+export interface OverallAssessment {
+  score: number; // 0-100
+  grade: 'A' | 'B' | 'C' | 'D' | 'F';
+  strengths: string[];
+  weaknesses: string[];
+  improvement_suggestions: string[];
+}
+```
 
 ### `CodeStructureAnalysis`
 
-**Properties:**
+**Interface Definition:**
 
-- `classes: number;`
-- `functions: number;`
-- `longestFunction: number;`
-- `complexityScore: number;`
-- `issues: string[];`
+```typescript
+export interface CodeStructureAnalysis {
+  classes: number;
+  functions: number;
+  longestFunction: number;
+  complexityScore: number;
+  issues: string[];
+}
+```
 
 ### `CommentAnalysis`
 
-**Properties:**
+**Interface Definition:**
 
-- `commentLines: number;`
-- `totalLines: number;`
+```typescript
+export interface CommentAnalysis {
+  commentLines: number;
+  totalLines: number;
+}
+```
 
 ### `ESLintAnalysisResult`
 
-**Properties:**
+**Interface Definition:**
 
-- `issues: string[];`
-- `complexityScore: number;`
-- `classes: number;`
-- `functions: number;`
-- `longestFunction: number;`
-- `cyclomaticComplexity: number;`
+```typescript
+export interface ESLintAnalysisResult {
+  issues: string[];
+  complexityScore: number;
+  classes: number;
+  functions: number;
+  longestFunction: number;
+  cyclomaticComplexity: number;
+}
+```
 
 ### `ComplexityThresholds`
 
-**Properties:**
+**Interface Definition:**
 
-- `excellent: number;`
-- `good: number;`
-- `moderate: number;`
-- `poor: number;`
+```typescript
+export interface ComplexityThresholds {
+  excellent: number;
+  good: number;
+  moderate: number;
+  poor: number;
+}
+```
 
 ### `ComplexityReport`
 
-**Properties:**
+**Interface Definition:**
 
-- `aggregate: {`
-- `cyclomatic: number;`
-- `classes: number;`
-- `};`
-- `functions: Array<{`
-- `name: string;`
-- `sloc: {`
-- `physical: number;`
-- `};`
-- `}>;`
+```typescript
+export interface ComplexityReport {
+  aggregate: {
+    cyclomatic: number;
+    classes: number;
+  };
+  functions: Array<{
+    name: string;
+    sloc: {
+      physical: number;
+    };
+  }>;
+}
+```
 

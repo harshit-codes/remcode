@@ -1,43 +1,9 @@
 import { getLogger } from '../utils/logger';
-import { FileChange } from './change-detector';
+import { FileChange, FileAnalysis, AnalysisOptions, ChunkStrategyType } from './types';
 import * as fs from 'fs';
 import * as path from 'path';
-// Note: For production use, install these dependencies:
-// npm install @typescript-eslint/parser acorn --save-dev
-
-// Using regex-based parsing as a fallback if AST parsers aren't available
 
 const logger = getLogger('FileAnalyzer');
-
-export interface FileAnalysis {
-  path: string;
-  category: 'priority' | 'normal' | 'test' | 'config' | 'ignore';
-  language: string;
-  complexity: 'low' | 'medium' | 'high';
-  size: number;
-  sloc?: number; // Source lines of code (excluding comments and blank lines)
-  imports?: string[];
-  exports?: string[];
-  functions?: string[];
-  classes?: string[];
-  dependencies?: string[];
-  chunkingStrategy: ChunkingStrategy;
-  metadata?: Record<string, any>;
-}
-
-export type ChunkingStrategy = 
-  | 'function_level' // Chunk by function/method
-  | 'class_level'    // Chunk by class/module
-  | 'file_level'     // Chunk by entire file
-  | 'hybrid'         // Combination based on file size/complexity
-  | 'semantic';      // Based on semantic units of code
-
-export interface AnalysisOptions {
-  basePath: string;
-  skipAST?: boolean;
-  skipDependencies?: boolean;
-  maxFileSizeBytes?: number;
-}
 
 export class FileAnalyzer {
   private repoPath: string;
@@ -282,7 +248,7 @@ export class FileAnalyzer {
   /**
    * Determine the initial chunking strategy based on file path and language
    */
-  private determineChunkingStrategy(filePath: string, language: string): ChunkingStrategy {
+  private determineChunkingStrategy(filePath: string, language: string): ChunkStrategyType {
     const filename = path.basename(filePath).toLowerCase();
     
     // Special case for specific file types
@@ -297,13 +263,13 @@ export class FileAnalyzer {
       return 'function_level';
     }
     
-    return 'hybrid';
+    return 'sliding_window';
   }
   
   /**
    * Refine the chunking strategy based on the detailed analysis
    */
-  private refineChunkingStrategy(analysis: FileAnalysis): ChunkingStrategy {
+  private refineChunkingStrategy(analysis: FileAnalysis): ChunkStrategyType {
     // Start with the initial strategy
     let strategy = analysis.chunkingStrategy;
     
@@ -320,7 +286,7 @@ export class FileAnalyzer {
     
     // If file is very complex, use hybrid approach
     if (analysis.complexity === 'high') {
-      return 'hybrid';
+      return 'sliding_window_with_overlap';
     }
     
     return strategy;

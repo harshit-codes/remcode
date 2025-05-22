@@ -96,5 +96,10 @@ export interface ComplexityReport {
   }>;
 }
 
+import { ChunkStrategyType } from '../../vectorizers/types';
+
+// Re-export for convenience
+export { ChunkStrategyType } from '../../vectorizers/types';
+
 export type QualityAssessment = 'excellent' | 'good' | 'moderate' | 'poor' | 'problematic';
-export type ChunkingStrategy = 'function_level' | 'class_level' | 'file_level' | 'sliding_window' | 'sliding_window_with_overlap';
+export type ChunkingStrategy = ChunkStrategyType;

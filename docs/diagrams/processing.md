@@ -58,13 +58,48 @@ classDiagram
     catch()
     String()
   }
-  class FileChange {
+  class EnhancedDependencyAnalyzer {
+    repoPath: string
+    baseDependencyAnalyzer: BaseDependencyAnalyzer
+    BaseDependencyAnalyzer()
+    analyze(): Promise<EnhancedDependencyAnalysis>
+  }
+  class DependencyGraphNode {
     <<interface>>
+    id: string
+    type: 'file' | 'module' | 'function' | 'class'
+    name: string
     path: string
-    status: 'added' | 'modified' | 'deleted' | 'renamed'
-    previousPath: string
-    size: number
-    extension: string
+    importance: number; // 0-1 scale
+    complexity: 'low' | 'medium' | 'high'
+    metadata: Record<string, any>
+  }
+  class DependencyGraphEdge {
+    <<interface>>
+    source: string
+    target: string
+    type: 'imports' | 'exports' | 'calls' | 'extends' | 'implements'
+    weight: number; // Strength of dependency
+  }
+  class EnhancedDependencyAnalysis {
+    <<interface>>
+    nodes: DependencyGraphNode[]
+    edges: DependencyGraphEdge[]
+    modules: Record<string, {
+    files: string[]
+    dependencies: string[]
+    dependents: string[]
+    importance: number
+    complexity: 'low' | 'medium' | 'high'
+    criticalPaths: Array<{
+    path: string[]
+    importance: number
+    description: string
+    recommendations: Array<{
+    type: 'refactor' | 'optimize' | 'split' | 'merge'
+    target: string
+    reason: string
+    priority: 'low' | 'medium' | 'high'
   }
   class FileAnalyzer {
     repoPath: string
@@ -112,11 +147,11 @@ classDiagram
     determineComplexity(): FileAnalysis['complexity']
     if()
     if()
-    determineChunkingStrategy(): ChunkingStrategy
+    determineChunkingStrategy(): ChunkStrategyType
     if()
     if()
     if()
-    refineChunkingStrategy(): ChunkingStrategy
+    refineChunkingStrategy(): ChunkStrategyType
     if()
     if()
     if()
@@ -128,38 +163,17 @@ classDiagram
     if()
     if()
   }
-  class FileAnalysis {
-    <<interface>>
-    path: string
-    category: 'priority' | 'normal' | 'test' | 'config' | 'ignore'
-    language: string
-    complexity: 'low' | 'medium' | 'high'
-    size: number
-    sloc: number; // Source lines of code (excluding comments and blank lines)
-    imports: string[]
-    exports: string[]
-    functions: string[]
-    classes: string[]
-    dependencies: string[]
-    chunkingStrategy: ChunkingStrategy
-    metadata: Record<string, any>
-  }
-  class AnalysisOptions {
-    <<interface>>
-    basePath: string
-    skipAST: boolean
-    skipDependencies: boolean
-    maxFileSizeBytes: number
-  }
   class IncrementalProcessor {
     repoPath: string
     stateManager: StateManager
     storage: PineconeStorage | null = null
-    chunker: CodeChunker
+    chunker: ChunkingManager
     embeddingManager: EmbeddingManager
     options: IncrementalProcessorOptions
     stats: ProcessingStats
     StateManager()
+    ChunkingManager()
+    EmbeddingManager()
     Date()
     initialize(): Promise<void>
     if()
@@ -198,30 +212,46 @@ classDiagram
     String()
     Error()
   }
-  class ProcessingStats {
-    <<interface>>
-    totalFiles: number
-    addedFiles: number
-    modifiedFiles: number
-    deletedFiles: number
-    totalChunks: number
-    totalEmbeddings: number
-    errorCount: number
-    startTime: Date
-    endTime: Date
-    durationMs: number
-  }
-  class IncrementalProcessorOptions {
-    <<interface>>
+  class ProcessingPipeline {
     repoPath: string
-    pineconeApiKey: string
-    pineconeEnvironment: string
-    pineconeIndexName: string
-    pineconeNamespace: string
-    embeddingModel: string
-    batchSize: number
-    dryRun: boolean
-    includeTests: boolean
+    changeDetector: ChangeDetector
+    fileAnalyzer: FileAnalyzer
+    incrementalProcessor: IncrementalProcessor
+    stateManager: StateManager
+    ChangeDetector()
+    FileAnalyzer()
+    IncrementalProcessor()
+    StateManager()
+    processIncremental(): Promise<ProcessingStats>
+    if()
+    catch()
+    String()
+    repository()
+    processAll(): Promise<ProcessingStats>
+    catch()
+    String()
+    getStatus(): Promise<
+    if()
+    catch()
+    String()
+    hasPendingChanges(): Promise<boolean>
+    if()
+    catch()
+    String()
+    getLastProcessedCommit(): Promise<string>
+    catch()
+    String()
+    createEmptyStats(): ProcessingStats
+    Date()
+    Date()
+    findAllCodeFiles(): Promise<string[]>
+    require()
+    execSync()
+    for()
+    require()
+    if()
+    catch()
+    String()
   }
   class StateManager {
     configPath: string
@@ -288,44 +318,146 @@ classDiagram
     chunkStrategy: string
     [key: string]: any
   }
+  class FileChange {
+    <<interface>>
+    path: string
+    status: 'added' | 'modified' | 'deleted' | 'renamed'
+    previousPath: string
+    size: number
+    extension: string
+  }
+  class FileAnalysis {
+    <<interface>>
+    path: string
+    category: 'priority' | 'normal' | 'test' | 'config' | 'ignore'
+    language: string
+    complexity: 'low' | 'medium' | 'high'
+    size: number
+    sloc: number
+    imports: string[]
+    exports: string[]
+    functions: string[]
+    classes: string[]
+    dependencies: string[]
+    chunkingStrategy: ChunkStrategyType
+    metadata: Record<string, any>
+  }
+  class ProcessingStats {
+    <<interface>>
+    totalFiles: number
+    addedFiles: number
+    modifiedFiles: number
+    deletedFiles: number
+    totalChunks: number
+    totalEmbeddings: number
+    errorCount: number
+    startTime: Date
+    endTime: Date
+    durationMs: number
+  }
+  class AnalysisOptions {
+    <<interface>>
+    basePath: string
+    skipAST: boolean
+    skipDependencies: boolean
+    maxFileSizeBytes: number
+  }
+  class IncrementalProcessorOptions {
+    <<interface>>
+    repoPath: string
+    pineconeApiKey: string
+    pineconeEnvironment: string
+    pineconeIndexName: string
+    pineconeNamespace: string
+    embeddingModel: string
+    batchSize: number
+    dryRun: boolean
+    includeTests: boolean
+  }
+  class VectorMetadata {
+    <<interface>>
+    filePath: string
+    language: string
+    category: string
+    startLine: number
+    endLine: number
+    functionName: string
+    className: string
+    chunkType: string
+    strategy: string
+    repo: string
+    changeType: 'added' | 'modified' | 'deleted' | 'renamed'
+    [key: string]: any
+  }
 
   %% Inheritance relationships
 
   %% Usage relationships
-  FileAnalyzer --> ChangeDetector: uses
-  FileAnalysis --> ChangeDetector: uses
-  AnalysisOptions --> ChangeDetector: uses
+  ChangeDetector --> FileChange: uses
+  ChangeDetector --> FileAnalysis: uses
+  ChangeDetector --> ProcessingStats: uses
+  ChangeDetector --> AnalysisOptions: uses
+  ChangeDetector --> IncrementalProcessorOptions: uses
+  ChangeDetector --> VectorMetadata: uses
+  EnhancedDependencyAnalyzer --> FileChange: uses
+  DependencyGraphNode --> FileChange: uses
+  DependencyGraphEdge --> FileChange: uses
+  EnhancedDependencyAnalysis --> FileChange: uses
+  EnhancedDependencyAnalyzer --> FileAnalysis: uses
+  DependencyGraphNode --> FileAnalysis: uses
+  DependencyGraphEdge --> FileAnalysis: uses
+  EnhancedDependencyAnalysis --> FileAnalysis: uses
+  EnhancedDependencyAnalyzer --> ProcessingStats: uses
+  DependencyGraphNode --> ProcessingStats: uses
+  DependencyGraphEdge --> ProcessingStats: uses
+  EnhancedDependencyAnalysis --> ProcessingStats: uses
+  EnhancedDependencyAnalyzer --> AnalysisOptions: uses
+  DependencyGraphNode --> AnalysisOptions: uses
+  DependencyGraphEdge --> AnalysisOptions: uses
+  EnhancedDependencyAnalysis --> AnalysisOptions: uses
+  EnhancedDependencyAnalyzer --> IncrementalProcessorOptions: uses
+  DependencyGraphNode --> IncrementalProcessorOptions: uses
+  DependencyGraphEdge --> IncrementalProcessorOptions: uses
+  EnhancedDependencyAnalysis --> IncrementalProcessorOptions: uses
+  EnhancedDependencyAnalyzer --> VectorMetadata: uses
+  DependencyGraphNode --> VectorMetadata: uses
+  DependencyGraphEdge --> VectorMetadata: uses
+  EnhancedDependencyAnalysis --> VectorMetadata: uses
   FileAnalyzer --> FileChange: uses
-  FileAnalysis --> FileChange: uses
-  AnalysisOptions --> FileChange: uses
-  IncrementalProcessor --> ChangeDetector: uses
-  ProcessingStats --> ChangeDetector: uses
-  IncrementalProcessorOptions --> ChangeDetector: uses
-  IncrementalProcessor --> FileChange: uses
-  ProcessingStats --> FileChange: uses
-  IncrementalProcessorOptions --> FileChange: uses
-  IncrementalProcessor --> FileAnalyzer: uses
-  ProcessingStats --> FileAnalyzer: uses
-  IncrementalProcessorOptions --> FileAnalyzer: uses
-  IncrementalProcessor --> FileAnalysis: uses
-  ProcessingStats --> FileAnalysis: uses
-  IncrementalProcessorOptions --> FileAnalysis: uses
-  IncrementalProcessor --> AnalysisOptions: uses
-  ProcessingStats --> AnalysisOptions: uses
-  IncrementalProcessorOptions --> AnalysisOptions: uses
+  FileAnalyzer --> FileAnalysis: uses
+  FileAnalyzer --> ProcessingStats: uses
+  FileAnalyzer --> AnalysisOptions: uses
+  FileAnalyzer --> IncrementalProcessorOptions: uses
+  FileAnalyzer --> VectorMetadata: uses
   IncrementalProcessor --> StateManager: uses
-  ProcessingStats --> StateManager: uses
-  IncrementalProcessorOptions --> StateManager: uses
   IncrementalProcessor --> RemcodeState: uses
-  ProcessingStats --> RemcodeState: uses
-  IncrementalProcessorOptions --> RemcodeState: uses
+  IncrementalProcessor --> FileChange: uses
+  IncrementalProcessor --> FileAnalysis: uses
+  IncrementalProcessor --> ProcessingStats: uses
+  IncrementalProcessor --> AnalysisOptions: uses
+  IncrementalProcessor --> IncrementalProcessorOptions: uses
+  IncrementalProcessor --> VectorMetadata: uses
+  ProcessingPipeline --> ChangeDetector: uses
+  ProcessingPipeline --> FileAnalyzer: uses
+  ProcessingPipeline --> IncrementalProcessor: uses
+  ProcessingPipeline --> StateManager: uses
+  ProcessingPipeline --> RemcodeState: uses
+  ProcessingPipeline --> FileChange: uses
+  ProcessingPipeline --> FileAnalysis: uses
+  ProcessingPipeline --> ProcessingStats: uses
+  ProcessingPipeline --> AnalysisOptions: uses
+  ProcessingPipeline --> IncrementalProcessorOptions: uses
+  ProcessingPipeline --> VectorMetadata: uses
 
   %% Style and notes
   note "Generated from folder: processing" as Note1
 
   %% File groupings
   note "change-detector.ts" as Note_change-detector
+  note "enhanced-dependency-analyzer.ts" as Note_enhanced-dependency-analyzer
   note "file-analyzer.ts" as Note_file-analyzer
   note "incremental.ts" as Note_incremental
+  note "pipeline.ts" as Note_pipeline
   note "state-manager.ts" as Note_state-manager
+  note "types.ts" as Note_types
 ```

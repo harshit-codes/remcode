@@ -10,101 +10,195 @@ Log levels
 
 ### `LogRecord`
 
-**Properties:**
+**Interface Definition:**
 
-- `timestamp: Date;`
-- `level: LogLevel;`
-- `name: string;`
-- `message: string;`
-- `metadata?: Record<string, any>;`
-- `error?: Error;`
+```typescript
+export interface LogRecord {
+  timestamp: Date;
+  level: LogLevel;
+  name: string;
+  message: string;
+  metadata?: Record<string, any>;
+  error?: Error;
+}
+```
 
 ### `Logger`
 
-**Properties:**
+**Interface Definition:**
 
-- `trace(message: string, metadata?: Record<string, any>): void;`
-- `debug(message: string, metadata?: Record<string, any>): void;`
-- `info(message: string, metadata?: Record<string, any>): void;`
-- `warn(message: string, metadata?: Record<string, any>): void;`
-- `error(message: string, error?: Error, metadata?: Record<string, any>): void;`
-- `fatal(message: string, error?: Error, metadata?: Record<string, any>): void;`
-- `log(level: LogLevel, message: string, error?: Error, metadata?: Record<string, any>): void;`
-- `child(name: string): Logger;`
-- `withMetadata(metadata: Record<string, any>): Logger;`
+```typescript
+export interface Logger {
+  trace(message: string, metadata?: Record<string, any>): void;
+  debug(message: string, metadata?: Record<string, any>): void;
+  info(message: string, metadata?: Record<string, any>): void;
+  warn(message: string, metadata?: Record<string, any>): void;
+  error(message: string, error?: Error, metadata?: Record<string, any>): void;
+  fatal(message: string, error?: Error, metadata?: Record<string, any>): void;
+  log(level: LogLevel, message: string, error?: Error, metadata?: Record<string, any>): void;
+  child(name: string): Logger;
+  withMetadata(metadata: Record<string, any>): Logger;
+}
+```
 
 ### `LoggerConfig`
 
-**Properties:**
+**Interface Definition:**
 
-- `level: LogLevel;`
-- `colors: boolean;`
-- `timestamp: boolean;`
-- `logToFile: boolean;`
-- `logFilePath?: string;`
-- `logFormat?: 'text' | 'json';`
+```typescript
+export interface LoggerConfig {
+  level: LogLevel;
+  colors: boolean;
+  timestamp: boolean;
+  logToFile: boolean;
+  logFilePath?: string;
+  logFormat?: 'text' | 'json';
+}
+```
 
 ## Functions
 
 ### `configureLogger()`
 
-**Parameters:**
+**Function Signature:**
 
-- `config: Partial<LoggerConfig>`
+```typescript
+export function configureLogger(config: Partial<LoggerConfig>): void {
+```
 
-**Returns:** `void`
+**Full Function:**
+
+```typescript
+export function configureLogger(config: Partial<LoggerConfig>): void {
+  globalConfig = { ...globalConfig, ...config };
+  
+  // Set up file logging if enabled
+  if (globalConfig.logToFile && globalConfig.logFilePath) {
+    const dir = path.dirname(globalConfig.logFilePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  }
+}
+```
 
 ### `createLogger()`
 
-**Parameters:**
+**Function Signature:**
 
-- `name: string`
-- `baseMetadata: Record<string`
-- `any> = {}`
+```typescript
+export function createLogger(name: string, baseMetadata: Record<string, any> = {
+```
 
-**Returns:** `Logger`
+**Full Function:**
+
+```typescript
+export function createLogger(name: string, baseMetadata: Record<string, any> = {}
+```
 
 ### `getLogger()`
 
-**Parameters:**
+**Function Signature:**
 
-- `component: string`
+```typescript
+export function getLogger(component: string): Logger {
+```
 
-**Returns:** `Logger`
+**Full Function:**
+
+```typescript
+export function getLogger(component: string): Logger {
+  return createLogger(component);
+}
+```
 
 ### `logError()`
 
-**Parameters:**
+**Function Signature:**
 
-- `error: Error`
-- `context?: string`
+```typescript
+export function logError(error: Error, context?: string): void {
+```
 
-**Returns:** `void`
+**Full Function:**
+
+```typescript
+export function logError(error: Error, context?: string): void {
+  const component = context || 'Error';
+  const logger = getLogger(component);
+  logger.error('An error occurred', error);
+}
+```
 
 ### `getLogLevel()`
 
-**Returns:** `LogLevel`
+**Function Signature:**
+
+```typescript
+export function getLogLevel(): LogLevel {
+```
+
+**Full Function:**
+
+```typescript
+export function getLogLevel(): LogLevel {
+  return globalConfig.level;
+}
+```
 
 ### `setLogLevel()`
 
-**Parameters:**
+**Function Signature:**
 
-- `level: LogLevel`
+```typescript
+export function setLogLevel(level: LogLevel): void {
+```
 
-**Returns:** `void`
+**Full Function:**
+
+```typescript
+export function setLogLevel(level: LogLevel): void {
+  globalConfig.level = level;
+}
+```
 
 ### `enableFileLogging()`
 
-**Parameters:**
+**Function Signature:**
 
-- `filePath: string`
-- `format: 'text' | 'json' = 'text'`
+```typescript
+export function enableFileLogging(filePath: string, format: 'text' | 'json' = 'text'): void {
+```
 
-**Returns:** `void`
+**Full Function:**
+
+```typescript
+export function enableFileLogging(filePath: string, format: 'text' | 'json' = 'text'): void {
+  configureLogger({
+    logToFile: true,
+    logFilePath: filePath,
+    logFormat: format
+  });
+}
+```
 
 ### `disableFileLogging()`
 
-**Returns:** `void`
+**Function Signature:**
+
+```typescript
+export function disableFileLogging(): void {
+```
+
+**Full Function:**
+
+```typescript
+export function disableFileLogging(): void {
+  configureLogger({
+    logToFile: false
+  });
+}
+```
 
 ## Variables
 

@@ -10,48 +10,60 @@ No overview provided.
 
 ### `VectorizationConfig`
 
-**Properties:**
+**Interface Definition:**
 
-- `pineconeApiKey: string;`
-- `pineconeIndexName: string;`
-- `pineconeNamespace?: string;`
-- `pineconeEnvironment?: string;`
-- `huggingfaceToken: string;`
-- `embeddingModel?: string;`
-- `fallbackModel?: string;`
-- `batchSize?: number;`
-- `maxFileSize?: number;`
-- `includeExtensions?: string[];`
-- `excludeExtensions?: string[];`
-- `excludePaths?: string[];`
+```typescript
+export interface VectorizationConfig {
+  pineconeApiKey: string;
+  pineconeIndexName: string;
+  pineconeNamespace?: string;
+  pineconeEnvironment?: string;
+  huggingfaceToken: string;
+  embeddingModel?: string;
+  fallbackModel?: string;
+  batchSize?: number;
+  maxFileSize?: number;
+  includeExtensions?: string[];
+  excludeExtensions?: string[];
+  excludePaths?: string[];
+}
+```
 
 ### `CodeChunk`
 
-**Properties:**
+**Interface Definition:**
 
-- `content: string;`
-- `metadata: {`
-- `file_path: string;`
-- `strategy: string;`
-- `language?: string;`
-- `start_line?: number;`
-- `end_line?: number;`
-- `function_name?: string;`
-- `class_name?: string;`
-- `chunk_type?: string;`
-- `[key: string]: any;`
-- `};`
-- `embedding?: number[];`
-- `id?: string;`
+```typescript
+export interface CodeChunk {
+  content: string;
+  metadata: {
+    file_path: string;
+    strategy: string;
+    language?: string;
+    start_line?: number;
+    end_line?: number;
+    function_name?: string;
+    class_name?: string;
+    chunk_type?: string;
+    [key: string]: any;
+  };
+  embedding?: number[];
+  id?: string;
+}
+```
 
 ### `VectorizationResult`
 
-**Properties:**
+**Interface Definition:**
 
-- `success: boolean;`
-- `filesProcessed: number;`
-- `chunksCreated: number;`
-- `vectorsStored: number;`
-- `errors: string[];`
-- `duration: number;`
+```typescript
+export interface VectorizationResult {
+  success: boolean;
+  filesProcessed: number;
+  chunksCreated: number;
+  vectorsStored: number;
+  errors: string[];
+  duration: number;
+}
+```
 

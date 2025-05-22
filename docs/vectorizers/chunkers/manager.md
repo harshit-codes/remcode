@@ -21,29 +21,31 @@ Manages code chunking with various strategies tailored to different code types
 
 **Methods:**
 
-- `TypeScript()`
-- `chunkFile()`
-- `if()`
-- `switch()`
-- `catch()`
-- `String()`
-- `chunkByFunction()`
-- `while()`
-- `if()`
-- `if()`
-- `chunkByClass()`
-- `while()`
-- `if()`
-- `if()`
-- `chunkAsFile()`
-- `chunkBySlidingWindow()`
-- `if()`
-- `TokenTextSplitter()`
-- `Document()`
-- `fallbackChunking()`
-- `for()`
-- `if()`
-- `determineChunkSize()`
-- `if()`
-- `if()`
+#### `chunkFile()`
+
+Chunks a file's content based on the specified strategy
+@param content The file content to chunk
+@param strategy The chunking strategy to apply
+@param fileInfo Information about the file
+@returns An array of code chunks
+
+```typescript
+chunkFile(content: string, strategy: string, fileInfo: any): Promise<CodeChunk[]> {
+```
+
+#### `fallbackChunking()`
+
+Simple fallback chunking strategy when advanced methods fail
+
+```typescript
+fallbackChunking(content: string, fileInfo: any): CodeChunk[] {
+```
+
+#### `determineChunkSize()`
+
+Determines appropriate chunk size based on content and language
+
+```typescript
+determineChunkSize(content: string, language: string): number {
+```
 

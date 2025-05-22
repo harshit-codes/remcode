@@ -1,17 +1,10 @@
 import { getLogger } from '../utils/logger';
+import { FileChange } from './types';
 import { execSync } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
 const logger = getLogger('ChangeDetector');
-
-export interface FileChange {
-  path: string;
-  status: 'added' | 'modified' | 'deleted' | 'renamed';
-  previousPath?: string;
-  size?: number;
-  extension?: string;
-}
 
 export class ChangeDetector {
   private repoPath: string;

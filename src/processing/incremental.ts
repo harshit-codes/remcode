@@ -1,77 +1,27 @@
 import { getLogger } from '../utils/logger';
-import { FileChange } from './change-detector';
-import { FileAnalysis } from './file-analyzer';
 import { StateManager, RemcodeState } from './state-manager';
+import { PineconeStorage } from '../vectorizers/storage/pinecone';
+import { ChunkingManager } from '../vectorizers/chunkers/manager';
+import { EmbeddingManager } from '../vectorizers/embedders/manager';
+import { 
+  FileChange, 
+  FileAnalysis, 
+  ProcessingStats, 
+  IncrementalProcessorOptions,
+  CodeChunk
+} from './types';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Import vector storage class
-import { PineconeStorage } from '../vectorizers/storage/pinecone';
-
-// Note: These modules need to be created or installed
-// For reference implementation only
-
-// Interface for Code Chunker
-interface CodeChunker {
-  chunkCode(content: string, options: {
-    filePath: string;
-    language: string;
-    strategy: string;
-  }): CodeChunk[];
-}
-
-// Interface for Embedding Manager
-interface EmbeddingManager {
-  embedChunks(chunks: CodeChunk[]): Promise<VectorData[]>;
-}
-
-// Interface for Code Chunk
-interface CodeChunk {
-  content: string;
-  startLine?: number;
-  endLine?: number;
-  metadata?: Record<string, any>;
-}
-
-// Interface for Vector Data
-interface VectorData {
-  id?: string;
-  embedding: number[];
-  metadata?: Record<string, any>;
-}
-
 const logger = getLogger('IncrementalProcessor');
 
-export interface ProcessingStats {
-  totalFiles: number;
-  addedFiles: number;
-  modifiedFiles: number;
-  deletedFiles: number;
-  totalChunks: number;
-  totalEmbeddings: number;
-  errorCount: number;
-  startTime: Date;
-  endTime?: Date;
-  durationMs?: number;
-}
 
-export interface IncrementalProcessorOptions {
-  repoPath: string;
-  pineconeApiKey: string;
-  pineconeEnvironment?: string;
-  pineconeIndexName: string;
-  pineconeNamespace?: string;
-  embeddingModel?: string;
-  batchSize?: number;
-  dryRun?: boolean;
-  includeTests?: boolean;
-}
 
 export class IncrementalProcessor {
   private repoPath: string;
   private stateManager: StateManager;
   private storage: PineconeStorage | null = null;
-  private chunker: CodeChunker;
+  private chunker: ChunkingManager;
   private embeddingManager: EmbeddingManager;
   private options: IncrementalProcessorOptions;
   private stats: ProcessingStats;
@@ -90,10 +40,20 @@ export class IncrementalProcessor {
     this.repoPath = options.repoPath;
     this.stateManager = new StateManager(options.repoPath);
     
-    // Note: In a real implementation, these would be properly initialized
-    // This is a simplified implementation for reference
-    this.chunker = {} as CodeChunker; // Placeholder
-    this.embeddingManager = {} as EmbeddingManager; // Placeholder
+    // Initialize chunking manager with default strategy
+    this.chunker = new ChunkingManager({
+      clean_modules: 'function_level',
+      complex_modules: 'class_level', 
+      monolithic_files: 'sliding_window_with_overlap'
+    });
+    
+    // Initialize embedding manager
+    this.embeddingManager = new EmbeddingManager({
+      primary: options.embeddingModel || 'microsoft/graphcodebert-base',
+      fallback: 'sentence-transformers/all-MiniLM-L6-v2',
+      batchSize: options.batchSize || 10,
+      token: process.env.HUGGINGFACE_TOKEN
+    });
     
     // Initialize stats
     this.stats = {
@@ -236,10 +196,12 @@ export class IncrementalProcessor {
       const content = fs.readFileSync(filePath, 'utf8');
       
       // 2. Chunk the content based on the chunking strategy
-      const chunks = this.chunker.chunkCode(content, {
-        filePath: file.path,
+      const chunks = await this.chunker.chunkFile(content, analysis.chunkingStrategy, {
+        file_path: file.path,
+        relative_path: file.path,
         language: analysis.language,
-        strategy: analysis.chunkingStrategy
+        size: analysis.size,
+        extension: path.extname(file.path)
       });
       
       this.stats.totalChunks += chunks.length;
@@ -250,7 +212,7 @@ export class IncrementalProcessor {
         ...chunk,
         metadata: {
           ...chunk.metadata,
-          filePath: file.path,
+          file_path: file.path,
           language: analysis.language,
           category: analysis.category,
           repo: path.basename(this.repoPath),
@@ -280,8 +242,17 @@ export class IncrementalProcessor {
       
       // 5. Store vectors in database
       if (this.storage && embeddings.length > 0) {
-        await this.storage.storeVectors(embeddings);
-        logger.info(`Stored ${embeddings.length} vectors for ${file.path}`);
+        // Convert CodeChunk[] to VectorData[] for storage
+        const vectorData = embeddings
+          .filter(chunk => chunk.embedding && chunk.embedding.length > 0)
+          .map(chunk => ({
+            id: chunk.id,
+            embedding: chunk.embedding!,
+            metadata: chunk.metadata
+          }));
+          
+        await this.storage.storeVectors(vectorData);
+        logger.info(`Stored ${vectorData.length} vectors for ${file.path}`);
       }
       
     } catch (error) {
@@ -310,7 +281,7 @@ export class IncrementalProcessor {
       
       // Delete vectors by metadata filter
       const deleteCount = await this.storage.deleteVectorsByMetadata({
-        filePath: filePath
+        file_path: filePath
       }, this.options.pineconeNamespace);
       
       logger.info(`Deleted vectors for file: ${filePath}`);

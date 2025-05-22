@@ -15,6 +15,32 @@ A simple example class
 
 ### `ExampleClass`
 
+**Class Definition:**
+
+```typescript
+export class ExampleClass {
+  private value: string;
+  
+  constructor(value: string) {
+    this.value = value;
+  }
+  
+  /**
+   * Gets the value
+   */
+  getValue(): string {
+    return this.value;
+  }
+  
+  /**
+   * Sets the value
+   */
+  setValue(newValue: string): void {
+    this.value = newValue;
+  }
+}
+```
+
 **Methods:**
 
 - `getValue()`
@@ -24,9 +50,17 @@ A simple example class
 
 ### `doSomething()`
 
-**Parameters:**
+**Function Signature:**
 
-- `input: string`
+```typescript
+export function doSomething(input: string): string {
+```
 
-**Returns:** `string`
+**Full Function:**
+
+```typescript
+export function doSomething(input: string): string {
+  return 'Modified: ' + input;
+}
+```
 

@@ -39,9 +39,13 @@ This documentation provides an overview of the Remcode codebase structure, entit
       - [setup](mcp/handlers/setup.md)
   - **processing/**
     - [change-detector](processing/change-detector.md)
+    - [enhanced-dependency-analyzer](processing/enhanced-dependency-analyzer.md)
     - [file-analyzer](processing/file-analyzer.md)
     - [incremental](processing/incremental.md)
+    - [index](processing/index.md)
+    - [pipeline](processing/pipeline.md)
     - [state-manager](processing/state-manager.md)
+    - [types](processing/types.md)
   - **search/**
     - [context-extractor](search/context-extractor.md)
     - [query-processor](search/query-processor.md)

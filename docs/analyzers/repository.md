@@ -16,55 +16,28 @@ Mapping of file extensions to languages
 
 **Methods:**
 
-- `Map()`
-- `for()`
-- `for()`
-- `analyze()`
-- `findFiles()`
-- `catch()`
-- `String()`
-- `analyzeRepositoryInfo()`
-- `for()`
-- `if()`
-- `catch()`
-- `String()`
-- `for()`
-- `detectBuildSystems()`
-- `Set()`
-- `for()`
-- `if()`
-- `if()`
-- `for()`
-- `if()`
-- `getPrimaryLanguages()`
-- `for()`
-- `languages()`
-- `analyzeModules()`
-- `for()`
-- `if()`
-- `if()`
-- `Set()`
-- `if()`
-- `for()`
-- `if()`
-- `if()`
-- `if()`
-- `if()`
-- `if()`
-- `score()`
-- `analyzeFiles()`
-- `for()`
-- `if()`
-- `if()`
-- `if()`
-- `if()`
-- `if()`
-- `catch()`
-- `String()`
-- `getModulePath()`
-- `if()`
-- `countClassesAndFunctions()`
-- `if()`
-- `if()`
-- `if()`
+#### `analyze()`
+
+Analyzes the repository to provide insights about its structure and composition
+@returns Analysis results
+
+```typescript
+analyze(): Promise<RepositoryAnalysis> {
+```
+
+#### `getModulePath()`
+
+Gets the module path for a file
+
+```typescript
+getModulePath(relativePath: string): string | null {
+```
+
+#### `countClassesAndFunctions()`
+
+Counts classes and functions in a file
+
+```typescript
+countClassesAndFunctions(content: string, language: string): { classes: number; functions: number }
+```
 
