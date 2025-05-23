@@ -1,16 +1,29 @@
-# Remcode workflow version: 0.2.0
-# Generated: 2025-05-22T10:44:20.091Z
+# Remcode Advanced workflow version: 0.3.0
+# Generated: 2025-05-23T10:00:00.000Z
 name: Remcode Advanced Processing
 
 on:
   push:
     branches: [ main, master, develop ]
+    paths-ignore:
+      - '*.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
   workflow_dispatch:
     inputs:
       force_full_reprocess:
         description: 'Force full reprocessing'
         type: boolean
         default: false
+      processing_type:
+        description: 'Processing type'
+        type: choice
+        options:
+          - auto
+          - full
+          - incremental
+        default: auto
       debug_mode:
         description: 'Enable debug mode'
         type: boolean
@@ -19,11 +32,62 @@ on:
         description: 'Embedding model to use'
         type: string
         default: 'microsoft/graphcodebert-base'
-        required: false
+      retry_attempts:
+        description: 'Number of retry attempts on failure'
+        type: number
+        default: 3
+
+env:
+  NODE_VERSION: '18'
+  TIMEOUT_SECONDS: 7200
+  MAX_RETRIES: ${{ github.event.inputs.retry_attempts || 3 }}
 
 jobs:
-  process:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      should_process: ${{ steps.check.outputs.should_process }}
+      processing_type: ${{ steps.check.outputs.processing_type }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Check if processing needed
+      id: check
+      run: |
+        # Check if there are any code changes
+        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(ts|js|jsx|tsx|py|java|go|rb|php|cpp|c|cs|rs)$' || true)
+        
+        if [ -z "$CHANGED_FILES" ] && [ "${{ github.event.inputs.force_full_reprocess }}" != "true" ]; then
+          echo "should_process=false" >> $GITHUB_OUTPUT
+          echo "No code files changed, skipping processing"
+        else
+          echo "should_process=true" >> $GITHUB_OUTPUT
+          
+          if [ "${{ github.event.inputs.force_full_reprocess }}" = "true" ]; then
+            echo "processing_type=full" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.inputs.processing_type }}" != "" ]; then
+            echo "processing_type=${{ github.event.inputs.processing_type }}" >> $GITHUB_OUTPUT
+          else
+            echo "processing_type=auto" >> $GITHUB_OUTPUT
+          fi
+        fi
+
+  process:
+    needs: validate
+    if: needs.validate.outputs.should_process == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        attempt: [1]
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -33,53 +97,190 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci
+    - name: Cache processing artifacts
+      uses: actions/cache@v4
+      with:
+        path: |
+          .remcode-cache
+          node_modules/.cache
+        key: remcode-${{ runner.os }}-${{ github.sha }}
+        restore-keys: |
+          remcode-${{ runner.os }}-
 
-    - name: Analyze repository
-      id: analyze
-      run: npx remcode@latest analyze --output-json
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Process with Remcode
-      id: process
+    - name: Environment validation
       run: |
-        DEBUG_FLAG=""
-        if [ "${{ github.event.inputs.debug_mode }}" == "true" ]; then
-          DEBUG_FLAG="--debug"
-        fi
+        echo "🔍 Environment Validation"
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Processing type: ${{ needs.validate.outputs.processing_type }}"
+        echo "Debug mode: ${{ github.event.inputs.debug_mode }}"
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        echo "Memory: $(free -h)"
+        echo "Disk space: $(df -h)"
 
-        FORCE_FLAG=""
-        if [ "${{ github.event.inputs.force_full_reprocess }}" == "true" ]; then
-          FORCE_FLAG="--force"
-        fi
+    - name: Install dependencies with retry
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 10
+        max_attempts: 3
+        command: |
+          npm ci
+          npm run build
 
-        EMBEDDING_MODEL="${{ github.event.inputs.embedding_model }}"
-        if [ -z "$EMBEDDING_MODEL" ]; then
-          EMBEDDING_MODEL="microsoft/graphcodebert-base"
+    - name: Validate API keys and configuration
+      run: |
+        echo "🔑 API Key Validation"
+        
+        # Check required secrets
+        if [ -z "$PINECONE_API_KEY" ]; then
+          echo "❌ PINECONE_API_KEY is not set"
+          exit 1
         fi
+        if [ -z "$HUGGINGFACE_TOKEN" ]; then
+          echo "❌ HUGGINGFACE_TOKEN is not set"
+          exit 1
+        fi
+        
+        # Validate Pinecone connection
+        echo "🔗 Testing Pinecone connection..."
+        curl -s "https://api.pinecone.io/databases" \
+          -H "Authorization: Bearer $PINECONE_API_KEY" \
+          -H "Content-Type: application/json" || {
+          echo "❌ Failed to connect to Pinecone API"
+          exit 1
+        }
+        
+        echo "✅ All API keys validated successfully"
+      env:
+        PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+        HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
 
-        npx remcode@latest process $DEBUG_FLAG $FORCE_FLAG --embedding-model="$EMBEDDING_MODEL" --metrics
+    - name: Dry run validation
+      run: |
+        echo "🧪 Running dry run to validate configuration..."
+        npx remcode process --dry-run --type ${{ needs.validate.outputs.processing_type }}
+      env:
+        PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+        HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        PINECONE_ENVIRONMENT: ${{ vars.PINECONE_ENVIRONMENT || 'gcp-starter' }}
+        PINECONE_INDEX_NAME: ${{ vars.PINECONE_INDEX_NAME }}
+        PINECONE_NAMESPACE: ${{ vars.PINECONE_NAMESPACE || 'main' }}
+        EMBEDDING_MODEL: ${{ github.event.inputs.embedding_model || 'microsoft/graphcodebert-base' }}
+
+    - name: Process with Remcode (with retry)
+      id: process
+      uses: nick-fields/retry@v3
+      with:
+        timeout_minutes: 90
+        max_attempts: ${{ env.MAX_RETRIES }}
+        retry_on: error
+        command: |
+          echo "🚀 Starting Remcode processing (attempt ${{ github.run_attempt }})..."
+          
+          VERBOSE_FLAG=""
+          if [ "${{ github.event.inputs.debug_mode }}" = "true" ]; then
+            VERBOSE_FLAG="--verbose"
+          fi
+          
+          npx remcode process \
+            --type ${{ needs.validate.outputs.processing_type }} \
+            --timeout ${{ env.TIMEOUT_SECONDS }} \
+            --report processing-report-${{ github.sha }}.json \
+            $VERBOSE_FLAG
+          
+          echo "✅ Processing completed successfully"
       env:
         PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
         HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        REPO_NAME: test-repo
+        PINECONE_ENVIRONMENT: ${{ vars.PINECONE_ENVIRONMENT || 'gcp-starter' }}
+        PINECONE_INDEX_NAME: ${{ vars.PINECONE_INDEX_NAME }}
+        PINECONE_NAMESPACE: ${{ vars.PINECONE_NAMESPACE || 'main' }}
+        EMBEDDING_MODEL: ${{ github.event.inputs.embedding_model || 'microsoft/graphcodebert-base' }}
+        BATCH_SIZE: ${{ vars.BATCH_SIZE || '10' }}
+        INCLUDE_TESTS: ${{ vars.INCLUDE_TESTS || 'true' }}
 
-    - name: Upload metrics
-      uses: actions/upload-artifact@v3
+    - name: Validate processing results
       if: always()
+      run: |
+        echo "🔍 Validating processing results..."
+        
+        if [ -f "processing-report-${{ github.sha }}.json" ]; then
+          echo "✅ Processing report found"
+          
+          # Validate report structure
+          TOTAL_FILES=$(cat processing-report-${{ github.sha }}.json | jq -r '.results.totalFiles // 0')
+          TOTAL_EMBEDDINGS=$(cat processing-report-${{ github.sha }}.json | jq -r '.results.totalEmbeddings // 0')
+          
+          if [ "$TOTAL_FILES" -gt 0 ] && [ "$TOTAL_EMBEDDINGS" -gt 0 ]; then
+            echo "✅ Processing results are valid"
+            echo "📁 Processed $TOTAL_FILES files"
+            echo "🔢 Generated $TOTAL_EMBEDDINGS embeddings"
+          else
+            echo "⚠️ Warning: Processing results may be incomplete"
+            echo "📁 Files processed: $TOTAL_FILES"
+            echo "🔢 Embeddings generated: $TOTAL_EMBEDDINGS"
+          fi
+        else
+          echo "❌ No processing report found"
+          exit 1
+        fi
+
+    - name: Upload comprehensive artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
       with:
-        name: remcode-metrics
-        path: .remcode-metrics.json
-        retention-days: 90
+        name: processing-artifacts-${{ github.sha }}
+        path: |
+          processing-report-*.json
+          processing-error-report.json
+          .remcode-cache/
+        retention-days: 30
 
-    - name: Generate processing report
+    - name: Detailed status summary
       if: always()
-      run: npx remcode@latest report
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "📊 Detailed Processing Summary"
+        echo "=============================="
+        
+        if [ -f "processing-report-${{ github.sha }}.json" ]; then
+          cat processing-report-${{ github.sha }}.json | jq -r '
+            "✅ Status: " + (.success | if . then "Success" else "Failed" end) + "\n" +
+            "🎯 Processing Type: " + .metadata.type + "\n" +
+            "📁 Total Files: " + (.results.totalFiles | tostring) + "\n" +
+            "➕ Added Files: " + (.results.addedFiles | tostring) + "\n" +
+            "✏️ Modified Files: " + (.results.modifiedFiles | tostring) + "\n" +
+            "🗑️ Deleted Files: " + (.results.deletedFiles | tostring) + "\n" +
+            "🧩 Total Chunks: " + (.results.totalChunks | tostring) + "\n" +
+            "🔢 Total Embeddings: " + (.results.totalEmbeddings | tostring) + "\n" +
+            "❌ Error Count: " + (.results.errorCount | tostring) + "\n" +
+            "⏱️ Duration: " + (.metadata.duration | tostring) + "s\n" +
+            "🕐 Timestamp: " + .metadata.timestamp
+          '
+        elif [ -f "processing-error-report.json" ]; then
+          echo "❌ Processing Failed"
+          cat processing-error-report.json | jq -r '.error.message'
+        else
+          echo "⚠️ No processing report found"
+        fi
+
+  notify:
+    needs: [validate, process]
+    if: always() && needs.validate.outputs.should_process == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Notify completion
+      run: |
+        if [ "${{ needs.process.result }}" = "success" ]; then
+          echo "🎉 Remcode processing completed successfully!"
+        elif [ "${{ needs.process.result }}" = "failure" ]; then
+          echo "❌ Remcode processing failed after ${{ env.MAX_RETRIES }} attempts"
+        else
+          echo "⚠️ Remcode processing completed with warnings"
+        fi

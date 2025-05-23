@@ -3,6 +3,7 @@ import { analyzeCommand } from './commands/analyze';
 import { vectorizeCommand } from './commands/vectorize';
 import { updateCommand } from './commands/update';
 import { serveCommand } from './commands/serve';
+import { processCommand } from './commands/process';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 
@@ -22,6 +23,7 @@ program
 analyzeCommand(program);
 vectorizeCommand(program);
 updateCommand(program);
+processCommand(program);
 serveCommand(program);
 
 // Add help information
@@ -30,6 +32,7 @@ program.on('--help', () => {
   console.log('Examples:');
   console.log('  $ remcode analyze ./my-project');
   console.log('  $ remcode vectorize ./my-project --analysis ./analysis.json');
+  console.log('  $ remcode process --type auto');
   console.log('  $ remcode update --since-commit abc123');
   console.log('  $ remcode serve --port 3000');
 });

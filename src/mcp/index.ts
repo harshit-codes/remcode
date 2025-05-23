@@ -15,7 +15,7 @@ import { SearchMCPHandler } from './handlers/search';
 import { ProcessingMCPHandler } from './handlers/processing';
 import { RepositoryMCPHandler } from './handlers/repository';
 import { RemcodeMCPHandler } from './handlers/remcode';
-import { SWEGuidanceMiddleware } from './swe-guidance-middleware';
+// import { SWEGuidanceMiddleware } from "./swe-guidance-middleware"; // Temporarily disabled
 import { getLogger } from '../utils/logger';
 
 const logger = getLogger('MCP-Server');
@@ -42,7 +42,7 @@ export class MCPServer {
   private processingHandler: ProcessingMCPHandler;
   private repositoryHandler: RepositoryMCPHandler;
   private remcodeHandler: RemcodeMCPHandler;
-  private sweGuidanceMiddleware: SWEGuidanceMiddleware;
+  // sweGuidanceMiddleware: SWEGuidanceMiddleware; // Temporarily disabled
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
@@ -73,8 +73,8 @@ export class MCPServer {
     this.searchHandler = new SearchMCPHandler();
     this.processingHandler = new ProcessingMCPHandler(this.options.githubToken);
     this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
-    this.remcodeHandler = new RemcodeMCPHandler();
-    this.sweGuidanceMiddleware = new SWEGuidanceMiddleware();
+    this.remcodeHandler = new RemcodeMCPHandler(); // Temporarily disabled
+    // this.sweGuidanceMiddleware = new SWEGuidanceMiddleware(...); // Temporarily disabled
     
     this.configureServer();
   }
@@ -94,7 +94,7 @@ export class MCPServer {
       'search', 'search_code', 'get_code_context', 'find_similar_patterns',
       'trigger-reprocessing', 'setup-repository', 'analyze_file_structure'
     ];
-    this.app.use('/v1/mcp/tools', this.sweGuidanceMiddleware.createSelectiveInjectionMiddleware(toolsWithGuidance));
+    // Middleware temporarily disabled
     
     // Health check endpoint
     this.app.get('/health', (req, res) => {
@@ -195,32 +195,99 @@ export class MCPServer {
           },
           {
             name: 'trigger-reprocessing',
-            description: 'Trigger repository reprocessing',
+            description: 'Trigger repository reprocessing with enhanced options',
             parameters: {
-              type: { type: 'string', description: 'Reprocessing type: incremental, full, vectorize, analyze' },
-              force: { type: 'boolean', description: 'Force reprocessing' },
+              type: { type: 'string', description: 'Processing type: auto, full, incremental, vectorize, analyze (default: auto)' },
+              force: { type: 'boolean', description: 'Force reprocessing (default: false)' },
               owner: { type: 'string', description: 'Repository owner' },
               repo: { type: 'string', description: 'Repository name' },
               branch: { type: 'string', description: 'Branch to process (default: main)' },
-              token: { type: 'string', description: 'GitHub token (optional)' }
+              timeout: { type: 'number', description: 'Processing timeout in seconds (default: 3600)' },
+              dryRun: { type: 'boolean', description: 'Validate configuration without processing (default: false)' }
             }
           },
           {
             name: 'get-processing-status',
-            description: 'Get processing status',
+            description: 'Get detailed processing status with workflow information',
             parameters: {
               owner: { type: 'string', description: 'Repository owner (optional)' },
               repo: { type: 'string', description: 'Repository name (optional)' },
-              runId: { type: 'string', description: 'Workflow run ID (optional)' }
+              runId: { type: 'string', description: 'Workflow run ID for specific run status (optional)' }
             }
           },
           {
             name: 'get-processing-history',
-            description: 'Get processing history',
+            description: 'Get processing workflow history with analytics',
             parameters: {
               owner: { type: 'string', description: 'Repository owner' },
               repo: { type: 'string', description: 'Repository name' },
-              limit: { type: 'number', description: 'Number of history items to return' }
+              limit: { type: 'number', description: 'Number of history items to return (default: 10)' }
+            }
+          },
+          {
+            name: 'cancel-processing',
+            description: 'Cancel a running processing workflow',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              runId: { type: 'number', description: 'Workflow run ID to cancel' }
+            }
+          },
+          {
+            name: 'retry-processing',
+            description: 'Retry a failed processing workflow',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              runId: { type: 'number', description: 'Workflow run ID to retry' },
+              onlyFailedJobs: { type: 'boolean', description: 'Retry only failed jobs (default: false)' }
+            }
+          },
+          {
+            name: 'get-processing-logs',
+            description: 'Get logs from a processing workflow run',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              runId: { type: 'number', description: 'Workflow run ID' }
+            }
+          },
+          {
+            name: 'get-processing-metrics',
+            description: 'Get processing analytics and metrics',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              days: { type: 'number', description: 'Number of days to analyze (default: 30)' }
+            }
+          },
+          {
+            name: 'get-workflow-analytics',
+            description: 'Get comprehensive workflow analytics with trends and performance data',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              days: { type: 'number', description: 'Number of days to analyze (default: 30)' }
+            }
+          },
+          {
+            name: 'monitor-workflow-health',
+            description: 'Monitor workflow health and get automated recommendations',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' },
+              maxFailureRate: { type: 'number', description: 'Maximum failure rate threshold (default: 50)' },
+              maxConsecutiveFailures: { type: 'number', description: 'Maximum consecutive failures (default: 3)' },
+              alertOnSlowRuns: { type: 'boolean', description: 'Alert on slow workflow runs (default: true)' },
+              maxDurationMinutes: { type: 'number', description: 'Maximum duration threshold in minutes (default: 60)' }
+            }
+          },
+          {
+            name: 'get-workflow-recommendations',
+            description: 'Get automated workflow optimization recommendations',
+            parameters: {
+              owner: { type: 'string', description: 'Repository owner' },
+              repo: { type: 'string', description: 'Repository name' }
             }
           },
           {
@@ -385,6 +452,20 @@ export class MCPServer {
         return this.processingHandler.handleGetProcessingStatus(req, res, req.body.parameters);
       } else if (tool === 'get-processing-history') {
         return this.processingHandler.handleGetProcessingHistory(req, res, req.body.parameters);
+      } else if (tool === 'cancel-processing') {
+        return this.processingHandler.handleCancelProcessing(req, res, req.body.parameters);
+      } else if (tool === 'retry-processing') {
+        return this.processingHandler.handleRetryProcessing(req, res, req.body.parameters);
+      } else if (tool === 'get-processing-logs') {
+        return this.processingHandler.handleGetProcessingLogs(req, res, req.body.parameters);
+      } else if (tool === 'get-processing-metrics') {
+        return this.processingHandler.handleGetProcessingMetrics(req, res, req.body.parameters);
+      } else if (tool === 'get-workflow-analytics') {
+        return this.processingHandler.handleGetWorkflowAnalytics(req, res, req.body.parameters);
+      } else if (tool === 'monitor-workflow-health') {
+        return this.processingHandler.handleMonitorWorkflowHealth(req, res, req.body.parameters);
+      } else if (tool === 'get-workflow-recommendations') {
+        return this.processingHandler.handleGetWorkflowRecommendations(req, res, req.body.parameters);
       } else if (tool === 'get_repository_status') {
         return this.repositoryHandler.handleGetRepositoryStatus(req, res, req.body.parameters);
       } else if (tool === 'list_repositories') {

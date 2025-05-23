@@ -1,5 +1,19 @@
 import { PromptType } from './prompts';
-import { DifficultyLevel, Scenario } from './scenarios';
+// Inline interfaces to avoid circular import
+interface Scenario {
+  id: string;
+  name: string;
+  description: string;
+  triggers: string[];
+  negativePatterns?: string[];
+  tools: string[];
+  difficulty: any;
+  promptType: any;
+  estimatedTime?: string;
+  requiredSkills?: string[];
+  examples?: string[];
+  tags?: string[];
+}
 
 /**
  * Complete scenario definitions for all 13 software engineering contexts
@@ -16,7 +30,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['add feature', 'implement new', 'create functionality', 'new requirement'],
     tools: ['search_code', 'find_similar_code', 'get_code_context'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.REFACTORING,
     estimatedTime: '1-4 hours',
     requiredSkills: ['design patterns', 'SOLID principles', 'clean code principles'],
@@ -38,7 +52,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['fix bug', 'resolve issue', 'troubleshoot', 'broken'],
     tools: ['search_code', 'get_code_context', 'analyze_file_structure'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.NEW_FEATURE,
     estimatedTime: '2-8 hours',
     requiredSkills: ['software design', 'testing', 'domain knowledge'],
@@ -60,7 +74,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['add feature', 'new capability', 'enhancement'],
     tools: ['search_code', 'find_similar_code', 'get_code_context'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.BUG_FIXING,
     estimatedTime: '30min-3 hours',
     requiredSkills: ['debugging', 'problem-solving', 'root cause analysis'],
@@ -82,7 +96,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['add feature', 'new functionality'],
     tools: ['search_code', 'find_similar_code', 'get_code_context'],
-    difficulty: DifficultyLevel.ADVANCED,
+    difficulty: "advanced" as any,
     promptType: PromptType.PERFORMANCE,
     estimatedTime: '2-6 hours',
     requiredSkills: ['algorithmic complexity', 'profiling tools', 'performance measurement'],
@@ -104,7 +118,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['performance', 'new feature'],
     tools: ['search_code', 'find_similar_code', 'get_code_context'],
-    difficulty: DifficultyLevel.ADVANCED,
+    difficulty: "advanced" as any,
     promptType: PromptType.SECURITY,
     estimatedTime: '2-5 hours',
     requiredSkills: ['security principles', 'OWASP knowledge', 'threat modeling'],
@@ -126,7 +140,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['production code', 'business logic'],
     tools: ['search_code', 'get_code_context', 'find_similar_code'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.TESTING,
     estimatedTime: '1-4 hours',
     requiredSkills: ['testing principles', 'test frameworks', 'mocking'],
@@ -148,7 +162,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['implement', 'create new'],
     tools: ['search_code', 'find_similar_code', 'get_code_context'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.CODE_REVIEW,
     estimatedTime: '1-2 hours',
     requiredSkills: ['code quality standards', 'security awareness', 'performance optimization'],
@@ -170,7 +184,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['bug fix', 'small change'],
     tools: ['analyze_file_structure', 'search_code', 'get_code_context'],
-    difficulty: DifficultyLevel.ADVANCED,
+    difficulty: "advanced" as any,
     promptType: PromptType.ARCHITECTURE,
     estimatedTime: '4-12 hours',
     requiredSkills: ['architectural patterns', 'system design', 'scalability principles'],
@@ -192,7 +206,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['implement', 'code', 'bug fix'],
     tools: ['search_code', 'get_code_context', 'analyze_file_structure'],
-    difficulty: DifficultyLevel.BEGINNER,
+    difficulty: "beginner" as any,
     promptType: PromptType.DOCUMENTATION,
     estimatedTime: '1-3 hours',
     requiredSkills: ['technical writing', 'markdown', 'clarity of expression'],
@@ -214,7 +228,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['code logic', 'business rules'],
     tools: ['search_code', 'get_repository_status', 'analyze_file_structure'],
-    difficulty: DifficultyLevel.ADVANCED,
+    difficulty: "advanced" as any,
     promptType: PromptType.DEPLOYMENT,
     estimatedTime: '2-8 hours',
     requiredSkills: ['DevOps tools', 'infrastructure as code', 'deployment strategies'],
@@ -236,7 +250,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['new feature', 'enhancement'],
     tools: ['search_code', 'find_similar_code', 'get_repository_status'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.MAINTENANCE,
     estimatedTime: '1-6 hours',
     requiredSkills: ['dependency management', 'migration strategies', 'risk assessment'],
@@ -258,7 +272,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     negativePatterns: ['implement', 'create', 'fix', 'deploy'],
     tools: ['search_code', 'get_code_context', 'find_similar_code', 'analyze_file_structure'],
-    difficulty: DifficultyLevel.BEGINNER,
+    difficulty: "beginner" as any,
     promptType: PromptType.LEARNING,
     estimatedTime: '30min-2 hours',
     requiredSkills: ['analytical thinking', 'pattern recognition', 'documentation reading'],
@@ -275,7 +289,7 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     description: 'General software engineering guidance and best practices',
     triggers: ['help', 'assist', 'general', 'advice', 'guidance', 'best practice'],
     tools: ['search_code', 'get_code_context'],
-    difficulty: DifficultyLevel.INTERMEDIATE,
+    difficulty: "intermediate" as any,
     promptType: PromptType.DEFAULT,
     estimatedTime: 'Variable',
     requiredSkills: ['general programming', 'problem solving'],
