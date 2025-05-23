@@ -27,6 +27,7 @@ classDiagram
     queryVectors(): Promise<any[]>
     if()
     Error()
+    if()
     catch()
     String()
     Error()

@@ -126,13 +126,20 @@ export class PineconeStorage {
     try {
       const ns = namespace || this.options.namespace || '';
       
-      const queryResponse = await this.index.namespace(ns).query({
+      // Build query object - only include filter if it has valid content
+      const queryOptions: any = {
         vector: embeddings,
         topK,
         includeMetadata: true,
-        includeValues: false,
-        filter
-      });
+        includeValues: false
+      };
+      
+      // Only add filter if it exists and has at least one key-value pair
+      if (filter && Object.keys(filter).length > 0) {
+        queryOptions.filter = filter;
+      }
+      
+      const queryResponse = await this.index.namespace(ns).query(queryOptions);
       
       logger.info(`Found ${queryResponse.matches?.length || 0} matches in Pinecone`);
       return queryResponse.matches || [];

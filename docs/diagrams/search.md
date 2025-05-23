@@ -275,9 +275,11 @@ classDiagram
     catch()
     String()
     if()
+    content()
+    path()
     identifyCodePatterns(): Promise<string[]>
     if()
-    Error()
+    if()
     if()
     catch()
     String()

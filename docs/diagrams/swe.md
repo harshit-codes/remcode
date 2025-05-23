@@ -41,12 +41,10 @@ classDiagram
     suggestedFix: string
   }
   class SWEPrompts {
-    languageTemplates: Record<string, string> = {
-    frameworkTemplates: Record<string, string> = {
     getDefaultPrompt(): string
+    strategies()
+    metrics()
     getContextAwarePrompt(): string
-    if()
-    if()
     if()
     if()
     if()
@@ -55,6 +53,9 @@ classDiagram
     length()
     getScenarioGuidance(): string
     switch()
+    testing()
+    complexity()
+    requirements()
     getPromptWithGuidelines(): string
     if()
     for()
@@ -67,8 +68,6 @@ classDiagram
     includeGuidelines: boolean
     detailLevel: 'minimal' | 'standard' | 'detailed'
     codeContext: string
-    languageSpecific: string
-    framework: string
     teamPreferences: Record<string, string>
     maxLength: number
   }

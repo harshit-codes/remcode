@@ -50,12 +50,13 @@ compareCodeSimilarity(code1: string, code2: string): Promise<number> {
 
 #### `identifyCodePatterns()`
 
-Identify code patterns in a file
-@param filePath Path to the file to analyze
+Identify code patterns in a file or code content
+@param filePathOrContent Path to the file to analyze or code content directly
+@param isContent Whether the first parameter is content (true) or file path (false)
 @returns Array of detected pattern names
 
 ```typescript
-identifyCodePatterns(filePath: string): Promise<string[]> {
+identifyCodePatterns(filePathOrContent: string, isContent: boolean = false): Promise<string[]> {
 ```
 
 #### `analyzeRepositoryPatterns()`

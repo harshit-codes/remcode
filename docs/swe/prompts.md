@@ -4,7 +4,7 @@
 
 ## Overview
 
-Prompt types supported by the system
+Prompt types supported by the system - Complete set of 13 software engineering scenarios
 
 ## Dependencies
 
@@ -15,7 +15,7 @@ Prompt types supported by the system
 
 ### `SWEPrompts`
 
-Get the default software engineering prompt
+Get the default software engineering prompt with Remcode MCP integration guidance
 
 ```typescript
 class SWEPrompts {
@@ -27,7 +27,7 @@ class SWEPrompts {
 
 #### `getScenarioGuidance()`
 
-Get scenario-specific guidance
+Get scenario-specific guidance with Remcode MCP tool recommendations
 
 ```typescript
 getScenarioGuidance(scenario: PromptType): string {

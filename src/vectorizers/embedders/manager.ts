@@ -170,14 +170,35 @@ export class EmbeddingManager {
   private async getEmbeddingViaDirectAPI(text: string, modelId: string, modelInfo: ModelInfo, retries = 2): Promise<number[]> {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        // Use feature extraction for all models for consistency
-        const requestBody = { 
-          inputs: text,
-          options: { wait_for_model: true }
-        };
+        // Different API formats for different model types
+        let requestBody: any;
+        let apiUrl: string;
+        
+        if (modelId.includes('sentence-transformers')) {
+          // For sentence transformers, use the correct format
+          requestBody = { 
+            inputs: [text], // Array format for sentence transformers
+            options: { wait_for_model: true }
+          };
+          apiUrl = `${this.apiBaseUrl}/${modelId}`;
+        } else if (modelId.includes('graphcodebert') || modelId.includes('codebert')) {
+          // For code models, use feature extraction
+          requestBody = { 
+            inputs: text,
+            options: { wait_for_model: true }
+          };
+          apiUrl = `https://api-inference.huggingface.co/pipeline/feature-extraction/${modelId}`;
+        } else {
+          // Default format
+          requestBody = { 
+            inputs: text,
+            options: { wait_for_model: true }
+          };
+          apiUrl = `${this.apiBaseUrl}/${modelId}`;
+        }
         
         const response = await axios.post(
-          `${this.apiBaseUrl}/${modelId}`,
+          apiUrl,
           requestBody,
           {
             headers: {

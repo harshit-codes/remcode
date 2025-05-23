@@ -398,30 +398,37 @@ export class SimilarityAnalyzer {
   }
 
   /**
-   * Identify code patterns in a file
-   * @param filePath Path to the file to analyze
+   * Identify code patterns in a file or code content
+   * @param filePathOrContent Path to the file to analyze or code content directly
+   * @param isContent Whether the first parameter is content (true) or file path (false)
    * @returns Array of detected pattern names
    */
-  async identifyCodePatterns(filePath: string): Promise<string[]> {
-    logger.info(`Identifying patterns in ${filePath}`);
+  async identifyCodePatterns(filePathOrContent: string, isContent: boolean = false): Promise<string[]> {
+    if (isContent) {
+      logger.info(`Identifying patterns in provided code content`);
+      return this.detectPatterns(filePathOrContent);
+    }
     
-    if (!fs.existsSync(filePath)) {
-      throw new Error(`File not found: ${filePath}`);
+    logger.info(`Identifying patterns in ${filePathOrContent}`);
+    
+    if (!fs.existsSync(filePathOrContent)) {
+      logger.warn(`File not found: ${filePathOrContent}, returning empty patterns`);
+      return [];
     }
     
     try {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      const extension = path.extname(filePath).toLowerCase();
+      const fileContent = fs.readFileSync(filePathOrContent, 'utf-8');
+      const extension = path.extname(filePathOrContent).toLowerCase();
       
       // Skip non-code files
       if (!['.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.cs', '.go', '.rb'].includes(extension)) {
-        logger.warn(`Skipping non-code file: ${filePath}`);
+        logger.warn(`Skipping non-code file: ${filePathOrContent}`);
         return [];
       }
       
       return this.detectPatterns(fileContent);
     } catch (error) {
-      logger.error(`Error identifying patterns in ${filePath}: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error identifying patterns in ${filePathOrContent}: ${error instanceof Error ? error.message : String(error)}`);
       return [];
     }
   }

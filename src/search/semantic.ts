@@ -57,8 +57,8 @@ export class SemanticSearch {
       pineconeEnvironment: options.pineconeEnvironment || 'gcp-starter',
       pineconeNamespace: options.pineconeNamespace || 'default',
       huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN,
-      embeddingModel: options.embeddingModel || 'microsoft/graphcodebert-base',
-      fallbackModel: options.fallbackModel || 'sentence-transformers/all-MiniLM-L6-v2',
+      embeddingModel: options.embeddingModel || 'BAAI/bge-base-en-v1.5',
+      fallbackModel: options.fallbackModel || 'BAAI/bge-small-en-v1.5',
       embeddingDimension: options.embeddingDimension || 768,
       batchSize: options.batchSize || 10
     };

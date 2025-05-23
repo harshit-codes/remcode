@@ -20,8 +20,8 @@ export class SearchMCPHandler {
       pineconeEnvironment: process.env.PINECONE_ENVIRONMENT || 'us-east-1',
       pineconeNamespace: process.env.PINECONE_NAMESPACE || 'default',
       huggingfaceToken: process.env.HUGGINGFACE_TOKEN,
-      embeddingModel: 'microsoft/graphcodebert-base',
-      fallbackModel: 'sentence-transformers/all-MiniLM-L6-v2'
+      embeddingModel: 'BAAI/bge-base-en-v1.5',
+      fallbackModel: 'BAAI/bge-small-en-v1.5'
     });
     
     this.contextExtractor = new ContextExtractor();

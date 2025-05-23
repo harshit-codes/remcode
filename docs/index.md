@@ -16,7 +16,15 @@ This documentation provides an overview of the Remcode codebase structure, entit
     - [client](github/client.md)
     - [repository](github/repository.md)
   - **mcp/**
+    - [enhanced-tools-registry-clean](mcp/enhanced-tools-registry-clean.md)
+    - [enhanced-tools-registry-final](mcp/enhanced-tools-registry-final.md)
+    - [enhanced-tools-registry-updated](mcp/enhanced-tools-registry-updated.md)
+    - [enhanced-tools-registry](mcp/enhanced-tools-registry.md)
+    - [enhanced-tools](mcp/enhanced-tools.md)
     - [index](mcp/index.md)
+    - [simple-test](mcp/simple-test.md)
+    - [tool-integration-final](mcp/tool-integration-final.md)
+    - [tool-integration](mcp/tool-integration.md)
     - **handlers/**
       - [github](mcp/handlers/github.md)
       - [huggingface](mcp/handlers/huggingface.md)
@@ -26,6 +34,15 @@ This documentation provides an overview of the Remcode codebase structure, entit
       - [repository](mcp/handlers/repository.md)
       - [search](mcp/handlers/search.md)
       - [setup](mcp/handlers/setup.md)
+    - **tools/**
+      - [ai-swe-assistance](mcp/tools/ai-swe-assistance.md)
+      - [code-search-analysis](mcp/tools/code-search-analysis.md)
+      - [processing-workflows](mcp/tools/processing-workflows.md)
+      - [repository-management](mcp/tools/repository-management.md)
+      - [setup-configuration](mcp/tools/setup-configuration.md)
+      - [test-enhanced-tools](mcp/tools/test-enhanced-tools.md)
+    - **types/**
+      - [enhanced-tool-types](mcp/types/enhanced-tool-types.md)
   - **processing/**
     - [change-detector](processing/change-detector.md)
     - [file-analyzer](processing/file-analyzer.md)
@@ -79,6 +96,8 @@ This documentation provides an overview of the Remcode codebase structure, entit
   - [github Diagram](diagrams/github.md)
   - [mcp Diagram](diagrams/mcp.md)
     - [handlers Diagram](diagrams/mcp/handlers.md)
+    - [tools Diagram](diagrams/mcp/tools.md)
+    - [types Diagram](diagrams/mcp/types.md)
   - [processing Diagram](diagrams/processing.md)
   - [search Diagram](diagrams/search.md)
   - [setup Diagram](diagrams/setup.md)

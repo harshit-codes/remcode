@@ -26,6 +26,8 @@ classDiagram
     getEmbeddingFromModel(): Promise<number[]>
     getEmbeddingViaDirectAPI(): Promise<number[]>
     for()
+    if()
+    if()
     catch()
     if()
     String()
