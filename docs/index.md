@@ -8,6 +8,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
   - [index](index.md)
   - **commands/**
     - [analyze](commands/analyze.md)
+    - [process](commands/process.md)
     - [serve](commands/serve.md)
     - [update](commands/update.md)
     - [vectorize](commands/vectorize.md)
@@ -35,6 +36,8 @@ This documentation provides an overview of the Remcode codebase structure, entit
       - [setup-configuration](mcp/tools/setup-configuration.md)
     - **types/**
       - [enhanced-tool-types](mcp/types/enhanced-tool-types.md)
+  - **notifications/**
+    - [service](notifications/service.md)
   - **processing/**
     - [change-detector](processing/change-detector.md)
     - [file-analyzer](processing/file-analyzer.md)
@@ -59,9 +62,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
   - **swe/**
     - [guidelines](swe/guidelines.md)
     - [prompts](swe/prompts.md)
-    - [scenario-definitions](swe/scenario-definitions.md)
     - [scenario-guidance](swe/scenario-guidance.md)
-    - [scenarios](swe/scenarios.md)
   - **utils/**
     - [config](utils/config.md)
     - [logger](utils/logger.md)
@@ -81,6 +82,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
   - **workflows/**
     - [generator](workflows/generator.md)
     - [monitor](workflows/monitor.md)
+    - [orchestrator](workflows/orchestrator.md)
     - [templates](workflows/templates.md)
 
 ## Entity Relationship Diagrams
@@ -92,6 +94,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
     - [handlers Diagram](diagrams/mcp/handlers.md)
     - [tools Diagram](diagrams/mcp/tools.md)
     - [types Diagram](diagrams/mcp/types.md)
+  - [notifications Diagram](diagrams/notifications.md)
   - [processing Diagram](diagrams/processing.md)
   - [search Diagram](diagrams/search.md)
   - [setup Diagram](diagrams/setup.md)

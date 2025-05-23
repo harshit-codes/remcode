@@ -136,61 +136,113 @@ classDiagram
     WorkflowMonitor()
     WorkflowGenerator()
     handleTriggerReprocessing(): Promise<void>
-    reprocessing()
-    if()
     if()
     if()
     if()
     Error()
-    catch()
-    String()
+    if()
+    Error()
     catch()
     String()
     handleGetProcessingStatus(): Promise<void>
-    if()
-    parseInt()
-    catch()
-    String()
     catch()
     String()
     handleGetProcessingHistory(): Promise<void>
     if()
-    parseInt(): limit
+    parseInt()
+    catch()
+    String()
+    handleCancelProcessing(): Promise<void>
+    if()
+    parseInt()
+    parseInt()
+    catch()
+    String()
+    handleRetryProcessing(): Promise<void>
+    if()
+    parseInt()
+    parseInt()
+    catch()
+    String()
+    handleGetProcessingLogs(): Promise<void>
+    if()
+    parseInt()
+    if()
+    parseInt()
+    catch()
+    String()
+    handleGetProcessingMetrics(): Promise<void>
+    if()
+    Date()
+    parseInt()
+    Date()
+    catch()
+    String()
+    handleGetWorkflowAnalytics(): Promise<void>
+    if()
+    parseInt()
+    Date()
+    catch()
+    String()
+    handleMonitorWorkflowHealth(): Promise<void>
+    if()
+    parseInt()
+    parseInt()
+    parseInt()
+    Date()
+    catch()
+    String()
+    handleGetWorkflowRecommendations(): Promise<void>
+    if()
+    if()
+    if()
+    if()
+    if()
+    Date()
     catch()
     String()
   }
   class ProcessingOptions {
     <<interface>>
-    type: 'full' | 'incremental' | 'vectorize' | 'analyze'
+    type: 'auto' | 'full' | 'incremental' | 'vectorize' | 'analyze'
     force: boolean
     repository: string
     owner: string
     repo: string
     branch: string
     token: string
+    timeout: number
+    dryRun: boolean
+  }
+  class ProcessingStatusResponse {
+    <<interface>>
+    status: 'idle' | 'analyzing' | 'vectorizing' | 'updating' | 'completed' | 'failed'
+    lastProcessed: string
+    currentCommit: string
+    pendingChanges: boolean
+    lastError: string
+    stats: {
+    filesProcessed: number
+    chunksCreated: number
+    vectorsStored: number
+    lastDuration: number
+    workflow: {
+    status: string
+    runId: number
+    url: string
+    startedAt: string
+    completedAt: string
   }
   class RemcodeMCPHandler {
-    swePrompts: SWEPrompts
-    sweScenarios: SWEScenarios
-    sweGuidelines: SWEGuidelines
-    SWEPrompts()
-    SWEScenarios()
-    SWEGuidelines()
+    initialized()
     handleDefaultPrompt(): Promise<void>
     catch()
-    Error()
     handleGetScenarios(): Promise<void>
     catch()
-    Error()
     handleGetGuidelines(): Promise<void>
-    if()
-    if()
-    if()
     catch()
-    Error()
     handleGetContextualGuidance(): Promise<void>
     catch()
-    Error()
   }
   class RepositoryMCPHandler {
     githubRepository: GitHubRepository

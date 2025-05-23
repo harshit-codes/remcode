@@ -111,6 +111,39 @@ classDiagram
     Date()
     catch()
     String()
+    cancelWorkflowRun(): Promise<void>
+    catch()
+    retryWorkflowRun(): Promise<void>
+    catch()
+    getWorkflowAnalytics(): Promise<
+    Date()
+    Date()
+    Date()
+    Date()
+    reasons()
+    if()
+    Date()
+    if()
+    if()
+    trends()
+    if()
+    Date()
+    Date()
+    Date()
+    catch()
+    monitorWorkflowHealth(): Promise<
+    if()
+    for()
+    if()
+    if()
+    if()
+    if()
+    Date()
+    Date()
+    if()
+    Date()
+    Date()
+    catch()
   }
   class WorkflowStatusResponse {
     <<interface>>
@@ -133,6 +166,93 @@ classDiagram
     logErrors: boolean
     logToFile: boolean
     logDirectory: string
+  }
+  class WorkflowOrchestrator {
+    config: OrchestrationConfig
+    monitor: WorkflowMonitor
+    stateManager: StateManager
+    isActive: boolean = false
+    automationActions: Array<any> = []
+    WorkflowMonitor()
+    StateManager()
+    if()
+    NotificationService()
+    start(): Promise<void>
+    if()
+    if()
+    setInterval()
+    if()
+    stop(): Promise<void>
+    if()
+    if()
+    clearInterval()
+    getStatus(): OrchestrationStatus
+    Date()
+    performHealthCheck(): Promise<void>
+    if()
+    if()
+    if()
+    catch()
+    handleUnhealthyWorkflow(): Promise<void>
+    if()
+    if()
+    attemptAutoRetry(): Promise<void>
+    if()
+    if()
+    Promise()
+    catch()
+    attemptAutoHealing(): Promise<void>
+    for()
+    catch()
+    generateHealingActions(): Array<
+    if()
+    async()
+    Promise()
+    if()
+    async()
+    Promise()
+    setupProactiveMonitoring(): Promise<void>
+    countConsecutiveFailures(): number
+    for()
+    if()
+    determineOverallHealth(): 'healthy' | 'warning' | 'critical'
+    if()
+    if()
+    logAutomationAction(): void
+    Date()
+    if()
+    handleWorkflowCompletion(): Promise<void>
+    if()
+    catch()
+  }
+  class OrchestrationConfig {
+    <<interface>>
+    repository: {
+    owner: string
+    repo: string
+    monitoring: {
+    healthCheckInterval: number; // minutes
+    enableAutoRetry: boolean
+    maxRetryAttempts: number
+    retryDelayMinutes: number
+    notifications: NotificationConfig
+    automation: {
+    enableAutoHealing: boolean
+    enablePerformanceOptimization: boolean
+    enableProactiveMonitoring: boolean
+  }
+  class OrchestrationStatus {
+    <<interface>>
+    isActive: boolean
+    lastHealthCheck: string
+    nextHealthCheck: string
+    totalWorkflowsMonitored: number
+    healthStatus: 'healthy' | 'warning' | 'critical'
+    automationActions: Array<{
+    timestamp: string
+    action: string
+    reason: string
+    success: boolean
   }
   class WorkflowTemplates {
     getWorkflowTemplate(): string
@@ -212,6 +332,15 @@ classDiagram
   WorkflowGenerationResult --> WorkflowEnvironmentConfig: uses
   WorkflowGenerator --> WorkflowTemplateOptions: uses
   WorkflowGenerationResult --> WorkflowTemplateOptions: uses
+  WorkflowOrchestrator --> WorkflowMonitor: uses
+  OrchestrationConfig --> WorkflowMonitor: uses
+  OrchestrationStatus --> WorkflowMonitor: uses
+  WorkflowOrchestrator --> WorkflowStatusResponse: uses
+  OrchestrationConfig --> WorkflowStatusResponse: uses
+  OrchestrationStatus --> WorkflowStatusResponse: uses
+  WorkflowOrchestrator --> MonitoringOptions: uses
+  OrchestrationConfig --> MonitoringOptions: uses
+  OrchestrationStatus --> MonitoringOptions: uses
 
   %% Style and notes
   note "Generated from folder: workflows" as Note1
@@ -219,5 +348,6 @@ classDiagram
   %% File groupings
   note "generator.ts" as Note_generator
   note "monitor.ts" as Note_monitor
+  note "orchestrator.ts" as Note_orchestrator
   note "templates.ts" as Note_templates
 ```

@@ -115,6 +115,55 @@ Get all runs for a specific workflow with detailed information
 getWorkflowRunsDetailed(
 ```
 
+#### `cancelWorkflowRun()`
+
+Cancel a workflow run
+@param owner Repository owner
+@param repo Repository name 
+@param runId Workflow run ID
+@returns Promise that resolves when cancellation is complete
+
+```typescript
+cancelWorkflowRun(owner: string, repo: string, runId: number): Promise<void> {
+```
+
+#### `retryWorkflowRun()`
+
+Retry a failed workflow run
+@param owner Repository owner
+@param repo Repository name
+@param runId Workflow run ID
+@param onlyFailedJobs Whether to retry only failed jobs
+@returns Promise that resolves when retry is triggered
+
+```typescript
+retryWorkflowRun(owner: string, repo: string, runId: number, onlyFailedJobs: boolean = false): Promise<void> {
+```
+
+#### `getWorkflowAnalytics()`
+
+Get comprehensive workflow analytics
+@param owner Repository owner
+@param repo Repository name
+@param days Number of days to analyze
+@returns Promise with workflow analytics
+
+```typescript
+getWorkflowAnalytics(owner: string, repo: string, days: number = 30): Promise<{
+```
+
+#### `monitorWorkflowHealth()`
+
+Monitor workflow health and send alerts if needed
+@param owner Repository owner
+@param repo Repository name
+@param options Monitoring options
+@returns Promise with health status
+
+```typescript
+monitorWorkflowHealth(
+```
+
 ## Interfaces
 
 ### `WorkflowStatusResponse`

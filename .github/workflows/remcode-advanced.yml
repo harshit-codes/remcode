@@ -129,7 +129,7 @@ jobs:
         timeout_minutes: 10
         max_attempts: 3
         command: |
-          npm ci
+          npm ci --legacy-peer-deps
           npm run build
 
     - name: Validate API keys and configuration

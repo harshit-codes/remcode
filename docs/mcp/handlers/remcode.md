@@ -4,15 +4,13 @@
 
 ## Overview
 
-No overview provided.
+MCP Handler for Remcode-specific operations
+Temporarily simplified to avoid SWE module circular dependencies
 
 ## Dependencies
 
 - `express`
 - `../../utils/logger`
-- `../../swe/prompts`
-- `../../swe/scenarios`
-- `../../swe/guidelines`
 
 ## Classes
 
