@@ -120,6 +120,7 @@ export class VectorizationPipeline {
           embedding: chunk.embedding!,
           metadata: {
             ...chunk.metadata,
+            content: chunk.content, // Store the actual content in metadata
             processed_at: new Date().toISOString()
           }
         }));
@@ -273,5 +274,86 @@ export class VectorizationPipeline {
     if (complexityScore < 10) return 'low';
     if (complexityScore < 50) return 'medium';
     return 'high';
+  }
+
+
+  /**
+   * Process all files in a directory recursively
+   */
+  async processDirectory(dirPath: string): Promise<VectorizationResult> {
+    if (!this.initialized) {
+      throw new Error('Pipeline not initialized. Call initialize() first.');
+    }
+
+    const startTime = Date.now();
+    const result: VectorizationResult = {
+      success: false,
+      filesProcessed: 0,
+      chunksCreated: 0,
+      vectorsStored: 0,
+      errors: [],
+      duration: 0
+    };
+
+    try {
+      // Find all code files
+      const files = await this.findCodeFiles(dirPath);
+      
+      for (const filePath of files) {
+        try {
+          const chunks = await this.processFile(filePath);
+          result.filesProcessed++;
+          result.chunksCreated += chunks.length;
+          result.vectorsStored += chunks.length;
+        } catch (error) {
+          const errorMsg = `Failed to process ${filePath}: ${error instanceof Error ? error.message : String(error)}`;
+          result.errors.push(errorMsg);
+          logger.warn(errorMsg, error instanceof Error ? error : undefined);
+        }
+      }
+
+      result.success = result.errors.length < files.length;
+      result.duration = Date.now() - startTime;
+      return result;
+    } catch (error) {
+      result.errors.push(`Directory processing failed: ${error instanceof Error ? error.message : String(error)}`);
+      result.duration = Date.now() - startTime;
+      return result;
+    }
+  }
+
+  /**
+   * Find all code files in a directory recursively
+   */
+  private async findCodeFiles(dirPath: string): Promise<string[]> {
+    const files: string[] = [];
+    const excludePatterns = this.options.excludePaths || [];
+    const includeExtensions = this.options.includeExtensions || ['.ts', '.js', '.py'];
+
+    const walk = async (currentPath: string): Promise<void> => {
+      const items = await fs.promises.readdir(currentPath);
+      
+      for (const item of items) {
+        const fullPath = path.join(currentPath, item);
+        const stat = await fs.promises.stat(fullPath);
+        
+        if (stat.isDirectory()) {
+          const shouldSkip = excludePatterns.some(pattern => 
+            fullPath.includes(pattern) || item === pattern
+          );
+          if (!shouldSkip) {
+            await walk(fullPath);
+          }
+        } else if (stat.isFile()) {
+          const ext = path.extname(item);
+          if (includeExtensions.includes(ext)) {
+            files.push(fullPath);
+          }
+        }
+      }
+    };
+
+    await walk(dirPath);
+    return files;
   }
 }

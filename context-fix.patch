@@ -1,0 +1,28 @@
+--- Original
++++ Fixed
+@@ -66,7 +66,10 @@
+       // Make sure the requested lines are within the file bounds
+-      if (startLine < 0 || endLine >= lines.length || startLine > endLine) {
++      if (startLine < 0 || startLine > endLine) {
+         throw new Error(`Invalid line range: ${startLine}-${endLine} for file with ${lines.length} lines`);
+       }
++      
++      // Clamp endLine to file bounds
++      const validEndLine = Math.min(endLine, lines.length - 1);
+       
+-      // Extract the target content
+-      const targetContent = lines.slice(startLine, endLine + 1).join('\n');
++      // Extract the target content  
++      const targetContent = lines.slice(startLine, validEndLine + 1).join('\n');
+       
+       // Extract surrounding context (5 lines before and after)
+       const contextSize = 5;
+       const surroundingStart = Math.max(0, startLine - contextSize);
+-      const surroundingEnd = Math.min(lines.length - 1, endLine + contextSize);
++      const surroundingEnd = Math.min(lines.length - 1, validEndLine + contextSize);
+       
+       const surroundingLines = [
+         ...lines.slice(surroundingStart, startLine),
+-        ...lines.slice(endLine + 1, surroundingEnd + 1)
++        ...lines.slice(validEndLine + 1, surroundingEnd + 1)
+       ];

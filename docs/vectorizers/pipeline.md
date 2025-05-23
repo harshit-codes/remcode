@@ -78,3 +78,25 @@ determineChunkingStrategy(content: string, fileInfo: FileInfo): string {
 estimateComplexity(content: string): 'low' | 'medium' | 'high' {
 ```
 
+#### `processDirectory()`
+
+Process all files in a directory recursively
+
+```typescript
+processDirectory(dirPath: string): Promise<VectorizationResult> {
+```
+
+#### `walk()`
+
+```typescript
+walk(fullPath);
+          }
+        } else if (stat.isFile()) {
+```
+
+#### `walk()`
+
+```typescript
+walk(dirPath);
+```
+

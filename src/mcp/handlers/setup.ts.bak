@@ -5,8 +5,7 @@ import { SetupInitializer } from '../../setup/initializer';
 import { Prerequisites } from '../../setup/prerequisites';
 import { RemcodeConfigManager } from '../../setup/remcode-config';
 import { SecretsManager } from '../../setup/secrets';
-import { WorkflowGenerator } from '../../workflows/generator';
-import { WorkflowTemplateType } from '../../setup/workflow-generator';
+import { WorkflowGenerator, WorkflowTemplateType } from '../../workflows/generator';
 
 const logger = getLogger('SetupMCPHandler');
 

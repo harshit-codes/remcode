@@ -232,7 +232,7 @@ export function updateCommand(program: Command): void {
               await storageManager.deleteVectorsByMetadata({ filePath });
               processedFiles++;
             } catch (error) {
-              logger.warn(`Failed to remove vectors for ${filePath}`, error);
+              logger.warn(`Failed to remove vectors for ${filePath}`, error instanceof Error ? error : undefined);
             }
           }
         }
@@ -279,7 +279,7 @@ export function updateCommand(program: Command): void {
               
               processedFiles++;
             } catch (error) {
-              logger.warn(`Failed to process ${filePath}`, error);
+              logger.warn(`Failed to process ${filePath}`, error instanceof Error ? error : undefined);
             }
           }
         }

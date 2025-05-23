@@ -11,9 +11,6 @@ No overview provided.
 - `commander`
 - `../utils/source`
 - `../utils/config`
-- `../analyzers/repository`
-- `../analyzers/quality`
-- `../analyzers/dependency`
 - `../utils/logger`
 
 ## Functions

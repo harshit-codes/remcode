@@ -58,49 +58,6 @@ classDiagram
     catch()
     String()
   }
-  class EnhancedDependencyAnalyzer {
-    repoPath: string
-    baseDependencyAnalyzer: BaseDependencyAnalyzer
-    BaseDependencyAnalyzer()
-    analyze(): Promise<EnhancedDependencyAnalysis>
-  }
-  class DependencyGraphNode {
-    <<interface>>
-    id: string
-    type: 'file' | 'module' | 'function' | 'class'
-    name: string
-    path: string
-    importance: number; // 0-1 scale
-    complexity: 'low' | 'medium' | 'high'
-    metadata: Record<string, any>
-  }
-  class DependencyGraphEdge {
-    <<interface>>
-    source: string
-    target: string
-    type: 'imports' | 'exports' | 'calls' | 'extends' | 'implements'
-    weight: number; // Strength of dependency
-  }
-  class EnhancedDependencyAnalysis {
-    <<interface>>
-    nodes: DependencyGraphNode[]
-    edges: DependencyGraphEdge[]
-    modules: Record<string, {
-    files: string[]
-    dependencies: string[]
-    dependents: string[]
-    importance: number
-    complexity: 'low' | 'medium' | 'high'
-    criticalPaths: Array<{
-    path: string[]
-    importance: number
-    description: string
-    recommendations: Array<{
-    type: 'refactor' | 'optimize' | 'split' | 'merge'
-    target: string
-    reason: string
-    priority: 'low' | 'medium' | 'high'
-  }
   class FileAnalyzer {
     repoPath: string
     maxFileSize: number
@@ -399,30 +356,6 @@ classDiagram
   ChangeDetector --> AnalysisOptions: uses
   ChangeDetector --> IncrementalProcessorOptions: uses
   ChangeDetector --> VectorMetadata: uses
-  EnhancedDependencyAnalyzer --> FileChange: uses
-  DependencyGraphNode --> FileChange: uses
-  DependencyGraphEdge --> FileChange: uses
-  EnhancedDependencyAnalysis --> FileChange: uses
-  EnhancedDependencyAnalyzer --> FileAnalysis: uses
-  DependencyGraphNode --> FileAnalysis: uses
-  DependencyGraphEdge --> FileAnalysis: uses
-  EnhancedDependencyAnalysis --> FileAnalysis: uses
-  EnhancedDependencyAnalyzer --> ProcessingStats: uses
-  DependencyGraphNode --> ProcessingStats: uses
-  DependencyGraphEdge --> ProcessingStats: uses
-  EnhancedDependencyAnalysis --> ProcessingStats: uses
-  EnhancedDependencyAnalyzer --> AnalysisOptions: uses
-  DependencyGraphNode --> AnalysisOptions: uses
-  DependencyGraphEdge --> AnalysisOptions: uses
-  EnhancedDependencyAnalysis --> AnalysisOptions: uses
-  EnhancedDependencyAnalyzer --> IncrementalProcessorOptions: uses
-  DependencyGraphNode --> IncrementalProcessorOptions: uses
-  DependencyGraphEdge --> IncrementalProcessorOptions: uses
-  EnhancedDependencyAnalysis --> IncrementalProcessorOptions: uses
-  EnhancedDependencyAnalyzer --> VectorMetadata: uses
-  DependencyGraphNode --> VectorMetadata: uses
-  DependencyGraphEdge --> VectorMetadata: uses
-  EnhancedDependencyAnalysis --> VectorMetadata: uses
   FileAnalyzer --> FileChange: uses
   FileAnalyzer --> FileAnalysis: uses
   FileAnalyzer --> ProcessingStats: uses
@@ -454,7 +387,6 @@ classDiagram
 
   %% File groupings
   note "change-detector.ts" as Note_change-detector
-  note "enhanced-dependency-analyzer.ts" as Note_enhanced-dependency-analyzer
   note "file-analyzer.ts" as Note_file-analyzer
   note "incremental.ts" as Note_incremental
   note "pipeline.ts" as Note_pipeline

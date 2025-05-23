@@ -89,6 +89,23 @@ classDiagram
     estimateComplexity(): 'low' | 'medium' | 'high'
     if()
     if()
+    processDirectory(): Promise<VectorizationResult>
+    if()
+    Error()
+    for()
+    catch()
+    String()
+    catch()
+    String()
+    findCodeFiles(): Promise<string[]>
+    async(): Promise<void> =>
+    for()
+    if()
+    if()
+    walk()
+    if()
+    if()
+    walk()
   }
   class SimpleVectorizer {
     storage: PineconeStorage
@@ -182,7 +199,6 @@ classDiagram
     indexName: string
     dimension: number
     metric: 'cosine' | 'dotproduct' | 'euclidean'
-    environment: string
     namespace: string
   }
   class VectorData {

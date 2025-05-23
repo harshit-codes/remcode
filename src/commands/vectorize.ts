@@ -37,7 +37,7 @@ export function vectorizeCommand(program: Command): void {
         
         // Resolve source path
         const resolvedSource = await resolveSource(source);
-        const sourcePath = resolvedSource.localPath || source;
+        const sourcePath = resolvedSource.path || source;
         
         if (!fs.existsSync(sourcePath)) {
           throw new Error(`Source path does not exist: ${sourcePath}`);
@@ -49,7 +49,7 @@ export function vectorizeCommand(program: Command): void {
                               config.vectorization?.storage?.pinecone?.apiKey;
         
         const huggingfaceToken = process.env.HUGGINGFACE_TOKEN || 
-                                config.vectorization?.embedding?.token;
+                                undefined;
 
         if (!pineconeApiKey) {
           throw new Error('Pinecone API key is required. Use --pinecone-key option or set PINECONE_API_KEY environment variable.');
@@ -127,12 +127,12 @@ export function vectorizeCommand(program: Command): void {
           try {
             const searchResults = await pipeline.searchSimilarCode('function authentication', 3);
             console.log(chalk.green(`✅ Search test successful: found ${searchResults.length} results`));
-          } catch (error) {
+          } catch (error: any) {
             console.log(chalk.yellow(`⚠️  Search test failed: ${error instanceof Error ? error.message : String(error)}`));
           }
         }
 
-      } catch (error) {
+      } catch (error: any) {
         spinner.stop();
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(chalk.red(`❌ Vectorization failed: ${errorMessage}`));

@@ -90,7 +90,6 @@ export interface PineconeStorageOptions {
   indexName: string;
   dimension?: number;
   metric?: 'cosine' | 'dotproduct' | 'euclidean';
-  environment?: string;
   namespace?: string;
 }
 

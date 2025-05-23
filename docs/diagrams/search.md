@@ -352,8 +352,112 @@ classDiagram
     enableSyntaxAnalysis: boolean
     enablePatternDetection: boolean
   }
+  class UnifiedSearch {
+    semanticSearch: SemanticSearch
+    queryProcessor: QueryProcessor
+    contextExtractor: ContextExtractor
+    similarityAnalyzer: SimilarityAnalyzer
+    fileCache: Map<string, { content: string
+    queryCache: Map<string, UnifiedSearchResult>
+    options: UnifiedSearchOptions
+    SemanticSearch()
+    QueryProcessor()
+    ContextExtractor()
+    SimilarityAnalyzer()
+    Map()
+    Map()
+    search(): Promise<UnifiedSearchResult>
+    if()
+    if()
+    if()
+    switch()
+    if()
+    catch()
+    String()
+    performExactSearch(): Promise<SearchResult[]>
+    performPatternSearch(): Promise<SearchResult[]>
+    RegExp()
+    performContextSearch(): Promise<SearchResult[]>
+    context()
+    enhanceSearchResults(): Promise<EnhancedSearchResult[]>
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    catch()
+    getFileContent(): Promise<string | null>
+    if()
+    if()
+    catch()
+    getFileStats(): Promise<any>
+    catch()
+    generateHighlights(): string[]
+    for()
+    for()
+    if()
+    generateRelevanceExplanation(): string
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    switch()
+    if()
+    if()
+    applyIntentBasedFiltering(): EnhancedSearchResult[]
+    switch()
+    sortResultsByRelevance(): EnhancedSearchResult[]
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    if()
+    cleanCache(): void
+    for()
+    if()
+    for()
+    if()
+  }
+  class EnhancedSearchResult {
+    <<interface>>
+    actualContent: string
+    highlights: string[]
+    relevanceExplanation: string
+    fileStats: {
+    size: number
+    lastModified: Date
+    lineCount: number
+    contextBefore: string
+    contextAfter: string
+  }
+  class UnifiedSearchOptions {
+    <<interface>>
+    includeContext: boolean
+    contextLines: number
+    includeFileStats: boolean
+    maxContentLength: number
+    enableCaching: boolean
+    cacheTimeout: number
+  }
+  class UnifiedSearchResult {
+    <<interface>>
+    query: ProcessedQuery
+    results: EnhancedSearchResult[]
+    totalResults: number
+    searchTime: number
+    cached: boolean
+    filters: QueryFilters
+  }
 
   %% Inheritance relationships
+  EnhancedSearchResult --|> SearchResult: extends
 
   %% Usage relationships
   SimilarityAnalyzer --> SemanticSearch: uses
@@ -365,6 +469,66 @@ classDiagram
   SimilarityAnalyzer --> SearchResult: uses
   SimilarityResult --> SearchResult: uses
   SimilarityOptions --> SearchResult: uses
+  UnifiedSearch --> SemanticSearch: uses
+  EnhancedSearchResult --> SemanticSearch: uses
+  UnifiedSearchOptions --> SemanticSearch: uses
+  UnifiedSearchResult --> SemanticSearch: uses
+  UnifiedSearch --> SemanticSearchOptions: uses
+  EnhancedSearchResult --> SemanticSearchOptions: uses
+  UnifiedSearchOptions --> SemanticSearchOptions: uses
+  UnifiedSearchResult --> SemanticSearchOptions: uses
+  UnifiedSearch --> SearchResult: uses
+  EnhancedSearchResult --> SearchResult: uses
+  UnifiedSearchOptions --> SearchResult: uses
+  UnifiedSearchResult --> SearchResult: uses
+  UnifiedSearch --> QueryProcessor: uses
+  EnhancedSearchResult --> QueryProcessor: uses
+  UnifiedSearchOptions --> QueryProcessor: uses
+  UnifiedSearchResult --> QueryProcessor: uses
+  UnifiedSearch --> ProcessedQuery: uses
+  EnhancedSearchResult --> ProcessedQuery: uses
+  UnifiedSearchOptions --> ProcessedQuery: uses
+  UnifiedSearchResult --> ProcessedQuery: uses
+  UnifiedSearch --> QueryFilters: uses
+  EnhancedSearchResult --> QueryFilters: uses
+  UnifiedSearchOptions --> QueryFilters: uses
+  UnifiedSearchResult --> QueryFilters: uses
+  UnifiedSearch --> ContextExtractor: uses
+  EnhancedSearchResult --> ContextExtractor: uses
+  UnifiedSearchOptions --> ContextExtractor: uses
+  UnifiedSearchResult --> ContextExtractor: uses
+  UnifiedSearch --> CodeContext: uses
+  EnhancedSearchResult --> CodeContext: uses
+  UnifiedSearchOptions --> CodeContext: uses
+  UnifiedSearchResult --> CodeContext: uses
+  UnifiedSearch --> FileStructure: uses
+  EnhancedSearchResult --> FileStructure: uses
+  UnifiedSearchOptions --> FileStructure: uses
+  UnifiedSearchResult --> FileStructure: uses
+  UnifiedSearch --> ClassInfo: uses
+  EnhancedSearchResult --> ClassInfo: uses
+  UnifiedSearchOptions --> ClassInfo: uses
+  UnifiedSearchResult --> ClassInfo: uses
+  UnifiedSearch --> FunctionInfo: uses
+  EnhancedSearchResult --> FunctionInfo: uses
+  UnifiedSearchOptions --> FunctionInfo: uses
+  UnifiedSearchResult --> FunctionInfo: uses
+  UnifiedSearch --> ImportInfo: uses
+  EnhancedSearchResult --> ImportInfo: uses
+  UnifiedSearchOptions --> ImportInfo: uses
+  UnifiedSearchResult --> ImportInfo: uses
+  UnifiedSearch --> SimilarityAnalyzer: uses
+  EnhancedSearchResult --> SimilarityAnalyzer: uses
+  UnifiedSearchOptions --> SimilarityAnalyzer: uses
+  UnifiedSearchResult --> SimilarityAnalyzer: uses
+  UnifiedSearch --> SimilarityResult: uses
+  EnhancedSearchResult --> SimilarityResult: uses
+  UnifiedSearchOptions --> SimilarityResult: uses
+  UnifiedSearchResult --> SimilarityResult: uses
+  UnifiedSearch --> SimilarityOptions: uses
+  EnhancedSearchResult --> SimilarityOptions: uses
+  UnifiedSearchOptions --> SimilarityOptions: uses
+  UnifiedSearchResult --> SimilarityOptions: uses
 
   %% Style and notes
   note "Generated from folder: search" as Note1
@@ -374,4 +538,5 @@ classDiagram
   note "query-processor.ts" as Note_query-processor
   note "semantic.ts" as Note_semantic
   note "similarity.ts" as Note_similarity
+  note "unified-search.ts" as Note_unified-search
 ```

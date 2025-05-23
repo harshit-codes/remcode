@@ -194,16 +194,19 @@ classDiagram
     semanticSearch: SemanticSearch
     contextExtractor: ContextExtractor
     similarityAnalyzer: SimilarityAnalyzer
+    unifiedSearch: UnifiedSearch
     SemanticSearch()
     ContextExtractor()
     SimilarityAnalyzer()
-    handleSearchCode(): Promise<void>
-    if()
+    UnifiedSearch()
+    handleSearch(): Promise<void>
     if()
     Date()
     catch()
     String()
     String()
+    handler()
+    handleSearchCode(): Promise<void>
     handleGetCodeContext(): Promise<void>
     if()
     Date()
@@ -248,9 +251,6 @@ classDiagram
     String()
     if()
     if()
-    for()
-    catch()
-    String()
     catch()
     String()
     catch()
@@ -266,9 +266,6 @@ classDiagram
     if()
     if()
     Error()
-    for()
-    catch()
-    String()
     catch()
     String()
     handleGenerateWorkflows(): Promise<void>

@@ -15,5 +15,4 @@ export { ProcessingPipeline } from './pipeline';
 // Types
 export * from './types';
 
-// Enhanced analyzers
-// export { EnhancedDependencyAnalyzer } from './enhanced-dependency-analyzer';
+// Enhanced analyzers - removed for simplification

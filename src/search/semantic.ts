@@ -81,7 +81,6 @@ export class SemanticSearch {
         apiKey: this.options.pineconeApiKey,
         indexName: this.options.pineconeIndexName!,
         namespace: this.options.pineconeNamespace,
-        environment: this.options.pineconeEnvironment,
         dimension: this.options.embeddingDimension || 768
       });
 

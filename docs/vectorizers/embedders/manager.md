@@ -44,7 +44,7 @@ Process embedding result from API based on model type
 
 ```typescript
 processEmbeddingResult(result: any, modelInfo: ModelInfo): number[] {
-    // Handle CodeBERT/GraphCodeBERT response format
+    // BGE models return direct array of numbers - perfect!
 ```
 
 #### `preprocessText()`

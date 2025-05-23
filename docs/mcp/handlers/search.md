@@ -4,7 +4,7 @@
 
 ## Overview
 
-No overview provided.
+Unified search handler that automatically processes queries
 
 ## Dependencies
 
@@ -13,10 +13,13 @@ No overview provided.
 - `../../search/semantic`
 - `../../search/context-extractor`
 - `../../search/similarity`
+- `../../search/unified-search`
 
 ## Classes
 
 ### `SearchMCPHandler`
+
+Unified search handler that automatically processes queries
 
 ```typescript
 class SearchMCPHandler {
@@ -26,7 +29,17 @@ class SearchMCPHandler {
 
 **Methods:**
 
+#### `handleSearch()`
+
+Unified search handler that automatically processes queries
+
+```typescript
+handleSearch(req: Request, res: Response, params?: any): Promise<void> {
+```
+
 #### `handleSearchCode()`
+
+Legacy search handler (deprecated - use handleSearch instead)
 
 ```typescript
 handleSearchCode(req: Request, res: Response, params?: any): Promise<void> {

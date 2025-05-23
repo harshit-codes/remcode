@@ -3,6 +3,7 @@ import { getLogger } from '../../utils/logger';
 import { SemanticSearch } from '../../search/semantic';
 import { ContextExtractor } from '../../search/context-extractor';
 import { SimilarityAnalyzer } from '../../search/similarity';
+import { UnifiedSearch } from '../../search/unified-search';
 
 const logger = getLogger('SearchMCPHandler');
 
@@ -10,6 +11,7 @@ export class SearchMCPHandler {
   private semanticSearch: SemanticSearch;
   private contextExtractor: ContextExtractor;
   private similarityAnalyzer: SimilarityAnalyzer;
+  private unifiedSearch: UnifiedSearch;
 
   constructor() {
     this.semanticSearch = new SemanticSearch({
@@ -29,10 +31,23 @@ export class SearchMCPHandler {
       enableSyntaxAnalysis: true,
       enablePatternDetection: true
     });
+    
+    // Initialize unified search
+    this.unifiedSearch = new UnifiedSearch(this.semanticSearch, {
+      includeContext: true,
+      contextLines: 3,
+      includeFileStats: true,
+      maxContentLength: 5000,
+      enableCaching: true,
+      cacheTimeout: 300000 // 5 minutes
+    });
   }
 
-  async handleSearchCode(req: Request, res: Response, params?: any): Promise<void> {
-    const { query, topK = 10, filters } = params || req.body;
+  /**
+   * Unified search handler that automatically processes queries
+   */
+  async handleSearch(req: Request, res: Response, params?: any): Promise<void> {
+    const { query, topK = 10, filters, options } = params || req.body;
 
     if (!query) {
       res.status(400).json({ error: 'Query is required' });
@@ -40,22 +55,60 @@ export class SearchMCPHandler {
     }
 
     try {
-      // Initialize semantic search if not already done
-      if (!this.semanticSearch.isInitialized()) {
-        await this.semanticSearch.initialize();
-      }
-
-      const results = await this.semanticSearch.search(query, topK, filters);
-      res.status(200).json({ 
-        results, 
-        totalResults: results.length,
-        query,
+      const startTime = Date.now();
+      
+      // Use unified search for intelligent query processing
+      const searchResult = await this.unifiedSearch.search(query, topK, filters);
+      
+      // Format response with enhanced metadata
+      const response = {
+        success: true,
+        query: {
+          original: searchResult.query.originalQuery,
+          processed: searchResult.query.processedQuery,
+          type: searchResult.query.queryType,
+          intent: searchResult.query.intent,
+          confidence: searchResult.query.confidence
+        },
+        results: searchResult.results.map(result => ({
+          filePath: result.metadata.filePath,
+          score: result.score,
+          content: result.actualContent || result.content,
+          highlights: result.highlights,
+          metadata: {
+            ...result.metadata,
+            relevance: result.relevanceExplanation,
+            fileStats: result.fileStats
+          },
+          context: {
+            before: result.contextBefore,
+            after: result.contextAfter
+          }
+        })),
+        totalResults: searchResult.totalResults,
+        searchTime: searchResult.searchTime,
+        cached: searchResult.cached,
+        filters: searchResult.filters,
         timestamp: new Date().toISOString()
-      });
+      };
+
+      res.status(200).json(response);
     } catch (error) {
-      logger.error(`Search failed: ${error instanceof Error ? error.message : String(error)}`);
-      res.status(500).json({ error: 'Search failed', details: error instanceof Error ? error.message : String(error) });
+      logger.error(`Unified search failed: ${error instanceof Error ? error.message : String(error)}`);
+      res.status(500).json({ 
+        success: false,
+        error: 'Search failed', 
+        details: error instanceof Error ? error.message : String(error) 
+      });
     }
+  }
+
+  /**
+   * Legacy search handler (deprecated - use handleSearch instead)
+   */
+  async handleSearchCode(req: Request, res: Response, params?: any): Promise<void> {
+    logger.warn('Using deprecated search_code handler. Please use the unified search handler instead.');
+    return this.handleSearch(req, res, params);
   }
 
   async handleGetCodeContext(req: Request, res: Response, params?: any): Promise<void> {
@@ -74,6 +127,7 @@ export class SearchMCPHandler {
       );
       
       res.status(200).json({ 
+        success: true,
         context,
         filePath,
         range: { startLine: startLine || 0, endLine: endLine || startLine || 10 },
@@ -81,7 +135,11 @@ export class SearchMCPHandler {
       });
     } catch (error) {
       logger.error(`Context extraction failed: ${error instanceof Error ? error.message : String(error)}`);
-      res.status(500).json({ error: 'Context extraction failed', details: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ 
+        success: false,
+        error: 'Context extraction failed', 
+        details: error instanceof Error ? error.message : String(error) 
+      });
     }
   }
 
@@ -97,13 +155,18 @@ export class SearchMCPHandler {
       const similarityResult = await this.similarityAnalyzer.findSimilarPatterns(codeSnippet, threshold);
       
       res.status(200).json({ 
+        success: true,
         ...similarityResult,
         threshold,
         timestamp: new Date().toISOString()
       });
     } catch (error) {
       logger.error(`Similarity analysis failed: ${error instanceof Error ? error.message : String(error)}`);
-      res.status(500).json({ error: 'Similarity analysis failed', details: error instanceof Error ? error.message : String(error) });
+      res.status(500).json({ 
+        success: false,
+        error: 'Similarity analysis failed', 
+        details: error instanceof Error ? error.message : String(error) 
+      });
     }
   }
 }

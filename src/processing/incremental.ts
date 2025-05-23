@@ -87,7 +87,6 @@ export class IncrementalProcessor {
       this.storage = new PineconeStorage({
         apiKey: this.options.pineconeApiKey,
         indexName: this.options.pineconeIndexName,
-        environment: this.options.pineconeEnvironment,
         namespace: this.options.pineconeNamespace
       });
       

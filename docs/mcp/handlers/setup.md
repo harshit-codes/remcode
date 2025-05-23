@@ -16,7 +16,7 @@ Handle repository setup request
 - `../../setup/remcode-config`
 - `../../setup/secrets`
 - `../../workflows/generator`
-- `../../workflows/templates`
+- `../../setup/workflow-generator`
 
 ## Classes
 

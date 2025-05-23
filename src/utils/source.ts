@@ -67,9 +67,9 @@ export async function resolveSource(source: string, options: SourceOptions = {})
   
   switch (parsedSource.type) {
     case SourceType.GITHUB_REPO:
-      return resolveGitHubSource(parsedSource, options);
+      return resolveGitHubSource(parsedSource.originalSource, options);
     case SourceType.LOCAL_PATH:
-      return resolveLocalSource(parsedSource.localPath);
+      return resolveLocalSource(parsedSource.localPath || parsedSource.originalSource);
     default:
       throw new Error(`Unsupported source type: ${parsedSource.type}`);
   }
@@ -244,7 +244,6 @@ function parseLocalPath(source: string): ParsedSource | null {
   }
   
   return null;
-  return source.startsWith('https://github.com/') || source.startsWith('git@github.com:');
 }
 
 /**

@@ -345,8 +345,6 @@ export class MCPServer {
         return this.setupHandler.handleSetupSecrets(req, res, req.body.parameters);
       } else if (tool === 'generate-workflows') {
         return this.setupHandler.handleGenerateWorkflows(req, res, req.body.parameters);
-      } else if (tool === 'search') {
-        return this.searchHandler.handleSearch(req, res, req.body.parameters);
       } else if (tool === 'search_code') {
         return this.searchHandler.handleSearchCode(req, res, req.body.parameters);
       } else if (tool === 'get_code_context') {

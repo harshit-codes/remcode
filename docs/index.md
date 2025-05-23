@@ -6,17 +6,6 @@ This documentation provides an overview of the Remcode codebase structure, entit
 
 - **src/**
   - [index](index.md)
-  - **analyzers/**
-    - [dependency](analyzers/dependency.md)
-    - [quality](analyzers/quality.md)
-    - [repository](analyzers/repository.md)
-    - **quality/**
-      - [complexity-analyzer](analyzers/quality/complexity-analyzer.md)
-      - [eslint-analyzer](analyzers/quality/eslint-analyzer.md)
-      - [index](analyzers/quality/index.md)
-      - [language-utils](analyzers/quality/language-utils.md)
-      - [quality-assessment](analyzers/quality/quality-assessment.md)
-      - [types](analyzers/quality/types.md)
   - **commands/**
     - [analyze](commands/analyze.md)
     - [serve](commands/serve.md)
@@ -39,7 +28,6 @@ This documentation provides an overview of the Remcode codebase structure, entit
       - [setup](mcp/handlers/setup.md)
   - **processing/**
     - [change-detector](processing/change-detector.md)
-    - [enhanced-dependency-analyzer](processing/enhanced-dependency-analyzer.md)
     - [file-analyzer](processing/file-analyzer.md)
     - [incremental](processing/incremental.md)
     - [index](processing/index.md)
@@ -51,6 +39,7 @@ This documentation provides an overview of the Remcode codebase structure, entit
     - [query-processor](search/query-processor.md)
     - [semantic](search/semantic.md)
     - [similarity](search/similarity.md)
+    - [unified-search](search/unified-search.md)
   - **setup/**
     - [detector](setup/detector.md)
     - [initializer](setup/initializer.md)
@@ -86,8 +75,6 @@ This documentation provides an overview of the Remcode codebase structure, entit
 ## Entity Relationship Diagrams
 
 - [src Diagram](diagrams/src.md)
-  - [analyzers Diagram](diagrams/analyzers.md)
-    - [quality Diagram](diagrams/analyzers/quality.md)
   - [commands Diagram](diagrams/commands.md)
   - [github Diagram](diagrams/github.md)
   - [mcp Diagram](diagrams/mcp.md)

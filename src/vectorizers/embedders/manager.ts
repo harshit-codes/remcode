@@ -19,33 +19,32 @@ interface ModelInfo {
 
 // Working embedding models with their configurations
 const EMBEDDING_MODELS: Record<string, ModelInfo> = {
-  // Code-specific models (working)
-  'microsoft/codebert-base': {
-    id: 'microsoft/codebert-base', 
-    name: 'CodeBERT',
-    embeddingDimension: 768,
-    strategy: 'code',
-    apiType: 'feature_extraction'
-  },
-  'microsoft/graphcodebert-base': {
-    id: 'microsoft/graphcodebert-base',
-    name: 'GraphCodeBERT',
-    embeddingDimension: 768,
-    strategy: 'code',
-    apiType: 'feature_extraction'
-  },
-  // Text models with sentence-transformers API
-  'sentence-transformers/all-MiniLM-L6-v2': {
-    id: 'sentence-transformers/all-MiniLM-L6-v2',
-    name: 'MiniLM-L6',
+  // Using models that work well with feature extraction API
+  'sentence-transformers/all-MiniLM-L12-v2': {
+    id: 'sentence-transformers/all-MiniLM-L12-v2',
+    name: 'MiniLM-L12',
     embeddingDimension: 384,
     strategy: 'text',
-    apiType: 'sentence_similarity'
+    apiType: 'feature_extraction'
+  },
+  'BAAI/bge-small-en-v1.5': {
+    id: 'BAAI/bge-small-en-v1.5',
+    name: 'BGE-Small',
+    embeddingDimension: 384,
+    strategy: 'text',
+    apiType: 'feature_extraction'
+  },
+  'BAAI/bge-base-en-v1.5': {
+    id: 'BAAI/bge-base-en-v1.5',
+    name: 'BGE-Base',
+    embeddingDimension: 768,
+    strategy: 'text',
+    apiType: 'feature_extraction'
   }
 };
 
-const DEFAULT_MODEL = EMBEDDING_MODELS['microsoft/codebert-base'];
-const FALLBACK_MODEL = EMBEDDING_MODELS['microsoft/graphcodebert-base'];
+const DEFAULT_MODEL = EMBEDDING_MODELS['BAAI/bge-base-en-v1.5'];
+const FALLBACK_MODEL = EMBEDDING_MODELS['BAAI/bge-small-en-v1.5'];
 
 export class EmbeddingManager {
   private options: EmbeddingManagerOptions;
@@ -171,25 +170,11 @@ export class EmbeddingManager {
   private async getEmbeddingViaDirectAPI(text: string, modelId: string, modelInfo: ModelInfo, retries = 2): Promise<number[]> {
     for (let attempt = 1; attempt <= retries; attempt++) {
       try {
-        let requestBody: any;
-        
-        // Format request based on model type
-        if (modelInfo.apiType === 'sentence_similarity') {
-          // Sentence transformers expect 'sentences' array
-          requestBody = { 
-            inputs: {
-              source_sentence: text,
-              sentences: [text] // Self-similarity to get embedding
-            },
-            options: { wait_for_model: true }
-          };
-        } else {
-          // Feature extraction models (CodeBERT) expect 'inputs' string
-          requestBody = { 
-            inputs: text,
-            options: { wait_for_model: true }
-          };
-        }
+        // Use feature extraction for all models for consistency
+        const requestBody = { 
+          inputs: text,
+          options: { wait_for_model: true }
+        };
         
         const response = await axios.post(
           `${this.apiBaseUrl}/${modelId}`,
@@ -228,28 +213,24 @@ export class EmbeddingManager {
    * Process embedding result from API based on model type
    */
   private processEmbeddingResult(result: any, modelInfo: ModelInfo): number[] {
-    // Handle CodeBERT/GraphCodeBERT response format
-    if (Array.isArray(result) && result.length > 0) {
-      // CodeBERT returns array of token embeddings
-      if (typeof result[0] === 'object' && Array.isArray(result[0])) {
-        // Average all token embeddings to get sentence embedding
-        return this.averageEmbeddings(result as number[][]);
-      }
-      
-      // If it's already a flat array of numbers
-      if (typeof result[0] === 'number') {
-        return result as number[];
-      }
+    // BGE models return direct array of numbers - perfect!
+    if (Array.isArray(result) && typeof result[0] === 'number') {
+      return result as number[];
     }
     
-    // Handle sentence transformers response
-    if (result && Array.isArray(result.embeddings)) {
-      return result.embeddings;
+    // Handle array of token embeddings (average them)
+    if (Array.isArray(result) && Array.isArray(result[0]) && typeof result[0][0] === 'number') {
+      return this.averageEmbeddings(result as number[][]);
     }
     
-    // Handle direct embedding response
+    // Handle object responses
     if (typeof result === 'object' && result.embedding) {
       return result.embedding;
+    }
+    
+    // Default: try to extract first array
+    if (Array.isArray(result) && result.length > 0) {
+      return Array.isArray(result[0]) ? result[0] : result;
     }
     
     throw new Error(`Unexpected embedding result format for ${modelInfo.name}: ${JSON.stringify(result).substring(0, 200)}...`);

@@ -26,8 +26,6 @@ classDiagram
     getEmbeddingFromModel(): Promise<number[]>
     getEmbeddingViaDirectAPI(): Promise<number[]>
     for()
-    if()
-    models()
     catch()
     if()
     String()
@@ -37,7 +35,7 @@ classDiagram
     Error()
     processEmbeddingResult(): number[]
     if()
-    if()
+    embeddings()
     if()
     if()
     if()
