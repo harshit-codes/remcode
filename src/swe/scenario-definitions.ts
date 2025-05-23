@@ -181,3 +181,105 @@ export const SCENARIO_DEFINITIONS: Scenario[] = [
     ],
     tags: ['architecture', 'design', 'scalability', 'structure']
   },
+  {
+    id: 'documentation',
+    name: 'Technical Documentation',
+    description: 'Creating clear, comprehensive documentation for developers and users',
+    triggers: [
+      'document', 'create docs', 'add documentation', 'write readme', 'explain code', 
+      'api docs', 'update documentation', 'user guide', 'developer guide', 'tutorial',
+      'how to', 'getting started', 'installation guide', 'troubleshooting'
+    ],
+    negativePatterns: ['implement', 'code', 'bug fix'],
+    tools: ['search_code', 'get_code_context', 'analyze_file_structure'],
+    difficulty: DifficultyLevel.BEGINNER,
+    promptType: PromptType.DOCUMENTATION,
+    estimatedTime: '1-3 hours',
+    requiredSkills: ['technical writing', 'markdown', 'clarity of expression'],
+    examples: [
+      'Create API documentation for these endpoints', 
+      'Write a README for this project',
+      'Document the installation and setup process'
+    ],
+    tags: ['documentation', 'readme', 'api-docs']
+  },
+  {
+    id: 'deployment',
+    name: 'Deployment & DevOps',
+    description: 'Implementing reliable, automated deployment processes and infrastructure',
+    triggers: [
+      'deploy', 'deployment', 'devops', 'ci/cd', 'pipeline', 'infrastructure', 
+      'docker', 'kubernetes', 'cloud', 'aws', 'azure', 'gcp', 'terraform',
+      'ansible', 'jenkins', 'github actions', 'build process', 'release'
+    ],
+    negativePatterns: ['code logic', 'business rules'],
+    tools: ['search_code', 'get_repository_status', 'analyze_file_structure'],
+    difficulty: DifficultyLevel.ADVANCED,
+    promptType: PromptType.DEPLOYMENT,
+    estimatedTime: '2-8 hours',
+    requiredSkills: ['DevOps tools', 'infrastructure as code', 'deployment strategies'],
+    examples: [
+      'Set up CI/CD pipeline for this project', 
+      'Create Docker configuration for deployment',
+      'Implement blue-green deployment strategy'
+    ],
+    tags: ['deployment', 'devops', 'infrastructure', 'automation']
+  },
+  {
+    id: 'maintenance',
+    name: 'Code Maintenance & Updates',
+    description: 'Keeping codebase healthy, updated, and aligned with current standards',
+    triggers: [
+      'maintenance', 'update dependencies', 'upgrade', 'legacy code', 'modernize', 
+      'deprecate', 'remove dead code', 'cleanup', 'technical debt', 'housekeeping',
+      'version update', 'library update', 'framework migration', 'consolidate'
+    ],
+    negativePatterns: ['new feature', 'enhancement'],
+    tools: ['search_code', 'find_similar_code', 'get_repository_status'],
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    promptType: PromptType.MAINTENANCE,
+    estimatedTime: '1-6 hours',
+    requiredSkills: ['dependency management', 'migration strategies', 'risk assessment'],
+    examples: [
+      'Update all dependencies to latest stable versions', 
+      'Remove unused code and clean up the codebase',
+      'Migrate from deprecated API to new version'
+    ],
+    tags: ['maintenance', 'updates', 'cleanup', 'migration']
+  },
+  {
+    id: 'learning',
+    name: 'Learning & Code Exploration',
+    description: 'Understanding codebases, technologies, and patterns for educational purposes',
+    triggers: [
+      'understand', 'explain', 'how does', 'what is', 'learn about', 'explore', 
+      'analyze', 'study', 'investigate', 'research', 'discover', 'find out',
+      'help me understand', 'walk through', 'trace', 'follow the flow'
+    ],
+    negativePatterns: ['implement', 'create', 'fix', 'deploy'],
+    tools: ['search_code', 'get_code_context', 'find_similar_code', 'analyze_file_structure'],
+    difficulty: DifficultyLevel.BEGINNER,
+    promptType: PromptType.LEARNING,
+    estimatedTime: '30min-2 hours',
+    requiredSkills: ['analytical thinking', 'pattern recognition', 'documentation reading'],
+    examples: [
+      'Help me understand how authentication works in this app', 
+      'Explain the data flow in this module',
+      'Show me examples of error handling patterns used here'
+    ],
+    tags: ['learning', 'exploration', 'understanding', 'education']
+  },
+  {
+    id: 'default',
+    name: 'General Software Engineering',
+    description: 'General software engineering guidance and best practices',
+    triggers: ['help', 'assist', 'general', 'advice', 'guidance', 'best practice'],
+    tools: ['search_code', 'get_code_context'],
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    promptType: PromptType.DEFAULT,
+    estimatedTime: 'Variable',
+    requiredSkills: ['general programming', 'problem solving'],
+    examples: ['General coding assistance', 'Best practices guidance'],
+    tags: ['general', 'guidance', 'best practices']
+  }
+];

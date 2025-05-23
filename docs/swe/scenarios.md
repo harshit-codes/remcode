@@ -10,6 +10,7 @@ Difficulty level for scenarios
 
 - `../utils/logger`
 - `./prompts`
+- `./scenario-definitions`
 
 ## Classes
 

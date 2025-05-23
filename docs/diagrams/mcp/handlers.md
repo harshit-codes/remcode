@@ -172,12 +172,25 @@ classDiagram
   class RemcodeMCPHandler {
     swePrompts: SWEPrompts
     sweScenarios: SWEScenarios
+    sweGuidelines: SWEGuidelines
     SWEPrompts()
     SWEScenarios()
+    SWEGuidelines()
     handleDefaultPrompt(): Promise<void>
     catch()
+    Error()
     handleGetScenarios(): Promise<void>
     catch()
+    Error()
+    handleGetGuidelines(): Promise<void>
+    if()
+    if()
+    if()
+    catch()
+    Error()
+    handleGetContextualGuidance(): Promise<void>
+    catch()
+    Error()
   }
   class RepositoryMCPHandler {
     githubRepository: GitHubRepository

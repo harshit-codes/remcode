@@ -52,10 +52,7 @@ classDiagram
     if()
     length()
     getScenarioGuidance(): string
-    switch()
-    testing()
-    complexity()
-    requirements()
+    getScenarioGuidance()
     getPromptWithGuidelines(): string
     if()
     for()

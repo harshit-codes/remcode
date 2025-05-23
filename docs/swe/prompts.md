@@ -10,6 +10,7 @@ Prompt types supported by the system - Complete set of 13 software engineering s
 
 - `../utils/logger`
 - `./guidelines`
+- `./scenario-guidance`
 
 ## Classes
 
@@ -31,6 +32,17 @@ Get scenario-specific guidance with Remcode MCP tool recommendations
 
 ```typescript
 getScenarioGuidance(scenario: PromptType): string {
+```
+
+#### `getScenarioGuidance()`
+
+```typescript
+getScenarioGuidance(scenario);
+  }
+
+  /**
+   * Generate a prompt that includes specific guidelines
+   */
 ```
 
 ## Interfaces

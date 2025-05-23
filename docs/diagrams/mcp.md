@@ -2,102 +2,6 @@
 
 ```mermaid
 classDiagram
-  class EnhancedToolsRegistry {
-    toolsMap: Map<string, EnhancedMCPTool>
-    categoriesMap: Map<ToolCategory, EnhancedMCPTool[]>
-    Map()
-    Map()
-    getInstance(): EnhancedToolsRegistry
-    if()
-    EnhancedToolsRegistry()
-    initializeTools(): void
-    if()
-    getAllTools(): EnhancedMCPTool[]
-    getToolByName(): EnhancedMCPTool | undefined
-    getToolsByCategory(): EnhancedMCPTool[]
-  }
-  class EnhancedToolsRegistry {
-    toolsMap: Map<string, EnhancedMCPTool>
-    categoriesMap: Map<ToolCategory, EnhancedMCPTool[]>
-    Map()
-    Map()
-    getInstance(): EnhancedToolsRegistry
-    if()
-    EnhancedToolsRegistry()
-    initializeTools(): void
-    if()
-    getAllTools(): EnhancedMCPTool[]
-    getToolByName(): EnhancedMCPTool | undefined
-    getToolsByCategory(): EnhancedMCPTool[]
-    getToolsByTag(): EnhancedMCPTool[]
-    getToolsByPriority(): EnhancedMCPTool[]
-    convertToMCPSpec(): any
-    getCategoryStats(): Record<string, number>
-    getToolSummary(): any
-  }
-  class EnhancedToolsRegistry {
-    toolsMap: Map<string, EnhancedMCPTool>
-    categoriesMap: Map<ToolCategory, EnhancedMCPTool[]>
-    Map()
-    Map()
-    getInstance(): EnhancedToolsRegistry
-    if()
-    EnhancedToolsRegistry()
-    initializeTools(): void
-    if()
-    getAllTools(): EnhancedMCPTool[]
-    getToolByName(): EnhancedMCPTool | undefined
-    getToolsByCategory(): EnhancedMCPTool[]
-    getToolsByTag(): EnhancedMCPTool[]
-    getToolsByPriority(): EnhancedMCPTool[]
-    convertToMCPSpec(): any
-  }
-  class MCPToolRecommendationEngine {
-    getToolsByCategory(): EnhancedMCPTool[]
-    getToolsByPriority(): EnhancedMCPTool[]
-    getToolsByUsageContext(): EnhancedMCPTool[]
-    recommendToolsForNewUser(): EnhancedMCPTool[]
-    recommendFollowUpTools(): string[]
-    getToolByName(): EnhancedMCPTool | undefined
-  }
-  class EnhancedMCPTool {
-    <<interface>>
-    name: string
-    displayName: string
-    description: string
-    detailedDescription: string
-    category: MCPToolCategory
-    priority: MCPToolPriority
-    usageContexts: MCPUsageContext[]
-    parameters: {
-    [key: string]: {
-    type: string
-    description: string
-    required: boolean
-    default: any
-    examples: string[]
-    constraints: string
-    returns: {
-    description: string
-    schema: any
-    examples: any[]
-    examples: {
-    title: string
-    description: string
-    request: any
-    expectedResponse: string
-    prerequisites: string[]
-    relatedTools: string[]
-    performanceHints: string[]
-    troubleshooting: {
-    commonIssues: string[]
-    solutions: string[]
-    bestPractices: string[]
-    aiGuidance: {
-    whenToUse: string
-    whenNotToUse: string
-    followUpSuggestions: string[]
-  }
   class MCPServer {
     app: express.Application
     port: number
@@ -111,6 +15,7 @@ classDiagram
     processingHandler: ProcessingMCPHandler
     repositoryHandler: RepositoryMCPHandler
     remcodeHandler: RemcodeMCPHandler
+    sweGuidanceMiddleware: SWEGuidanceMiddleware
     express()
     parseInt(): 3000);
     PineconeMCPHandler()
@@ -121,6 +26,7 @@ classDiagram
     ProcessingMCPHandler()
     RepositoryMCPHandler()
     RemcodeMCPHandler()
+    SWEGuidanceMiddleware()
     configureServer(): void
     token()
     branch()
@@ -135,6 +41,11 @@ classDiagram
     scenario()
     context()
     from()
+    type()
+    category()
+    level()
+    context()
+    preferences()
     repository()
     owner()
     name()
@@ -144,6 +55,8 @@ classDiagram
     use()
     batch()
     use()
+    if()
+    if()
     if()
     if()
     if()
@@ -182,16 +95,34 @@ classDiagram
     huggingfaceToken: string
     corsOrigins: string
   }
+  class SWEGuidanceMiddleware {
+    swePrompts: SWEPrompts
+    SWEPrompts()
+    createInjectionMiddleware()
+    return()
+    function()
+    if()
+    response()
+    if()
+    catch()
+    Error()
+    next()
+    createSelectiveInjectionMiddleware()
+    return()
+    if()
+    next()
+  }
 
   %% Inheritance relationships
 
   %% Usage relationships
+  MCPServer --> SWEGuidanceMiddleware: uses
+  MCPServerOptions --> SWEGuidanceMiddleware: uses
 
   %% Style and notes
   note "Generated from folder: mcp" as Note1
 
   %% File groupings
-  note "enhanced-tools-registry.ts" as Note_enhanced-tools-registry
-  note "enhanced-tools.ts" as Note_enhanced-tools
   note "index.ts" as Note_index
+  note "swe-guidance-middleware.ts" as Note_swe-guidance-middleware
 ```

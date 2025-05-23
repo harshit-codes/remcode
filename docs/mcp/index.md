@@ -19,6 +19,7 @@ to allow AI assistants to interact with the remcode tools.
 - `./handlers/processing`
 - `./handlers/repository`
 - `./handlers/remcode`
+- `./swe-guidance-middleware`
 - `../utils/logger`
 
 ## Classes

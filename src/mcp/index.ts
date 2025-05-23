@@ -15,6 +15,7 @@ import { SearchMCPHandler } from './handlers/search';
 import { ProcessingMCPHandler } from './handlers/processing';
 import { RepositoryMCPHandler } from './handlers/repository';
 import { RemcodeMCPHandler } from './handlers/remcode';
+import { SWEGuidanceMiddleware } from './swe-guidance-middleware';
 import { getLogger } from '../utils/logger';
 
 const logger = getLogger('MCP-Server');
@@ -41,6 +42,7 @@ export class MCPServer {
   private processingHandler: ProcessingMCPHandler;
   private repositoryHandler: RepositoryMCPHandler;
   private remcodeHandler: RemcodeMCPHandler;
+  private sweGuidanceMiddleware: SWEGuidanceMiddleware;
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
@@ -72,6 +74,7 @@ export class MCPServer {
     this.processingHandler = new ProcessingMCPHandler(this.options.githubToken);
     this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
     this.remcodeHandler = new RemcodeMCPHandler();
+    this.sweGuidanceMiddleware = new SWEGuidanceMiddleware();
     
     this.configureServer();
   }
@@ -85,6 +88,13 @@ export class MCPServer {
     };
     this.app.use(cors(corsOptions));
     this.app.use(express.json());
+    
+    // Add SWE guidance injection middleware for key tools
+    const toolsWithGuidance = [
+      'search', 'search_code', 'get_code_context', 'find_similar_patterns',
+      'trigger-reprocessing', 'setup-repository', 'analyze_file_structure'
+    ];
+    this.app.use('/v1/mcp/tools', this.sweGuidanceMiddleware.createSelectiveInjectionMiddleware(toolsWithGuidance));
     
     // Health check endpoint
     this.app.get('/health', (req, res) => {
@@ -229,6 +239,24 @@ export class MCPServer {
             }
           },
           {
+            name: 'get_guidelines',
+            description: 'Get specific software engineering guidelines and best practices',
+            parameters: {
+              scenario: { type: 'string', description: 'Scenario type (optional)', optional: true },
+              category: { type: 'string', description: 'Guideline category (optional)', optional: true },
+              priority: { type: 'string', description: 'Priority level (optional)', optional: true }
+            }
+          },
+          {
+            name: 'get_contextual_guidance',
+            description: 'Get comprehensive SWE guidance for specific development context',
+            parameters: {
+              userQuery: { type: 'string', description: 'User query to analyze' },
+              codeContext: { type: 'string', description: 'Code context (optional)', optional: true },
+              teamPreferences: { type: 'object', description: 'Team preferences (optional)', optional: true }
+            }
+          },
+          {
             name: 'github_get_repo',
             description: 'Get repository metadata from GitHub',
             parameters: {
@@ -365,6 +393,10 @@ export class MCPServer {
         return this.remcodeHandler.handleDefaultPrompt(req, res, req.body.parameters);
       } else if (tool === 'get_scenarios') {
         return this.remcodeHandler.handleGetScenarios(req, res, req.body.parameters);
+      } else if (tool === 'get_guidelines') {
+        return this.remcodeHandler.handleGetGuidelines(req, res, req.body.parameters);
+      } else if (tool === 'get_contextual_guidance') {
+        return this.remcodeHandler.handleGetContextualGuidance(req, res, req.body.parameters);
       }
       
       res.status(400).json({ error: 'Unknown tool type' });

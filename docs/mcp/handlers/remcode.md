@@ -12,6 +12,7 @@ No overview provided.
 - `../../utils/logger`
 - `../../swe/prompts`
 - `../../swe/scenarios`
+- `../../swe/guidelines`
 
 ## Classes
 
@@ -35,5 +36,17 @@ handleDefaultPrompt(req: Request, res: Response, params?: any): Promise<void> {
 
 ```typescript
 handleGetScenarios(req: Request, res: Response, params?: any): Promise<void> {
+```
+
+#### `handleGetGuidelines()`
+
+```typescript
+handleGetGuidelines(req: Request, res: Response, params?: any): Promise<void> {
+```
+
+#### `handleGetContextualGuidance()`
+
+```typescript
+handleGetContextualGuidance(req: Request, res: Response, params?: any): Promise<void> {
 ```
 

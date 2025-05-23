@@ -129,8 +129,10 @@ First question triggers automatic setup, then ask away:
 - `update_configuration`: Modify .remcode settings and chunking strategies
 
 **SWE Best Practices & Guidance**:
-- `default_prompt`: Auto-injected SWE best practices and Remcode optimization guidelines
-- `get_scenarios`: Context-aware system prompt selection for specialized development scenarios
+- `default_prompt`: Auto-injected comprehensive SWE best practices for all development scenarios
+- `get_scenarios`: Context-aware detection and guidance for 13 software engineering scenarios
+- `get_guidelines`: Specific coding guidelines and best practices on-demand
+- `get_contextual_guidance`: Comprehensive SWE guidance tailored to your specific development context
 
 ### **Connecting AI Assistants**
 

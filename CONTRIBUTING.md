@@ -40,10 +40,11 @@ Choose your area of contribution:
 
 ### 🧠 [SWE Best Practices & Prompts](./docs/contributing/swe-prompts.md)
 **Perfect for:** Software engineers, prompt engineers, and AI practitioners
-- Improve software engineering prompts
-- Add context-aware scenarios
-- Enhance code quality guidelines
+- Improve software engineering prompts across 13 comprehensive scenarios
+- Add context-aware guidance with deep Remcode MCP integration
+- Enhance language-agnostic code quality guidelines and workflows
 - **Skill Level:** Beginner to Intermediate
+- **✨ NEW:** Complete coverage of all software engineering scenarios with automatic guidance injection
 
 ### 🔧 [External Integrations & Local Support](./docs/contributing/external-integrations.md)
 **Perfect for:** DevOps engineers, infrastructure developers, and integration specialists
