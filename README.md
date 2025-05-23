@@ -12,7 +12,8 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 - **🧠 Codebase-Aware Intelligence**: ✅ **WORKING** - Real CodeBERT embeddings analyze your code patterns, architecture, and conventions
 - **📊 Incremental Processing**: Only analyzes changed files for efficient continuous integration
 - **🔍 Semantic Code Search**: ✅ **FOUNDATION READY** - Vectorization pipeline functional, search layer in development
-- **🎯 SWE Best Practices**: Auto-injected software engineering guidelines and context-aware assistance
+- **🎯 Enhanced SWE Best Practices**: ✅ **NEW** - Comprehensive guidance across 13 software engineering scenarios with automatic injection
+- **🌐 Language-Agnostic Guidance**: ✅ **NEW** - Universal software engineering principles that work with any technology stack
 - **🛡️ Privacy & Security First**: Processing in your GitHub environment, secrets secured, vectors isolated
 - **⚡ Production-Ready Core**: Real 768-dimensional CodeBERT embeddings, Pinecone vector storage, smart chunking
 
@@ -118,7 +119,7 @@ First question triggers automatic setup, then ask away:
 - `create_repository`: Create new GitHub repository for local codebase
 
 **Code Search & Analysis**:
-- `search_code`: Semantic search across vectorized codebase
+- `search_code`: Semantic search across vectorized codebase with automatic SWE guidance
 - `get_code_context`: Get surrounding context for specific code snippets
 - `analyze_file_structure`: Understand file organization and dependencies
 - `find_similar_code`: Find code patterns similar to a given snippet
@@ -127,6 +128,27 @@ First question triggers automatic setup, then ask away:
 - `trigger_reprocessing`: Force full or incremental reprocessing
 - `get_processing_status`: Check GitHub Actions workflow status
 - `update_configuration`: Modify .remcode settings and chunking strategies
+
+**Enhanced SWE Best Practices & Guidance**:
+- `default_prompt`: ✅ **AUTO-INJECTED** - Comprehensive SWE best practices automatically included in all tool responses
+- `get_scenarios`: ✅ **ENHANCED** - Intelligent detection and guidance for all 13 software engineering scenarios
+- `get_guidelines`: ✅ **NEW** - Get specific coding guidelines and best practices by scenario, category, or priority
+- `get_contextual_guidance`: ✅ **NEW** - Comprehensive, context-aware SWE guidance tailored to your development situation
+
+**All 13 Software Engineering Scenarios Covered**:
+- 🔧 **Refactoring** - Code structure improvement and technical debt reduction
+- ✨ **New Feature** - Adding functionality with proper integration patterns  
+- 🐛 **Bug Fixing** - Root cause analysis and robust defect resolution
+- ⚡ **Performance** - Data-driven optimization and efficiency improvements
+- 🔒 **Security** - Vulnerability identification and security hardening
+- 🧪 **Testing** - Comprehensive testing strategies and coverage improvement
+- 👀 **Code Review** - Quality assessment and standards compliance
+- 🏗️ **Architecture** - System design and scalable structure planning
+- 📚 **Documentation** - Clear technical documentation for developers and users
+- 🚀 **Deployment** - Automated deployment processes and DevOps integration
+- 🔧 **Maintenance** - Codebase health, updates, and legacy modernization
+- 🎓 **Learning** - Code exploration and educational understanding
+- 🎯 **General** - Universal software engineering best practices
 
 **SWE Best Practices & Guidance**:
 - `default_prompt`: Auto-injected comprehensive SWE best practices for all development scenarios
