@@ -9,6 +9,7 @@ MCP Inspector Integration for Remcode
 ## Dependencies
 
 - `../../src/mcp`
+- `../../src/utils/port-manager`
 
 ## Classes
 

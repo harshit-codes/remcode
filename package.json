@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.0",
-  "description": "Codebase-Aware SWE Autopilot - AI assistant integration via Model Context Protocol (MCP) for intelligent code analysis and vectorization",
+  "version": "0.1.1",
+  "description": "Enhanced Codebase-Aware SWE Autopilot with Smart Setup - AI assistant integration via MCP with automatic token management and intelligent port selection",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "./bin/remcode.js"
@@ -71,7 +71,12 @@
     "pinecone",
     "langchain",
     "graphcodebert",
-    "code-quality"
+    "code-quality",
+    "smart-setup",
+    "token-management",
+    "port-selection",
+    "npx-package",
+    "enhanced-ux"
   ],
   "author": "",
   "license": "MIT",

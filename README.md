@@ -4,6 +4,36 @@
 
 Remcode creates a codebase-aware autopilot trained on software engineering best practices. Your AI assistant gains deep understanding of your code patterns, architecture, and conventions. Use alongside other MCP tools to build an intelligent development workflow that follows your project's standards.
 
+## ⚡ Quick Installation
+
+### **Option 1: NPX (Recommended)**
+```bash
+# Start MCP server (auto-installs if needed)
+npx remcode serve --port 3000
+
+# Test all 27 tools interactively
+npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+# Opens: http://127.0.0.1:6274
+```
+
+### **Option 2: Global Install**
+```bash
+# Install globally
+npm install -g remcode
+
+# Start server
+remcode serve --port 3000
+```
+
+### **Option 3: Clone & Build**
+```bash
+git clone https://github.com/harshit-codes/remcode.git
+cd remcode
+npm install && npm run build
+./bin/remcode.js serve --port 3000
+```
+
+**[📖 Complete Setup Guide →](INSTALLATION.md)**
 
 ## 🚀 Quick Start (5 minutes)
 
@@ -17,8 +47,6 @@ npx remcode serve --port 3000
 # 3. Add to your AI assistant (Claude Desktop example)
 # See INSTALLATION.md for complete setup guide
 ```
-
-**[📖 Complete Installation Guide →](INSTALLATION.md)**
 ## 🚀 Key Features
 
 - **🚀 One-Click Automated Setup**: First MCP call handles everything - secrets, workflows, processing
@@ -87,6 +115,32 @@ npx remcode serve --port 3000
   - **Pinecone API Key** - [Get one here](https://www.pinecone.io/)
   - **HuggingFace Token** - [Get one here](https://huggingface.co/settings/tokens)
   - **GitHub Token** - [Get one here](https://github.com/settings/tokens) (required for automated setup)
+
+## 🧪 Testing & Development
+
+### **MCP Inspector (Interactive Tool Testing)**
+Test all 27 MCP tools in a web interface:
+
+```bash
+# Start MCP Inspector with STDIO bridge
+npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+
+# Open in browser: http://127.0.0.1:6274
+```
+
+**Available Tools:**
+- 📁 **Repository**: setup-repository, get_repository_status, list_repositories
+- 🔍 **Search**: search, search_code, get_code_context  
+- ⚙️ **Processing**: trigger-reprocessing, get-processing-status
+- 🤖 **SWE**: default_prompt, get_scenarios, get_guidelines
+- 🐙 **GitHub**: github_get_repo, github_list_files, github_get_file
+- 🌲 **Pinecone**: pinecone_query, pinecone_list_indexes
+- 🤗 **HuggingFace**: huggingface_embed_code, huggingface_embed_query
+
+**Usage:**
+1. Click "Connect" → "List Tools"
+2. Select any tool and click "Run Tool"
+3. View results and debug in real-time
 
 
 ## 🔧 Configuration
@@ -169,6 +223,10 @@ npm run test:mcp         # MCP server tests
 npm run test:e2e         # End-to-end tests
 npm run test:performance # Performance benchmarks
 
+# Interactive MCP Testing
+npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+# Opens: http://127.0.0.1:6274 - Test all 27 tools interactively
+
 # Documentation
 npm run docs             # Regenerate all -rem.md files
 ```
@@ -183,27 +241,6 @@ Remcode now offers a **professional-grade installation experience** with:
 - ⚡ <30-second setup from fresh install to working MCP server
 - 🎯 Clear status messages and helpful error guidance
 
-### **🎯 Upcoming Priorities**
-
-For detailed development plans, see [docs/ROADMAP.md](docs/ROADMAP.md).
-
-#### **Phase 1: Production Release (Next 2-4 weeks)**
-- **Beta Testing Program**: Gather real user feedback on enhanced setup
-- **Documentation Polish**: Video tutorials and visual installation guides
-- **NPM Stable Release**: Graduate from beta to stable v0.1.0
-- **Community Outreach**: Share with developer communities
-
-#### **Phase 2: Advanced User Experience (1-2 months)**  
-- **Token Validation**: API calls to verify tokens work correctly
-- **Multi-Environment Support**: `.env.local`, `.env.development` support
-- **Configuration Presets**: Pre-configured setups for common use cases
-- **Health Dashboard**: Web UI for monitoring MCP server status
-
-#### **Phase 3: Advanced Features (2-3 months)**
-- **Multi-Language Support**: Expand beyond TypeScript/JavaScript
-- **Enterprise Features**: Team collaboration, shared configurations  
-- **Performance Optimization**: Advanced caching and search improvements
-- **Additional Integrations**: More MCP clients and AI assistants
 
 ### **🤝 Contributing**
 

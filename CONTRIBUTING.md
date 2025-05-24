@@ -21,11 +21,16 @@ Welcome to Remcode! We're excited to have you contribute to making AI assistants
    # Add your API keys
    ```
 
-4. **Run tests**
+4. **Run tests and MCP Inspector**
    ```bash
    npm test
-   npm run test:mcp-inspector
    ```
+
+5. **Test with MCP Inspector** (Interactive tool testing)
+   ```bash
+   npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+   ```
+   Then open: http://127.0.0.1:6274 to test all 27 MCP tools interactively
 
 ## 📂 Contributing Domains - Basic Version Focus
 
@@ -95,6 +100,33 @@ The following features have been moved to the Advanced Version to keep the Basic
 - **Testing**: Include tests for all new functionality
 - **Documentation**: Update relevant documentation
 
+### MCP Inspector Testing
+For interactive testing of MCP tools during development:
+
+```bash
+# Start the MCP Inspector with STDIO bridge
+npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+
+# Open in browser
+open http://127.0.0.1:6274
+```
+
+**Using the Inspector:**
+1. **Connect**: Click "Connect" to establish connection
+2. **List Tools**: Click "List Tools" to see all 27 available tools
+3. **Test Tools**: Click any tool → "Run Tool" to test functionality
+4. **Debug**: Check "Server Notifications" for errors or logs
+5. **History**: View all executed commands in the History panel
+
+**Available Tool Categories:**
+- 📁 **Repository**: setup-repository, get_repository_status, list_repositories
+- 🔍 **Search**: search, search_code, get_code_context  
+- ⚙️ **Processing**: trigger-reprocessing, get-processing-status
+- 🤖 **SWE**: default_prompt, get_scenarios, get_guidelines
+- 🐙 **GitHub**: github_get_repo, github_list_files, github_get_file
+- 🌲 **Pinecone**: pinecone_query, pinecone_list_indexes
+- 🤗 **HuggingFace**: huggingface_embed_code, huggingface_embed_query
+
 ### Commit Message Format
 ```
 type(scope): description
@@ -109,7 +141,9 @@ test(search): add semantic search edge cases
 1. Create a feature branch: `git checkout -b feature/your-feature-name`
 2. Make your changes with tests
 3. Run the full test suite: `npm test`
-4. Test with MCP Inspector: `npm run test:mcp-inspector`
+4. **Test with MCP Inspector**: `npx @modelcontextprotocol/inspector node bin/remcode-stdio.js`
+   - Open http://127.0.0.1:6274 to test tools interactively
+   - Verify your changes work with the MCP protocol
 5. Update documentation as needed
 6. Submit a pull request with clear description
 
