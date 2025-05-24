@@ -4,6 +4,21 @@
 
 Remcode creates a codebase-aware autopilot trained on software engineering best practices. Your AI assistant gains deep understanding of your code patterns, architecture, and conventions. Use alongside other MCP tools to build an intelligent development workflow that follows your project's standards.
 
+
+## 🚀 Quick Start (5 minutes)
+
+```bash
+# 1. Install and test
+npx remcode --help
+
+# 2. Start MCP server
+npx remcode serve --port 3000
+
+# 3. Add to your AI assistant (Claude Desktop example)
+# See INSTALLATION.md for complete setup guide
+```
+
+**[📖 Complete Installation Guide →](INSTALLATION.md)**
 ## 🚀 Key Features
 
 - **🚀 One-Click Automated Setup**: First MCP call handles everything - secrets, workflows, processing

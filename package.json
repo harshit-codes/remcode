@@ -1,6 +1,6 @@
 {
   "name": "remcode",
-  "version": "0.1.0-beta.3",
+  "version": "0.1.0",
   "description": "Codebase-Aware SWE Autopilot - AI assistant integration via Model Context Protocol (MCP) for intelligent code analysis and vectorization",
   "main": "bin/remcode.js",
   "bin": {
@@ -12,7 +12,8 @@
     ".npmrc",
     "README.md",
     "LICENSE",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "INSTALLATION.md"
   ],
   "scripts": {
     "start": "node bin/remcode.js",

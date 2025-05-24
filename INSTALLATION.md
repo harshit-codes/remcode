@@ -14,7 +14,7 @@
 
 ### 1. Test Installation
 ```bash
-npx remcode@beta --help
+npx remcode --help
 ```
 
 ### 2. Configure Environment
@@ -29,12 +29,13 @@ GITHUB_TOKEN=your_github_token
 
 ### 3. Start MCP Server
 ```bash
-npx remcode@beta serve --port 3000
+npx remcode serve --port 3000
 ```
 
 ✅ **Success!** Your MCP server is now running and ready for AI assistant integration.
 
 ---
+
 ## 📋 Detailed Installation Guide
 
 ### Step 1: Verify Prerequisites
@@ -61,7 +62,6 @@ git commit -m "Initial commit"
 git remote add origin https://github.com/yourusername/your-repo.git
 git push -u origin main
 ```
-
 ### Step 2: Obtain API Keys
 
 #### Pinecone API Key
@@ -87,16 +87,16 @@ git push -u origin main
 #### Install via NPX (Recommended)
 ```bash
 # Test installation
-npx remcode@beta --version
+npx remcode --version
 
 # View available commands
-npx remcode@beta --help
+npx remcode --help
 ```
 
 #### Alternative: Global Installation
 ```bash
 # Install globally
-npm install -g remcode@beta
+npm install -g remcode
 
 # Test global installation
 remcode --version
@@ -124,16 +124,16 @@ MCP_HOST=localhost
 
 #### Basic Startup
 ```bash
-npx remcode@beta serve
+npx remcode serve
 ```
 
 #### Advanced Startup Options
 ```bash
 # Custom port and verbose logging
-npx remcode@beta serve --port 3001 --verbose
+npx remcode serve --port 3001 --verbose
 
 # Specify API keys directly (not recommended for production)
-npx remcode@beta serve --pinecone-key "your_key" --github-token "your_token"
+npx remcode serve --pinecone-key "your_key" --github-token "your_token"
 ```
 
 #### Verify Server is Running
@@ -166,7 +166,7 @@ Send MCP requests to: POST http://localhost:3000/v1/mcp
   "mcpServers": {
     "remcode": {
       "command": "npx",
-      "args": ["remcode@beta", "serve"],
+      "args": ["remcode", "serve"],
       "env": {
         "PINECONE_API_KEY": "your_pinecone_api_key",
         "HUGGINGFACE_TOKEN": "your_huggingface_token",
@@ -183,29 +183,86 @@ Close and reopen Claude Desktop to load the new MCP server.
 #### 4. Test Integration
 Ask Claude: "What MCP tools are available?" or "Search my codebase for authentication functions."
 
+### Other MCP-Compatible Clients
+
+#### Continue Dev (VS Code Extension)
+1. Install the Continue extension in VS Code
+2. Add to your `~/.continue/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "remcode": {
+      "command": "npx",
+      "args": ["remcode", "serve", "--port", "3001"],
+      "env": {
+        "PINECONE_API_KEY": "your_pinecone_api_key",
+        "HUGGINGFACE_TOKEN": "your_huggingface_token",
+        "GITHUB_TOKEN": "your_github_token"
+      }
+    }
+  }
+}
+```
+
+#### Cursor Editor
+1. Open Cursor settings
+2. Navigate to Extensions > MCP
+3. Add server configuration:
+
+```json
+{
+  "remcode": {
+    "command": "npx remcode serve --port 3002",
+    "env": {
+      "PINECONE_API_KEY": "your_pinecone_api_key",
+      "HUGGINGFACE_TOKEN": "your_huggingface_token",
+      "GITHUB_TOKEN": "your_github_token"
+    }
+  }
+}
+```
+
+#### Custom MCP Client Implementation
+For custom integrations, use the MCP specification:
+
+```javascript
+// Example HTTP request to Remcode MCP server
+const response = await fetch('http://localhost:3000/v1/mcp', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    tool: 'pinecone_query',
+    parameters: {
+      text: 'authentication functions',
+      topK: 5
+    }
+  })
+});
+
+const result = await response.json();
+```
+
+---
+
 ## 🔧 Troubleshooting
 
 ### Common Issues and Solutions
 
-#### Issue: "chalk.gray is not a function"
-**Solution**: Update to the latest beta version:
-```bash
-npx clear-npx-cache
-npx remcode@beta serve
-```
-
-#### Issue: "Cannot find module"
-**Solution**: Clear npm cache and reinstall:
-```bash
-npm cache clean --force
-npx clear-npx-cache
-npx remcode@beta serve
-```
-
 #### Issue: "Port already in use"
 **Solution**: Use a different port:
 ```bash
-npx remcode@beta serve --port 3001
+npx remcode serve --port 3001
+```
+
+#### Issue: "Module not found" or dependency errors
+**Solution**: Clear npm cache and reinstall:
+```bash
+npm cache clean --force
+npx clear-npx-cache  # If available
+npx remcode serve
 ```
 
 #### Issue: "Pinecone/GitHub/HuggingFace API errors"
@@ -215,9 +272,47 @@ npx remcode@beta serve --port 3001
 3. Ensure network connectivity
 4. Check service status pages
 
+#### Issue: "Server starts but AI assistant can't connect"
+**Solutions**:
+1. Verify the MCP configuration in your AI assistant
+2. Check that ports match between server and client config
+3. Restart your AI assistant after configuration changes
+4. Check firewall settings
+
+#### Issue: "Permission denied" errors
+**Solutions**:
+- **macOS/Linux**: Ensure you have write permissions to the project directory
+- **Windows**: Run terminal as administrator if needed
+- Check that your GitHub token has the required scopes
+
+### Advanced Troubleshooting
+
+#### Enable Debug Logging
+```bash
+npx remcode serve --verbose
+```
+
+#### Test API Keys Individually
+```bash
+# Test Pinecone connection
+curl -X GET "https://api.pinecone.io/indexes" \
+  -H "Api-Key: your_pinecone_key"
+
+# Test GitHub connection
+curl -H "Authorization: token your_github_token" \
+  https://api.github.com/user
+
+# Test HuggingFace connection
+curl -X POST "https://api-inference.huggingface.co/models/microsoft/codebert-base" \
+  -H "Authorization: Bearer your_hf_token"
+```
+
 ### Get Help
 - **GitHub Issues**: [Report bugs](https://github.com/harshit-codes/remcode/issues)
 - **Documentation**: [Full docs](https://github.com/harshit-codes/remcode#readme)
+- **Community**: [Discussions](https://github.com/harshit-codes/remcode/discussions)
+
+---
 
 ## 🎯 Next Steps
 
@@ -231,5 +326,14 @@ After successful installation:
 - "How does authentication work in this codebase?"
 - "Show me error handling patterns"
 - "Find functions related to user management"
+- "What are the main components in this project?"
+
+## 🔐 Security Best Practices
+
+1. **Never commit API keys** to version control
+2. **Use environment variables** for all secrets
+3. **Rotate API keys** regularly
+4. **Limit GitHub token scopes** to minimum required
+5. **Use project-specific** `.env` files
 
 Congratulations! You now have a fully functional codebase-aware AI assistant. 🚀

@@ -60,10 +60,20 @@ export function serveCommand(program: Command): void {
           process.exit(1);
         }
         
-        // Start the server
-        await server.start();
-        
-        spinner.succeed(chalk.green(`MCP server started on http://${options.host}:${options.port}`));
+        // Start the server with enhanced error handling
+        try {
+          await server.start();
+          spinner.succeed(chalk.green(`MCP server started on http://${options.host}:${options.port}`));
+        } catch (startError) {
+          spinner.fail('Failed to start MCP server');
+          if (startError instanceof Error && startError.message.includes('EADDRINUSE')) {
+            console.error(chalk.red(`Error: Port ${options.port} is already in use`));
+            console.error(chalk.yellow(`Try using a different port: npx remcode serve --port ${parseInt(options.port) + 1}`));
+          } else {
+            console.error(chalk.red(`Error: ${startError instanceof Error ? startError.message : String(startError)}`));
+          }
+          process.exit(1);
+        }
         
         // Print tool information
         console.log('');
@@ -101,14 +111,36 @@ export function serveCommand(program: Command): void {
         console.log(chalk.magenta('Press Ctrl+C to stop the server'));
         
         // Handle graceful shutdown
-        process.on('SIGINT', () => {
+        const gracefulShutdown = () => {
           console.log(chalk.yellow('\nShutting down MCP server...'));
-          server.stop();
-          process.exit(0);
-        });
+          try {
+            server.stop();
+            console.log(chalk.green('Server stopped successfully'));
+            process.exit(0);
+          } catch (error) {
+            console.error(chalk.red('Error during shutdown:', error));
+            process.exit(1);
+          }
+        };
+
+        process.on('SIGINT', gracefulShutdown);
+        process.on('SIGTERM', gracefulShutdown);
+        
       } catch (error) {
         spinner.fail('Failed to start MCP server');
         logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+        
+        // Provide helpful error messages
+        if (error instanceof Error) {
+          if (error.message.includes('ENOTFOUND')) {
+            console.error(chalk.yellow('Network connectivity issue. Check your internet connection.'));
+          } else if (error.message.includes('EACCES')) {
+            console.error(chalk.yellow('Permission denied. Try running with appropriate permissions.'));
+          } else if (error.message.includes('Invalid API key')) {
+            console.error(chalk.yellow('Invalid API key provided. Check your environment variables.'));
+          }
+        }
+        
         process.exit(1);
       }
     });
