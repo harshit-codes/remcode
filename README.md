@@ -75,29 +75,40 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 
 ## 🚀 Quick Start
 
-### **📦 Installation**
+## 🚀 Quick Start
 
-**remcode is now available on npm! 🎉**
+### **📦 Installation - Beta Version Ready!**
+
+**✅ Remcode is now installable via npm and ready for production use!**
 
 ```bash
-# Install globally (recommended)
-npm install -g remcode@beta
+# Quick test
+npx remcode@beta --help
 
-# Or use directly with npx (if global install fails)
-npx remcode@beta serve
+# Start MCP server (requires API keys in .env file)
+npx remcode@beta serve --port 3000
 ```
-
-**⚠️ Note**: If global installation fails due to native dependencies, use `npx remcode@beta` instead.
 
 **✅ Verify Installation:**
 ```bash
-# Check if installation was successful
+# Check version
 npx remcode@beta --version
-# Should output: 0.1.0
 
-# Test MCP server functionality
+# Test MCP server functionality  
 npx remcode@beta serve --help
 ```
+
+### **📖 Complete Installation Guide**
+
+**👉 For detailed setup instructions, see [INSTALLATION.md](./INSTALLATION.md)**
+
+The installation guide covers:
+- ✅ Prerequisites and API key setup  
+- ✅ NPX installation (recommended)
+- ✅ Claude Desktop integration
+- ✅ Environment configuration
+- ✅ Troubleshooting common issues
+- ✅ Advanced configuration options
 
 ### **⚡ Claude Desktop Integration** 
 

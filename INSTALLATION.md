@@ -1,200 +1,174 @@
 # Remcode Installation Guide
 
-**Complete setup guide for integrating Remcode with AI assistants via Model Context Protocol (MCP)**
+**Complete step-by-step guide to install and configure Remcode as an MCP server for AI assistants**
 
----
+## 🚀 Quick Start (5 minutes)
 
-## 🚀 Quick Installation
+### Prerequisites
+- **Node.js 16+** installed
+- **Git repository** (for your codebase)
+- **API Keys**:
+  - Pinecone API Key ([Get one here](https://www.pinecone.io/))
+  - HuggingFace Token ([Get one here](https://huggingface.co/settings/tokens))
+  - GitHub Token ([Get one here](https://github.com/settings/tokens))
+
+### 1. Test Installation
+```bash
+npx remcode@beta --help
+```
+
+### 2. Configure Environment
+Create a `.env` file in your project directory:
 
 ```bash
-# Install globally (recommended)
+# Remcode Environment Configuration
+PINECONE_API_KEY=your_pinecone_api_key
+HUGGINGFACE_TOKEN=your_huggingface_token
+GITHUB_TOKEN=your_github_token
+```
+
+### 3. Start MCP Server
+```bash
+npx remcode@beta serve --port 3000
+```
+
+✅ **Success!** Your MCP server is now running and ready for AI assistant integration.
+
+---
+## 📋 Detailed Installation Guide
+
+### Step 1: Verify Prerequisites
+
+#### Node.js Installation
+```bash
+node --version  # Should be 16.0.0 or higher
+npm --version   # Should be 8.0.0 or higher
+```
+
+If Node.js is not installed:
+- **macOS**: `brew install node`
+- **Windows**: Download from [nodejs.org](https://nodejs.org/)
+- **Linux**: `curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - && sudo apt-get install -y nodejs`
+
+#### Git Repository Setup
+```bash
+# Initialize Git if needed
+git init
+git add .
+git commit -m "Initial commit"
+
+# Connect to GitHub (optional but recommended)
+git remote add origin https://github.com/yourusername/your-repo.git
+git push -u origin main
+```
+
+### Step 2: Obtain API Keys
+
+#### Pinecone API Key
+1. Visit [pinecone.io](https://www.pinecone.io/)
+2. Sign up for a free account
+3. Go to "API Keys" in dashboard
+4. Copy your API key
+
+#### HuggingFace Token
+1. Visit [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+2. Sign up if needed
+3. Create a new token with "Read" permissions
+4. Copy the token
+
+#### GitHub Token (Required for setup automation)
+1. Visit [github.com/settings/tokens](https://github.com/settings/tokens)
+2. Generate new token (classic)
+3. Select scopes: `repo`, `workflow`, `admin:repo_hook`
+4. Copy the token
+
+### Step 3: Install and Test Remcode
+
+#### Install via NPX (Recommended)
+```bash
+# Test installation
+npx remcode@beta --version
+
+# View available commands
+npx remcode@beta --help
+```
+
+#### Alternative: Global Installation
+```bash
+# Install globally
 npm install -g remcode@beta
 
-# Or use directly with npx
+# Test global installation
+remcode --version
+```
+
+### Step 4: Configure Environment Variables
+
+Create a `.env` file in your project root:
+
+```bash
+# Essential Configuration
+PINECONE_API_KEY=pcsk_xxxxx...
+HUGGINGFACE_TOKEN=hf_xxxxx...
+GITHUB_TOKEN=ghp_xxxxx...
+
+# Optional Configuration
+LOG_LEVEL=info
+MCP_PORT=3000
+MCP_HOST=localhost
+```
+
+**Security Note**: Add `.env` to your `.gitignore` file to keep API keys secure.
+
+### Step 5: Start MCP Server
+
+#### Basic Startup
+```bash
 npx remcode@beta serve
 ```
 
----
-
-## 📋 Prerequisites
-
-Before installing Remcode, ensure you have:
-
-### **System Requirements**
-- **Node.js**: Version 16 or higher
-- **Git**: Repository must be under Git version control
-- **GitHub Repository**: Public or private repository on GitHub
-
-### **Required API Keys**
-You'll need these API keys for full functionality:
-
-1. **Pinecone API Key** - [Get one here](https://www.pinecone.io/)
-   - Used for vector storage and semantic search
-   - Free tier available
-
-2. **HuggingFace Token** - [Get one here](https://huggingface.co/settings/tokens)
-   - Used for code embedding generation
-   - Free tier available
-
-3. **GitHub Token** - [Get one here](https://github.com/settings/tokens)
-   - Required for automated repository setup
-   - Needs `repo` and `workflow` permissions
-
----
-
-## 🤖 Claude Desktop Integration
-
-### **Step 1: Install Remcode**
-
+#### Advanced Startup Options
 ```bash
-# Install the beta version
-npm install -g remcode@beta
+# Custom port and verbose logging
+npx remcode@beta serve --port 3001 --verbose
 
-# Verify installation
-remcode --version
-# Should output: 0.1.0-beta.1
+# Specify API keys directly (not recommended for production)
+npx remcode@beta serve --pinecone-key "your_key" --github-token "your_token"
 ```
 
-### **Step 2: Set Up Environment Variables**
-
-Create a `.env` file in your project directory or set system environment variables:
-
-```bash
-# Option A: Project-level .env file
-cd /path/to/your/project
-echo "PINECONE_API_KEY=your_pinecone_key_here" >> .env
-echo "HUGGINGFACE_TOKEN=your_huggingface_token_here" >> .env
-echo "GITHUB_TOKEN=your_github_token_here" >> .env
+#### Verify Server is Running
+You should see output similar to:
 ```
+✔ MCP server started on http://localhost:3000
 
-```bash
-# Option B: System environment variables (macOS/Linux)
-export PINECONE_API_KEY="your_pinecone_key_here"
-export HUGGINGFACE_TOKEN="your_huggingface_token_here"
-export GITHUB_TOKEN="your_github_token_here"
-```
-
-### **Step 3: Configure Claude Desktop**
-
-1. **Locate Claude Desktop Config File**:
-   ```bash
-   # macOS
-   ~/.config/claude_desktop_config.json
-   
-   # Windows
-   %APPDATA%\Claude\claude_desktop_config.json
-   
-   # Linux
-   ~/.config/claude_desktop_config.json
-   ```
-
-2. **Add Remcode MCP Server Configuration**:
-
-   ```json
-   {
-     "mcpServers": {
-       "remcode": {
-         "command": "remcode",
-         "args": ["serve"],
-         "env": {
-           "PINECONE_API_KEY": "your_pinecone_key_here",
-           "HUGGINGFACE_TOKEN": "your_huggingface_token_here",
-           "GITHUB_TOKEN": "your_github_token_here"
-         }
-       }
-     }
-   }
-   ```
-
-   **Alternative with npx (if not installed globally)**:
-   ```json
-   {
-     "mcpServers": {
-       "remcode": {
-         "command": "npx",
-         "args": ["remcode@beta", "serve"],
-         "env": {
-           "PINECONE_API_KEY": "your_pinecone_key_here",
-           "HUGGINGFACE_TOKEN": "your_huggingface_token_here",
-           "GITHUB_TOKEN": "your_github_token_here"
-         }
-       }
-     }
-   }
-   ```
-
-### **Step 4: Restart Claude Desktop**
-
-1. **Close Claude Desktop completely**
-2. **Restart the application**
-3. **Verify MCP integration** by starting a new conversation
-
-### **Step 5: Initialize Your Codebase**
-
-In your project directory, start a conversation with Claude and ask any question about your codebase. Remcode will automatically:
-
-1. **Detect setup requirements**
-2. **Ask for confirmation to proceed**
-3. **Set up GitHub repository secrets**
-4. **Create GitHub Actions workflow**
-5. **Begin initial code analysis**
-
-Example first question:
-```
-"How does authentication work in this codebase?"
+Available MCP Tools:
+  • pinecone_query        - Search for vectors in Pinecone
+  • pinecone_upsert       - Upload vectors to Pinecone
+  • github_get_repo       - Get repository metadata
+  • huggingface_embed_code - Generate embeddings for code
+  
+Send MCP requests to: POST http://localhost:3000/v1/mcp
 ```
 
 ---
 
-## 🔧 Advanced Configuration
+## 🤖 AI Assistant Integration
 
-### **Custom MCP Server Options**
+### Claude Desktop Integration
 
-You can customize the MCP server behavior:
+#### 1. Locate Configuration File
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
+#### 2. Add Remcode MCP Server
 ```json
 {
   "mcpServers": {
     "remcode": {
-      "command": "remcode",
-      "args": [
-        "serve",
-        "--port", "3001",
-        "--host", "localhost",
-        "--verbose"
-      ],
+      "command": "npx",
+      "args": ["remcode@beta", "serve"],
       "env": {
-        "PINECONE_API_KEY": "your_pinecone_key_here",
-        "HUGGINGFACE_TOKEN": "your_huggingface_token_here",
-        "GITHUB_TOKEN": "your_github_token_here",
-        "MCP_CORS_ORIGINS": "*"
-      }
-    }
-  }
-}
-```
-
-### **Multiple Projects Configuration**
-
-For multiple projects, you can set up project-specific configurations:
-
-```json
-{
-  "mcpServers": {
-    "remcode-project1": {
-      "command": "remcode",
-      "args": ["serve", "--port", "3001"],
-      "env": {
-        "PINECONE_API_KEY": "project1_pinecone_key",
-        "HUGGINGFACE_TOKEN": "your_huggingface_token",
-        "GITHUB_TOKEN": "your_github_token"
-      }
-    },
-    "remcode-project2": {
-      "command": "remcode", 
-      "args": ["serve", "--port", "3002"],
-      "env": {
-        "PINECONE_API_KEY": "project2_pinecone_key",
+        "PINECONE_API_KEY": "your_pinecone_api_key",
         "HUGGINGFACE_TOKEN": "your_huggingface_token",
         "GITHUB_TOKEN": "your_github_token"
       }
@@ -203,164 +177,59 @@ For multiple projects, you can set up project-specific configurations:
 }
 ```
 
----
+#### 3. Restart Claude Desktop
+Close and reopen Claude Desktop to load the new MCP server.
 
-## ✅ Verification & Testing
+#### 4. Test Integration
+Ask Claude: "What MCP tools are available?" or "Search my codebase for authentication functions."
 
-### **Test MCP Integration**
+## 🔧 Troubleshooting
 
-1. **Start a new conversation in Claude Desktop**
+### Common Issues and Solutions
 
-2. **Ask a codebase question**:
-   ```
-   "What are the main components in this codebase?"
-   ```
-
-3. **Expected behavior**:
-   - If first time: Remcode will ask to set up the repository
-   - Subsequent questions: Remcode will search and analyze your code
-
-### **Manual MCP Server Test**
-
+#### Issue: "chalk.gray is not a function"
+**Solution**: Update to the latest beta version:
 ```bash
-# Start MCP server manually
-cd /path/to/your/project
-remcode serve --verbose
-
-# Should output:
-# ✓ MCP server started on http://localhost:3000
-# Available MCP Tools: [list of tools]
+npx clear-npx-cache
+npx remcode@beta serve
 ```
 
-### **Test CLI Commands**
-
+#### Issue: "Cannot find module"
+**Solution**: Clear npm cache and reinstall:
 ```bash
-# Test basic functionality
-remcode --help
-remcode analyze ./your-project
-remcode serve --port 3001
+npm cache clean --force
+npx clear-npx-cache
+npx remcode@beta serve
 ```
 
----
-
-## 🛠️ Troubleshooting
-
-### **Common Issues**
-
-#### **1. "Command not found: remcode"**
+#### Issue: "Port already in use"
+**Solution**: Use a different port:
 ```bash
-# Solution: Install globally or use npx
-npm install -g remcode@beta
-# Or
-npx remcode@beta --version
+npx remcode@beta serve --port 3001
 ```
 
-#### **2. "GitHub token is required"**
-```bash
-# Solution: Set the environment variable
-export GITHUB_TOKEN="your_github_token_here"
-# Or add to Claude Desktop config env section
-```
+#### Issue: "Pinecone/GitHub/HuggingFace API errors"
+**Solutions**:
+1. Verify API keys are correct
+2. Check API key permissions
+3. Ensure network connectivity
+4. Check service status pages
 
-#### **3. "Port already in use"**
-```bash
-# Solution: Use different port
-remcode serve --port 3001
-```
+### Get Help
+- **GitHub Issues**: [Report bugs](https://github.com/harshit-codes/remcode/issues)
+- **Documentation**: [Full docs](https://github.com/harshit-codes/remcode#readme)
 
-#### **4. "Claude Desktop not detecting MCP server"**
-- **Check config file location and syntax**
-- **Restart Claude Desktop completely**
-- **Verify environment variables are set**
-- **Check console logs in Claude Desktop**
-
-### **Debug Mode**
-
-Enable verbose logging for troubleshooting:
-
-```json
-{
-  "mcpServers": {
-    "remcode": {
-      "command": "remcode",
-      "args": ["serve", "--verbose"],
-      "env": {
-        "NODE_ENV": "development",
-        "DEBUG": "remcode:*",
-        "PINECONE_API_KEY": "your_key",
-        "HUGGINGFACE_TOKEN": "your_token",
-        "GITHUB_TOKEN": "your_token"
-      }
-    }
-  }
-}
-```
-
-### **Log Files**
-
-Check log files for detailed error information:
-
-```bash
-# MCP server logs
-tail -f ~/.config/claude_desktop_logs/mcp.log
-
-# Remcode logs (if available)
-tail -f ~/.remcode/logs/server.log
-```
-
----
-
-## 🔄 Updates & Maintenance
-
-### **Update Remcode**
-
-```bash
-# Update to latest beta version
-npm update -g remcode@beta
-
-# Or reinstall
-npm uninstall -g remcode
-npm install -g remcode@beta
-```
-
-### **Version Check**
-
-```bash
-# Check current version
-remcode --version
-
-# Check for updates
-npm outdated -g remcode
-```
-
----
-
-## 📞 Support
-
-### **Getting Help**
-
-1. **GitHub Issues**: [Create an issue](https://github.com/harshit-codes/remcode/issues)
-2. **Documentation**: Check the [README](https://github.com/harshit-codes/remcode#readme)
-3. **Discussions**: [GitHub Discussions](https://github.com/harshit-codes/remcode/discussions)
-
-### **Before Reporting Issues**
-
-Please include:
-- **Remcode version**: `remcode --version`
-- **Node.js version**: `node --version`
-- **Operating system**: macOS/Windows/Linux
-- **Error messages**: Full error output
-- **Configuration**: Your Claude Desktop config (without API keys)
-
----
-
-## 🎯 What's Next?
+## 🎯 Next Steps
 
 After successful installation:
 
-1. **Explore MCP Tools**: Ask questions about your codebase
-2. **Review Generated Workflows**: Check `.github/workflows/remcode.yml`
-3. **Monitor Processing**: Watch GitHub Actions for code analysis
-4. **Advanced Features**: Explore semantic search and code patterns
+1. **First Usage**: Ask your AI assistant to search your codebase
+2. **Repository Setup**: Run initial codebase analysis
+3. **Team Setup**: Share configuration with team members
 
-**Happy coding with AI-powered codebase understanding! 🚀**
+**Example first queries**:
+- "How does authentication work in this codebase?"
+- "Show me error handling patterns"
+- "Find functions related to user management"
+
+Congratulations! You now have a fully functional codebase-aware AI assistant. 🚀

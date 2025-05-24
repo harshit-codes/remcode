@@ -130,6 +130,7 @@ export function disableFileLogging()
 
 ## Variables
 
+- `chalk`
 - `LogLevelNames`
 - `defaultLoggerConfig`
 - `globalConfig`

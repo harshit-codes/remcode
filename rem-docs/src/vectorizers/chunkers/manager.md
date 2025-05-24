@@ -30,7 +30,7 @@ Determines appropriate chunk size based on content and language
 ## Dependencies
 
 - `../../utils/logger`
-- `langchain/document`
+- `@langchain/core/documents`
 - `langchain/text_splitter`
 - `langchain/text_splitter`
 - `langchain/text_splitter`

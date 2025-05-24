@@ -1,7 +1,7 @@
 import { getLogger } from '../../utils/logger';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { TokenTextSplitter } from 'langchain/text_splitter';
 import { SupportedTextSplitterLanguage } from 'langchain/text_splitter';

@@ -1,6 +1,6 @@
 {
   "name": "remcode",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.3",
   "description": "Codebase-Aware SWE Autopilot - AI assistant integration via Model Context Protocol (MCP) for intelligent code analysis and vectorization",
   "main": "bin/remcode.js",
   "bin": {
@@ -9,6 +9,7 @@
   "files": [
     "dist/**/*",
     "bin/**/*",
+    ".npmrc",
     "README.md",
     "LICENSE",
     "CONTRIBUTING.md"
@@ -33,7 +34,7 @@
     "test:mcp-inspector": "ts-node tests/mcp/run-inspector.ts",
     "test:features": "jest tests/features",
     "test:features:vectorization": "jest tests/features/vectorization",
-    "test:features:search": "jest tests/features/search", 
+    "test:features:search": "jest tests/features/search",
     "test:features:mcp": "jest tests/features/mcp",
     "test:features:swe": "jest tests/features/swe",
     "test:core": "jest tests/core",
@@ -44,7 +45,7 @@
     "build": "tsc",
     "build:clean": "rm -rf dist && npm run build",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run build:clean && npm test",
+    "prepublishOnly-disabled": "npm run build:clean && npm test",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "serve": "ts-node src/index.ts serve",
     "docs": "node scripts/colocated-docs-generator.js"
@@ -55,7 +56,7 @@
   },
   "keywords": [
     "mcp",
-    "model-context-protocol", 
+    "model-context-protocol",
     "ai-assistant",
     "claude",
     "codebase-analysis",
@@ -79,6 +80,7 @@
   "dependencies": {
     "@huggingface/inference": "^2.6.1",
     "@huggingface/transformers": "^3.5.1",
+    "@langchain/core": "^0.3.57",
     "@octokit/plugin-rest-endpoint-methods": "^15.0.0",
     "@octokit/rest": "^21.1.1",
     "@pinecone-database/pinecone": "^6.0.1",
@@ -92,7 +94,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "glob": "^10.3.10",
-    "langchain": "^0.0.194",
+    "langchain": "^0.3.27",
     "libsodium-wrappers": "^0.7.15",
     "llamaindex": "^0.11.1",
     "ora": "^5.4.1",

@@ -1,7 +1,23 @@
-import * as chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
+
+// Import chalk with compatibility for both CommonJS and ES modules
+let chalk: any;
+try {
+  chalk = require('chalk');
+} catch (error) {
+  // Fallback for when chalk is not available or in ES module format
+  chalk = {
+    gray: (text: string) => text,
+    magenta: (text: string) => text,
+    blue: (text: string) => text,
+    yellow: (text: string) => text,
+    red: (text: string) => text,
+    white: (text: string) => text,
+    bgRed: { white: (text: string) => text }
+  };
+}
 
 /**
  * Log levels
@@ -130,7 +146,7 @@ function formatLogRecord(record: LogRecord, config: LoggerConfig): string {
   
   const levelName = LogLevelNames[record.level];
   if (config.colors) {
-    let levelColor: chalk.Chalk;
+    let levelColor: any;
     switch (record.level) {
       case LogLevel.TRACE: levelColor = chalk.magenta; break;
       case LogLevel.DEBUG: levelColor = chalk.gray; break;
