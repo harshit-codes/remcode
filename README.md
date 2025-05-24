@@ -88,189 +88,6 @@ npx remcode serve --port 3000
   - **HuggingFace Token** - [Get one here](https://huggingface.co/settings/tokens)
   - **GitHub Token** - [Get one here](https://github.com/settings/tokens) (required for automated setup)
 
-## 🚀 Quick Start
-
-## 🚀 Quick Start
-
-### **📦 Enhanced Installation Experience**
-
-**✅ Remcode is now installable via npm with smart setup and token management!**
-
-```bash
-# Quick start with enhanced setup
-npx remcode serve
-
-# Or specify port and tokens via CLI  
-npx remcode serve --port 3001 --github-token YOUR_TOKEN --pinecone-key YOUR_KEY
-```
-
-**🔥 New Enhanced Features:**
-- 🔑 **Smart Token Management**: Auto-detects tokens in `.env`, prompts for missing ones
-- 🚪 **Auto Port Selection**: Finds available ports automatically (3000 → 3001 → 3002...)
-- 📁 **Environment File Management**: Creates/updates `.env` files and adds to `.gitignore`
-- ⚡ **Interactive Setup**: Secure token input with helpful guidance URLs
-- 🎯 **Enhanced UX**: Clear status messages, token validation, error guidance
-
-**✅ Verify Installation:**
-```bash
-# Check all options
-npx remcode serve --help
-
-# Test with existing tokens  
-npx remcode serve --skip-token-collection
-```
-
-### **📖 Complete Installation Guide**
-
-**👉 For detailed setup instructions, see [INSTALLATION.md](./INSTALLATION.md)**
-
-The installation guide covers:
-- ✅ Prerequisites and API key setup  
-- ✅ NPX installation (recommended)
-- ✅ Claude Desktop integration
-- ✅ Environment configuration
-- ✅ Troubleshooting common issues
-- ✅ Advanced configuration options
-
-### **⚡ Claude Desktop Integration** 
-
-1. **Add to your Claude Desktop configuration** (`~/.config/claude_desktop_config.json`):
-   ```json
-   {
-     "mcpServers": {
-       "remcode": {
-         "command": "remcode",
-         "args": ["serve"],
-         "env": {
-           "PINECONE_API_KEY": "your_pinecone_key",
-           "HUGGINGFACE_TOKEN": "your_huggingface_token",
-           "GITHUB_TOKEN": "your_github_token"
-         }
-       }
-     }
-   }
-   ```
-
-2. **Restart Claude Desktop** and ask any question about your codebase
-
-📖 **[Complete Installation Guide →](./INSTALLATION.md)**
-
-### 2. **Setup Repository (If Needed)**
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/yourusername/your-repo.git
-git push -u origin main
-```
-
-### 3. **Configure MCP (Alternative Method)**
-Add to your AI assistant's MCP configuration:
-```json
-{
-  "mcpServers": {
-    "remcode": {
-      "command": "npx",
-      "args": ["remcode"],
-      "env": {
-        "PINECONE_API_KEY": "your_pinecone_key",
-        "HUGGINGFACE_TOKEN": "your_huggingface_token",
-        "GITHUB_TOKEN": "your_github_token"
-      }
-    }
-  }
-}
-```
-
-> **📋 Note**: Comprehensive installation guides coming soon! The next development session will focus on creating detailed step-by-step installation documentation and making remcode easily installable via npm.
-
-### 3. **Start Asking Questions**
-First question triggers automatic setup, then ask away:
-```
-"How does authentication work in this codebase?"
-"Show me the error handling patterns"
-```
-
-## 📝 Documentation System
-
-Remcode uses a co-located documentation system where each source file has a corresponding `-rem.md` file with the same name in the same directory.
-
-**Examples:**
-- `src/utils/logger.ts` → `src/utils/logger.ts-rem.md`
-- `src/mcp/index.ts` → `src/mcp/index.ts-rem.md`
-
-**Regenerate Documentation:**
-```bash
-npm run docs  # Updates all -rem.md files throughout the project
-```
-## 🔍 MCP Integration
-
-### **Available MCP Tools**
-
-**Setup & Repository Management**:
-- `setup_repository`: Automated first-time setup (secrets, workflow generation, commit)
-- `get_repository_status`: Check if repository is initialized, get processing status
-- `list_repositories`: Show user's accessible GitHub repositories (for selection)
-- `create_repository`: Create new GitHub repository for local codebase
-
-**Code Search & Analysis**:
-- `search_code`: Semantic search across vectorized codebase with automatic SWE guidance
-- `get_code_context`: Get surrounding context for specific code snippets
-- `analyze_file_structure`: Understand file organization and dependencies
-- `find_similar_code`: Find code patterns similar to a given snippet
-
-**Processing & Workflow Management**:
-- `trigger_reprocessing`: Force full or incremental reprocessing
-- `get_processing_status`: Check GitHub Actions workflow status
-- `update_configuration`: Modify .remcode settings and chunking strategies
-
-**Enhanced SWE Best Practices & Guidance**:
-- `default_prompt`: ✅ **AUTO-INJECTED** - Comprehensive SWE best practices automatically included in all tool responses
-- `get_scenarios`: ✅ **ENHANCED** - Intelligent detection and guidance for all 13 software engineering scenarios
-- `get_guidelines`: ✅ **NEW** - Get specific coding guidelines and best practices by scenario, category, or priority
-- `get_contextual_guidance`: ✅ **NEW** - Comprehensive, context-aware SWE guidance tailored to your development situation
-
-**All 13 Software Engineering Scenarios Covered**:
-- 🔧 **Refactoring** - Code structure improvement and technical debt reduction
-- ✨ **New Feature** - Adding functionality with proper integration patterns  
-- 🐛 **Bug Fixing** - Root cause analysis and robust defect resolution
-- ⚡ **Performance** - Data-driven optimization and efficiency improvements
-- 🔒 **Security** - Vulnerability identification and security hardening
-- 🧪 **Testing** - Comprehensive testing strategies and coverage improvement
-- 👀 **Code Review** - Quality assessment and standards compliance
-- 🏗️ **Architecture** - System design and scalable structure planning
-- 📚 **Documentation** - Clear technical documentation for developers and users
-- 🚀 **Deployment** - Automated deployment processes and DevOps integration
-- 🔧 **Maintenance** - Codebase health, updates, and legacy modernization
-- 🎓 **Learning** - Code exploration and educational understanding
-- 🎯 **General** - Universal software engineering best practices
-
-### **Connecting AI Assistants**
-
-Configure remcode as an MCP server in your AI assistant. **GitHub token is mandatory** for automated setup:
-
-**For Claude Desktop** (`claude_desktop_config.json`):
-```json
-{
-  "mcpServers": {
-    "remcode": {
-      "command": "npx",
-      "args": ["remcode"],
-      "env": {
-        "PINECONE_API_KEY": "your_pinecone_api_key",
-        "HUGGINGFACE_TOKEN": "your_huggingface_token", 
-        "GITHUB_TOKEN": "your_github_token"
-      }
-    }
-  }
-}
-```
-
-**For other MCP-compatible tools:**
-Follow your tool's MCP server configuration format using:
-- **Command**: `npx remcode`
-- **Environment variables**: All three API keys as shown above
-- **Note**: GitHub token enables automated repository setup and secret management
 
 ## 🔧 Configuration
 
@@ -336,56 +153,6 @@ After initialization, your repository will contain a `.remcode` file:
 }
 ```
 
-## 📈 Current Status
-
-## 📈 Current Status
-
-**✅ MAJOR ACHIEVEMENT**: All planned Basic Version features are **COMPLETE and FUNCTIONAL** + **Enhanced NPX Installation Experience**!
-
-### **🆕 Recently Added Enhanced Features:**
-- **✅ Smart Token Management**: **100% Complete** - Auto-detection, interactive collection, secure storage
-- **✅ Auto Port Selection**: **100% Complete** - Smart conflict resolution with auto-increment
-- **✅ Enhanced UX**: **100% Complete** - Clear status messages, validation, error guidance
-- **✅ Environment Management**: **100% Complete** - Auto `.env` creation and `.gitignore` updates
-
-### **Core Features Operational:**
-- **✅ Core Vectorization (Phase 1)**: **100% Complete** - Real CodeBERT embeddings with Pinecone storage
-- **✅ Semantic Search (Phase 2)**: **100% Complete** - Natural language search with 250-500ms response times
-- **✅ MCP Integration (Phase 3)**: **100% Complete** - All 15+ tools working with AI assistants
-- **✅ GitHub Actions (Phase 4)**: **100% Complete** - Zero-setup automation with real API integration
-- **✅ Testing & QA (Phase 5)**: **100% Complete** - Production-ready testing infrastructure
-- **✅ NPX Installation**: **100% Complete** - Enhanced serve command with smart setup
-
-### **Real Performance Metrics:**
-- **Installation Time**: <30 seconds for complete setup with token collection ✅
-- **Port Selection**: Auto-increment from busy ports in <100ms ✅
-- **Token Management**: Secure collection and storage in <5 seconds ✅
-- **Search Quality**: 4/4 test queries returning relevant results with 0.6-0.8 similarity scores
-- **Response Time**: 250-500ms average search time (target: <1s) ✅
-- **Embedding Generation**: 1-4s per chunk with real HuggingFace API ✅
-- **Vector Operations**: Real-time upsert/query with Pinecone ✅
-- **API Integration**: Both Pinecone and HuggingFace APIs fully operational ✅
-
-### **Production-Ready Testing Infrastructure:**
-- **✅ Core Tests**: **5/5 PASSING** - System health, component validation, package configuration
-- **✅ Enhanced Features Tests**: **8/8 PASSING** - Token management, port selection, UX features
-- **✅ SWE Feature Tests**: **6/6 PASSING** - All 13 software engineering scenarios validated
-- **✅ Unit Tests**: **23/23 PASSING** - Comprehensive coverage including new utilities
-- **✅ Build System**: **OPTIMIZED** - Clean TypeScript compilation, Jest configuration
-- **✅ Documentation**: **92 FILES** - Complete co-located documentation system with new utilities
-
-## 🚀 Future Development
-
-For detailed development plans and roadmap, see [docs/ROADMAP.md](docs/ROADMAP.md).
-
-### **🎯 Next Session Priority: Installable MCP Server**
-1. **📦 NPM Package Distribution** - Make remcode installable via `npx remcode`
-2. **📖 Comprehensive Installation Guide** - Step-by-step setup documentation
-3. **🛠️ GitHub Repository Enhancement** - Professional documentation and examples  
-4. **✅ End-to-End User Validation** - Complete installation testing
-2. **Advanced Cleanup** - Further reduce codebase complexity
-3. **Enhanced Features** - Multi-language support, enterprise features
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
@@ -405,6 +172,47 @@ npm run test:performance # Performance benchmarks
 # Documentation
 npm run docs             # Regenerate all -rem.md files
 ```
+
+## 🚀 Next Steps & Future Development
+
+### **✅ Current Status: Enhanced NPX Package Complete!**
+
+Remcode now offers a **professional-grade installation experience** with:
+- 🔑 Smart token management and auto-detection
+- 🚪 Intelligent port conflict resolution  
+- ⚡ <30-second setup from fresh install to working MCP server
+- 🎯 Clear status messages and helpful error guidance
+
+### **🎯 Upcoming Priorities**
+
+For detailed development plans, see [docs/ROADMAP.md](docs/ROADMAP.md).
+
+#### **Phase 1: Production Release (Next 2-4 weeks)**
+- **Beta Testing Program**: Gather real user feedback on enhanced setup
+- **Documentation Polish**: Video tutorials and visual installation guides
+- **NPM Stable Release**: Graduate from beta to stable v0.1.0
+- **Community Outreach**: Share with developer communities
+
+#### **Phase 2: Advanced User Experience (1-2 months)**  
+- **Token Validation**: API calls to verify tokens work correctly
+- **Multi-Environment Support**: `.env.local`, `.env.development` support
+- **Configuration Presets**: Pre-configured setups for common use cases
+- **Health Dashboard**: Web UI for monitoring MCP server status
+
+#### **Phase 3: Advanced Features (2-3 months)**
+- **Multi-Language Support**: Expand beyond TypeScript/JavaScript
+- **Enterprise Features**: Team collaboration, shared configurations  
+- **Performance Optimization**: Advanced caching and search improvements
+- **Additional Integrations**: More MCP clients and AI assistants
+
+### **🤝 Contributing**
+
+We welcome contributions! The enhanced NPX package provides a solid foundation for:
+- **User Experience Improvements**: Building on our token/port management
+- **Core Feature Development**: Leveraging the production-ready infrastructure
+- **Documentation & Examples**: Helping new users get started quickly
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
 ### 📦 Tech Stack
 
