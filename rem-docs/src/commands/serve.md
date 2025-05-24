@@ -4,16 +4,18 @@
 
 ## Overview
 
-MCP Server Command
+Enhanced MCP Server Command
 
-Command to start the Model Context Protocol (MCP) server,
-which allows AI assistants to interact with remcode
+Command to start the Model Context Protocol (MCP) server with smart token management
+and automatic port selection for AI assistant integration
 
 ## Dependencies
 
 - `commander`
 - `../mcp`
 - `../utils/logger`
+- `../utils/token-manager`
+- `../utils/port-manager`
 
 ## Functions
 
@@ -23,15 +25,17 @@ which allows AI assistants to interact with remcode
 export function serveCommand()
 ```
 
-### `that()`
-
-```typescript
-export function that()
-```
-
 ## Variables
 
 - `logger`
+- `preferredPort`
+- `selectedPort`
+- `tokenManager`
+- `existingTokens`
+- `cliTokens`
+- `finalTokens`
+- `hasNewTokens`
+- `missingCriticalTokens`
 - `spinner`
 - `server`
 - `gracefulShutdown`

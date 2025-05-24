@@ -1,15 +1,18 @@
 /**
- * MCP Server Command
+ * Enhanced MCP Server Command
  * 
- * Command to start the Model Context Protocol (MCP) server,
- * which allows AI assistants to interact with remcode
+ * Command to start the Model Context Protocol (MCP) server with smart token management
+ * and automatic port selection for AI assistant integration
  */
 
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import dotenv from 'dotenv';
 import { MCPServer } from '../mcp';
 import { getLogger } from '../utils/logger';
+import { TokenManager, TokenConfig } from '../utils/token-manager';
+import { PortManager } from '../utils/port-manager';
 
 const logger = getLogger('MCP-Command');
 
@@ -19,106 +22,153 @@ export function serveCommand(program: Command): void {
     .description('Start the MCP server for AI assistant integration')
     .option('-p, --port <port>', 'Port to listen on', '3000')
     .option('-h, --host <host>', 'Host to bind to', 'localhost')
+    .option('--github-token <token>', 'GitHub Personal Access Token')
     .option('--pinecone-key <key>', 'Pinecone API key')
-    .option('--github-token <token>', 'GitHub token')
     .option('--huggingface-token <token>', 'HuggingFace API token')
     .option('--cors-origins <origins>', 'Allowed CORS origins (comma-separated)')
     .option('-v, --verbose', 'Enable verbose output')
+    .option('--skip-token-collection', 'Skip interactive token collection')
     .action(async (options) => {
-      const spinner = ora('Starting MCP server').start();
+      // Load environment variables
+      dotenv.config();
+      
+      console.log(chalk.cyan('🚀 Starting Remcode MCP Server...\n'));
       
       try {
-        // Initialize MCP server
+        // Step 1: Smart Port Selection
+        const preferredPort = parseInt(options.port);
+        const selectedPort = await PortManager.getAvailablePort(preferredPort);
+        
+        // Step 2: Token Management
+        const tokenManager = new TokenManager();
+        const existingTokens = tokenManager.loadExistingTokens();
+        const cliTokens = TokenManager.cliOptionsToTokens(options);
+        
+        let finalTokens: TokenConfig;
+        
+        if (options.skipTokenCollection) {
+          // Use existing + CLI tokens without interactive collection
+          finalTokens = { ...existingTokens };
+          
+          // Override with CLI tokens if provided
+          if (cliTokens.GITHUB_TOKEN) {
+            finalTokens.GITHUB_TOKEN = cliTokens.GITHUB_TOKEN;
+            console.log(chalk.green(`✓ GITHUB_TOKEN: Provided via CLI argument`));
+          } else if (existingTokens.GITHUB_TOKEN) {
+            console.log(chalk.green(`✓ GITHUB_TOKEN: Found in .env file`));
+          }
+          
+          if (cliTokens.PINECONE_API_KEY) {
+            finalTokens.PINECONE_API_KEY = cliTokens.PINECONE_API_KEY;
+            console.log(chalk.green(`✓ PINECONE_API_KEY: Provided via CLI argument`));
+          } else if (existingTokens.PINECONE_API_KEY) {
+            console.log(chalk.green(`✓ PINECONE_API_KEY: Found in .env file`));
+          }
+          
+          if (cliTokens.HUGGINGFACE_TOKEN) {
+            finalTokens.HUGGINGFACE_TOKEN = cliTokens.HUGGINGFACE_TOKEN;
+            console.log(chalk.green(`✓ HUGGINGFACE_TOKEN: Provided via CLI argument`));
+          } else if (existingTokens.HUGGINGFACE_TOKEN) {
+            console.log(chalk.green(`✓ HUGGINGFACE_TOKEN: Found in .env file`));
+          }
+          
+          console.log(chalk.yellow('⚠ Skipping interactive token collection'));
+        } else {
+          // Interactive token collection for missing tokens
+          finalTokens = await tokenManager.collectMissingTokens(existingTokens, cliTokens);
+        }
+        
+        // Save tokens to .env if any were collected
+        const hasNewTokens = Object.keys(finalTokens).some(key => 
+          finalTokens[key] && finalTokens[key] !== existingTokens[key]
+        );
+        
+        if (hasNewTokens) {
+          await tokenManager.saveTokensToEnv(finalTokens);
+        }
+        
+        // Step 3: Validate Required Tokens
+        const missingCriticalTokens = [];
+        if (!finalTokens.GITHUB_TOKEN || finalTokens.GITHUB_TOKEN.trim() === '') missingCriticalTokens.push('GITHUB_TOKEN');
+        if (!finalTokens.PINECONE_API_KEY || finalTokens.PINECONE_API_KEY.trim() === '') missingCriticalTokens.push('PINECONE_API_KEY');
+        if (!finalTokens.HUGGINGFACE_TOKEN || finalTokens.HUGGINGFACE_TOKEN.trim() === '') missingCriticalTokens.push('HUGGINGFACE_TOKEN');
+        
+        if (missingCriticalTokens.length > 0) {
+          console.log(chalk.red(`\n❌ Missing critical tokens: ${missingCriticalTokens.join(', ')}`));
+          console.log(chalk.yellow('💡 MCP server will start with limited functionality'));
+          console.log(chalk.gray('   Run again without --skip-token-collection to add missing tokens\n'));
+        }
+        
+        // Step 4: Initialize MCP Server
+        const spinner = ora('Initializing MCP server').start();
+        
         const server = new MCPServer({
-          port: parseInt(options.port),
+          port: selectedPort,
           host: options.host,
-          pineconeApiKey: options.pineconeKey || process.env.PINECONE_API_KEY,
-          githubToken: options.githubToken || process.env.GITHUB_TOKEN,
-          huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN,
+          pineconeApiKey: finalTokens.PINECONE_API_KEY || process.env.PINECONE_API_KEY,
+          githubToken: finalTokens.GITHUB_TOKEN || process.env.GITHUB_TOKEN,
+          huggingfaceToken: finalTokens.HUGGINGFACE_TOKEN || process.env.HUGGINGFACE_TOKEN,
           corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS
         });
 
-        // Validate required tokens
-        if (!server.options.githubToken) {
-          spinner.fail('GitHub token is required');
-          console.error(chalk.red('Error: GitHub token is required for MCP server operation'));
-          console.error(chalk.yellow('Set GITHUB_TOKEN environment variable or use --github-token option'));
-          process.exit(1);
-        }
-
-        if (!server.options.pineconeApiKey) {
-          spinner.fail('Pinecone API key is required');
-          console.error(chalk.red('Error: Pinecone API key is required for vector operations'));
-          console.error(chalk.yellow('Set PINECONE_API_KEY environment variable or use --pinecone-key option'));
-          process.exit(1);
-        }
-
-        if (!server.options.huggingfaceToken) {
-          spinner.fail('HuggingFace token is required');
-          console.error(chalk.red('Error: HuggingFace token is required for embedding generation'));
-          console.error(chalk.yellow('Set HUGGINGFACE_TOKEN environment variable or use --huggingface-token option'));
-          process.exit(1);
-        }
-        
-        // Start the server with enhanced error handling
+        // Step 5: Start the server with enhanced error handling
         try {
           await server.start();
-          spinner.succeed(chalk.green(`MCP server started on http://${options.host}:${options.port}`));
+          spinner.succeed(chalk.green(`✅ MCP server started successfully!`));
+          
+          // Display server information
+          console.log('');
+          console.log(chalk.cyan('📍 Server Information:'));
+          console.log(`   🌐 URL: ${chalk.white(`http://${options.host}:${selectedPort}`)}`);
+          console.log(`   🔗 Health Check: ${chalk.white(`http://${options.host}:${selectedPort}/health`)}`);
+          console.log(`   📊 API Spec: ${chalk.white(`http://${options.host}:${selectedPort}/v1/mcp/spec`)}`);
+          console.log('');
+          
+          // Display token status
+          console.log(chalk.cyan('🔑 Token Status:'));
+          console.log(`   GitHub: ${finalTokens.GITHUB_TOKEN && finalTokens.GITHUB_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log(`   Pinecone: ${finalTokens.PINECONE_API_KEY && finalTokens.PINECONE_API_KEY.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log(`   HuggingFace: ${finalTokens.HUGGINGFACE_TOKEN && finalTokens.HUGGINGFACE_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log('');
+          
+          // Display available tools
+          console.log(chalk.cyan('🛠 Available MCP Tools:'));
+          console.log('   📁 Repository: setup-repository, get_repository_status, list_repositories');
+          console.log('   🔍 Search: search, search_code, get_code_context');
+          console.log('   ⚙️ Processing: trigger-reprocessing, get-processing-status');
+          console.log('   🤖 SWE: default_prompt, get_scenarios, get_guidelines');
+          console.log('   🐙 GitHub: github_get_repo, github_list_files, github_get_file');
+          console.log('   🌲 Pinecone: pinecone_query, pinecone_list_indexes');
+          console.log('   🤗 HuggingFace: huggingface_embed_code, huggingface_embed_query');
+          console.log('');
+          
+          console.log(chalk.magenta('🎯 Next Steps:'));
+          console.log('   1. Configure your AI assistant to connect to this MCP server');
+          console.log(`   2. Use server URL: http://${options.host}:${selectedPort}`);
+          console.log('   3. Start asking questions about your codebase!');
+          console.log('');
+          console.log(chalk.gray('Press Ctrl+C to stop the server'));
+          
         } catch (startError) {
           spinner.fail('Failed to start MCP server');
           if (startError instanceof Error && startError.message.includes('EADDRINUSE')) {
-            console.error(chalk.red(`Error: Port ${options.port} is already in use`));
-            console.error(chalk.yellow(`Try using a different port: npx remcode serve --port ${parseInt(options.port) + 1}`));
+            console.error(chalk.red(`❌ Port ${selectedPort} is unexpectedly busy`));
+            console.error(chalk.yellow(`💡 Try a different port: npx remcode serve --port ${selectedPort + 1}`));
           } else {
-            console.error(chalk.red(`Error: ${startError instanceof Error ? startError.message : String(startError)}`));
+            console.error(chalk.red(`❌ Error: ${startError instanceof Error ? startError.message : String(startError)}`));
           }
           process.exit(1);
         }
         
-        // Print tool information
-        console.log('');
-        console.log(chalk.cyan('Available MCP Tools:'));
-        console.log('');
-        console.log(chalk.yellow('Pinecone Tools:'));
-        console.log('  • pinecone_query        - Search for vectors in Pinecone');
-        console.log('  • pinecone_upsert       - Upload vectors to Pinecone');
-        console.log('  • pinecone_delete       - Delete vectors from Pinecone');
-        console.log('  • pinecone_list_indexes - List available Pinecone indexes');
-        console.log('');
-        console.log(chalk.yellow('GitHub Tools:'));
-        console.log('  • github_get_repo       - Get repository metadata');
-        console.log('  • github_list_files     - List files in a repository');
-        console.log('  • github_get_file       - Get file contents');
-        console.log('  • github_search_code    - Search code in repositories');
-        console.log('');
-        console.log(chalk.yellow('HuggingFace Tools:'));
-        console.log('  • huggingface_embed_code  - Generate embeddings for code');
-        console.log('  • huggingface_embed_query - Generate embeddings for queries');
-        console.log('  • huggingface_list_models - List available embedding models');
-        console.log('');
-        console.log(chalk.cyan('Send MCP requests to:'));
-        console.log(`  POST http://${options.host}:${options.port}/v1/mcp`);
-        console.log('');
-        console.log(chalk.cyan('Example Request:'));
-        console.log(`  {
-    "tool": "pinecone_query",
-    "parameters": {
-      "text": "function that handles authentication",
-      "topK": 5
-    }
-  }`);
-        console.log('');
-        console.log(chalk.magenta('Press Ctrl+C to stop the server'));
-        
         // Handle graceful shutdown
         const gracefulShutdown = () => {
-          console.log(chalk.yellow('\nShutting down MCP server...'));
+          console.log(chalk.yellow('\n🛑 Shutting down MCP server...'));
           try {
             server.stop();
-            console.log(chalk.green('Server stopped successfully'));
+            console.log(chalk.green('✅ Server stopped successfully'));
             process.exit(0);
           } catch (error) {
-            console.error(chalk.red('Error during shutdown:', error));
+            console.error(chalk.red('❌ Error during shutdown:', error));
             process.exit(1);
           }
         };
@@ -127,17 +177,16 @@ export function serveCommand(program: Command): void {
         process.on('SIGTERM', gracefulShutdown);
         
       } catch (error) {
-        spinner.fail('Failed to start MCP server');
-        logger.error(`Error: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(chalk.red(`\n❌ Failed to start MCP server: ${error instanceof Error ? error.message : String(error)}`));
         
         // Provide helpful error messages
         if (error instanceof Error) {
           if (error.message.includes('ENOTFOUND')) {
-            console.error(chalk.yellow('Network connectivity issue. Check your internet connection.'));
+            console.error(chalk.yellow('🌐 Network connectivity issue. Check your internet connection.'));
           } else if (error.message.includes('EACCES')) {
-            console.error(chalk.yellow('Permission denied. Try running with appropriate permissions.'));
-          } else if (error.message.includes('Invalid API key')) {
-            console.error(chalk.yellow('Invalid API key provided. Check your environment variables.'));
+            console.error(chalk.yellow('🔒 Permission denied. Try running with appropriate permissions.'));
+          } else if (error.message.includes('No available ports')) {
+            console.error(chalk.yellow('🚪 Try specifying a different port range: --port 4000'));
           }
         }
         
