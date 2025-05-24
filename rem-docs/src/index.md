@@ -14,6 +14,7 @@ No overview provided.
 - `./commands/update`
 - `./commands/serve`
 - `./commands/process`
+- `./commands/inspector`
 
 ## Variables
 

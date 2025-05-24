@@ -11,8 +11,9 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 # Start MCP server (auto-installs if needed)
 npx remcode serve --port 3000
 
-# Test all 27 tools interactively
-npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+# Start MCP Inspector for interactive testing
+npx remcode inspector
+# OR: npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 # Opens: http://127.0.0.1:6274
 ```
 
@@ -21,8 +22,9 @@ npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 # Install globally
 npm install -g remcode
 
-# Start server
+# Start server and inspector
 remcode serve --port 3000
+remcode inspector  # Interactive testing
 ```
 
 ### **Option 3: Clone & Build**
@@ -31,22 +33,11 @@ git clone https://github.com/harshit-codes/remcode.git
 cd remcode
 npm install && npm run build
 ./bin/remcode.js serve --port 3000
+./bin/remcode.js inspector  # Interactive testing
 ```
 
 **[📖 Complete Setup Guide →](INSTALLATION.md)**
 
-## 🚀 Quick Start (5 minutes)
-
-```bash
-# 1. Install and test
-npx remcode --help
-
-# 2. Start MCP server
-npx remcode serve --port 3000
-
-# 3. Add to your AI assistant (Claude Desktop example)
-# See INSTALLATION.md for complete setup guide
-```
 ## 🚀 Key Features
 
 - **🚀 One-Click Automated Setup**: First MCP call handles everything - secrets, workflows, processing
@@ -122,10 +113,15 @@ npx remcode serve --port 3000
 Test all 27 MCP tools in a web interface:
 
 ```bash
-# Start MCP Inspector with STDIO bridge
+# Easy way (new!)
+npx remcode inspector
+# OR
+remcode inspector  # if installed globally
+
+# Manual way
 npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 
-# Open in browser: http://127.0.0.1:6274
+# Opens: http://127.0.0.1:6274
 ```
 
 **Available Tools:**
@@ -224,7 +220,8 @@ npm run test:e2e         # End-to-end tests
 npm run test:performance # Performance benchmarks
 
 # Interactive MCP Testing
-npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+npx remcode inspector  # Easy way!
+# OR: npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 # Opens: http://127.0.0.1:6274 - Test all 27 tools interactively
 
 # Documentation

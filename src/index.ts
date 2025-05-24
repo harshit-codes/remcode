@@ -4,6 +4,7 @@ import { vectorizeCommand } from './commands/vectorize';
 import { updateCommand } from './commands/update';
 import { serveCommand } from './commands/serve';
 import { processCommand } from './commands/process';
+import { inspectorCommand } from './commands/inspector';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 
@@ -17,7 +18,7 @@ const program = new Command();
 program
   .name('remcode')
   .description('A code vectorization and analysis tool for better understanding of codebases')
-  .version('0.1.0');
+  .version('0.1.2');
 
 // Add commands
 analyzeCommand(program);
@@ -25,6 +26,7 @@ vectorizeCommand(program);
 updateCommand(program);
 processCommand(program);
 serveCommand(program);
+inspectorCommand(program);
 
 // Add help information
 program.on('--help', () => {
@@ -35,6 +37,7 @@ program.on('--help', () => {
   console.log('  $ remcode process --type auto');
   console.log('  $ remcode update --since-commit abc123');
   console.log('  $ remcode serve --port 3000');
+  console.log('  $ remcode inspector  # Interactive MCP tool testing');
 });
 
 // Error handling

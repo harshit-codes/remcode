@@ -28,6 +28,10 @@ Welcome to Remcode! We're excited to have you contribute to making AI assistants
 
 5. **Test with MCP Inspector** (Interactive tool testing)
    ```bash
+   # Easy way (new!)
+   npx remcode inspector
+   
+   # Manual way  
    npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
    ```
    Then open: http://127.0.0.1:6274 to test all 27 MCP tools interactively
@@ -104,7 +108,10 @@ The following features have been moved to the Advanced Version to keep the Basic
 For interactive testing of MCP tools during development:
 
 ```bash
-# Start the MCP Inspector with STDIO bridge
+# Easy way (new!)
+npx remcode inspector
+
+# Manual way
 npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 
 # Open in browser
@@ -141,7 +148,14 @@ test(search): add semantic search edge cases
 1. Create a feature branch: `git checkout -b feature/your-feature-name`
 2. Make your changes with tests
 3. Run the full test suite: `npm test`
-4. **Test with MCP Inspector**: `npx @modelcontextprotocol/inspector node bin/remcode-stdio.js`
+4. **Test with MCP Inspector**: 
+   ```bash
+   # Easy way (new!)
+   npx remcode inspector
+   
+   # Manual way
+   npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+   ```
    - Open http://127.0.0.1:6274 to test tools interactively
    - Verify your changes work with the MCP protocol
 5. Update documentation as needed

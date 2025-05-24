@@ -1,10 +1,11 @@
 {
   "name": "remcode",
-  "version": "0.1.1",
-  "description": "Enhanced Codebase-Aware SWE Autopilot with Smart Setup - AI assistant integration via MCP with automatic token management and intelligent port selection",
+  "version": "0.1.2",
+  "description": "Enhanced Codebase-Aware SWE Autopilot with Smart Setup - AI assistant integration via MCP with automatic token management, intelligent port selection, and interactive MCP Inspector support",
   "main": "bin/remcode.js",
   "bin": {
-    "remcode": "./bin/remcode.js"
+    "remcode": "./bin/remcode.js",
+    "remcode-stdio": "./bin/remcode-stdio.js"
   },
   "files": [
     "dist/**/*",
@@ -32,7 +33,9 @@
     "test:external-api:performance": "jest tests/external-api/performance.test.ts",
     "test:external-api:reliability": "jest tests/external-api/reliability.test.ts",
     "test:external-api:all": "npm run test:external-api:setup && npm run test:external-api:e2e && npm run test:external-api:performance && npm run test:external-api:reliability",
-    "test:mcp-inspector": "ts-node tests/mcp/run-inspector.ts",
+    "test:mcp-inspector": "node bin/remcode-stdio.js",
+    "inspector": "npx @modelcontextprotocol/inspector node bin/remcode-stdio.js",
+    "mcp-test": "npx @modelcontextprotocol/inspector node bin/remcode-stdio.js",
     "test:features": "jest tests/features",
     "test:features:vectorization": "jest tests/features/vectorization",
     "test:features:search": "jest tests/features/search",
@@ -76,7 +79,9 @@
     "token-management",
     "port-selection",
     "npx-package",
-    "enhanced-ux"
+    "mcp-inspector",
+    "stdio-bridge",
+    "interactive-testing"
   ],
   "author": "",
   "license": "MIT",
