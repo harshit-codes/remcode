@@ -9,15 +9,6 @@
   "transform": {
     "^.+\\.ts$": "ts-jest"
   },
-  "transformIgnorePatterns": [
-    "node_modules/(?!(@octokit|@huggingface)/)"
-  ],
-  "extensionsToTreatAsEsm": [".ts"],
-  "globals": {
-    "ts-jest": {
-      "useESM": false
-    }
-  },
   "collectCoverageFrom": [
     "src/**/*.ts",
     "!src/**/*.d.ts",
@@ -26,12 +17,15 @@
   "coverageDirectory": "coverage",
   "coverageReporters": [
     "text",
-    "lcov",
+    "lcov", 
     "html"
   ],
   "setupFilesAfterEnv": ["<rootDir>/tests/setup.test.ts"],
   "testTimeout": 30000,
   "moduleNameMapper": {
-    "^@octokit/(.*)$": "<rootDir>/node_modules/@octokit/$1/dist-src/index.js"
-  }
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
+  "maxWorkers": 1,
+  "forceExit": true,
+  "detectOpenHandles": true
 }

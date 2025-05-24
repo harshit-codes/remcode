@@ -88,6 +88,27 @@ export class UnifiedSearch {
   }
 
   /**
+   * Get the context extractor instance
+   */
+  getContextExtractor(): ContextExtractor {
+    return this.contextExtractor;
+  }
+
+  /**
+   * Get the similarity analyzer instance
+   */
+  getSimilarityAnalyzer(): SimilarityAnalyzer {
+    return this.similarityAnalyzer;
+  }
+
+  /**
+   * Get the semantic search instance
+   */
+  getSemanticSearch(): SemanticSearch {
+    return this.semanticSearch;
+  }
+
+  /**
    * Perform unified search with automatic query processing and enhancement
    */
   async search(

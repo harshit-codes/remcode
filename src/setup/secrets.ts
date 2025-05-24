@@ -108,7 +108,7 @@ export class SecretsManager {
    * Get required secrets for Remcode
    * @returns List of required secrets
    */
-  private getRequiredSecrets(): SecretConfig[] {
+  public getRequiredSecrets(): SecretConfig[] {
     return [
       {
         name: 'PINECONE_API_KEY',

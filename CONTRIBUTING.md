@@ -27,9 +27,9 @@ Welcome to Remcode! We're excited to have you contribute to making AI assistants
    npm run test:mcp-inspector
    ```
 
-## 📂 Contributing Domains
+## 📂 Contributing Domains - Basic Version Focus
 
-Choose your area of contribution:
+Choose your area of contribution. **Note**: Multi-language and large-scale features have been moved to the Advanced Version.
 
 ### 🤖 [MCP Tools Development](./docs/contributing/mcp-tools.md)
 **Perfect for:** Developers familiar with APIs, HTTP servers, and AI tool integration
@@ -37,14 +37,32 @@ Choose your area of contribution:
 - Improve existing tool functionality
 - Enhance tool specifications and documentation
 - **Skill Level:** Intermediate to Advanced
+- **Priority:** HIGH for Basic Version
 
 ### 🧠 [SWE Best Practices & Prompts](./docs/contributing/swe-prompts.md)
 **Perfect for:** Software engineers, prompt engineers, and AI practitioners
 - Improve software engineering prompts across 13 comprehensive scenarios
 - Add context-aware guidance with deep Remcode MCP integration
-- Enhance language-agnostic code quality guidelines and workflows
+- Enhance TypeScript/JavaScript specific guidance and workflows
 - **Skill Level:** Beginner to Intermediate
-- **✨ NEW:** Complete coverage of all software engineering scenarios with automatic guidance injection
+- **✨ UPDATED:** Focus on TypeScript/JavaScript for Basic Version
+- **Priority:** HIGH for Basic Version
+
+### 🧪 [Testing & Quality Assurance](./docs/contributing/testing.md)
+**Perfect for:** QA engineers, test automation specialists, and reliability engineers
+- Expand test coverage for core functionality
+- Add TypeScript/JavaScript specific test cases
+- Improve testing infrastructure for small-to-medium repositories
+- **Skill Level:** Beginner to Advanced
+- **Priority:** HIGH for Basic Version
+
+### ⚙️ [Core Logic Improvements](./docs/contributing/core-logic.md)
+**Perfect for:** Algorithm developers, ML engineers, and performance optimization experts
+- Enhance code analysis algorithms for TypeScript/JavaScript
+- Improve chunking strategies for modern web development
+- Optimize embedding and vectorization for smaller codebases
+- **Skill Level:** Advanced
+- **Priority:** MEDIUM for Basic Version
 
 ### 🔧 [External Integrations & Local Support](./docs/contributing/external-integrations.md)
 **Perfect for:** DevOps engineers, infrastructure developers, and integration specialists
@@ -52,13 +70,7 @@ Choose your area of contribution:
 - Integrate additional embedding models
 - Support local deployments and custom setups
 - **Skill Level:** Advanced
-
-### ⚙️ [Core Logic Improvements](./docs/contributing/core-logic.md)
-**Perfect for:** Algorithm developers, ML engineers, and performance optimization experts
-- Enhance code analysis algorithms
-- Improve chunking strategies
-- Optimize embedding and vectorization
-- **Skill Level:** Advanced
+- **Priority:** LOW for Basic Version (moved to Advanced)
 
 ### 🚀 [Platform Extensions](./docs/contributing/platform-extensions.md)
 **Perfect for:** Full-stack developers, DevOps engineers, and product developers
@@ -66,13 +78,14 @@ Choose your area of contribution:
 - Build IDE plugins
 - Develop custom frontends
 - **Skill Level:** Intermediate to Advanced
+- **Priority:** LOW for Basic Version (moved to Advanced)
 
-### 🧪 [Testing & Quality Assurance](./docs/contributing/testing.md)
-**Perfect for:** QA engineers, test automation specialists, and reliability engineers
-- Expand test coverage
-- Add domain-specific test cases
-- Improve testing infrastructure
-- **Skill Level:** Beginner to Advanced
+## 🚫 **Moved to Advanced Version**
+The following features have been moved to the Advanced Version to keep the Basic Version focused:
+- **Multi-Language Support** (Python, Java, Go, Rust, C++)
+- **Large-Scale Processing** (1000+ files, enterprise codebases)
+- **Complex Platform Extensions**
+- **Advanced External Integrations**
 
 ## 📋 General Guidelines
 

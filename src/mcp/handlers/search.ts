@@ -8,13 +8,10 @@ import { UnifiedSearch } from '../../search/unified-search';
 const logger = getLogger('SearchMCPHandler');
 
 export class SearchMCPHandler {
-  private semanticSearch: SemanticSearch;
-  private contextExtractor: ContextExtractor;
-  private similarityAnalyzer: SimilarityAnalyzer;
   private unifiedSearch: UnifiedSearch;
 
   constructor() {
-    this.semanticSearch = new SemanticSearch({
+    const semanticSearch = new SemanticSearch({
       pineconeApiKey: process.env.PINECONE_API_KEY,
       pineconeIndexName: process.env.PINECONE_INDEX_NAME || 'remcode-default',
       pineconeEnvironment: process.env.PINECONE_ENVIRONMENT || 'us-east-1',
@@ -24,16 +21,8 @@ export class SearchMCPHandler {
       fallbackModel: 'BAAI/bge-small-en-v1.5'
     });
     
-    this.contextExtractor = new ContextExtractor();
-    this.similarityAnalyzer = new SimilarityAnalyzer({
-      semanticSearch: this.semanticSearch,
-      enableSemanticSearch: true,
-      enableSyntaxAnalysis: true,
-      enablePatternDetection: true
-    });
-    
-    // Initialize unified search
-    this.unifiedSearch = new UnifiedSearch(this.semanticSearch, {
+    // Initialize unified search - this handles all search components internally
+    this.unifiedSearch = new UnifiedSearch(semanticSearch, {
       includeContext: true,
       contextLines: 3,
       includeFileStats: true,
@@ -41,6 +30,20 @@ export class SearchMCPHandler {
       enableCaching: true,
       cacheTimeout: 300000 // 5 minutes
     });
+  }
+
+  /**
+   * Get the context extractor from unified search
+   */
+  private getContextExtractor(): ContextExtractor {
+    return this.unifiedSearch.getContextExtractor();
+  }
+
+  /**
+   * Get the similarity analyzer from unified search
+   */
+  private getSimilarityAnalyzer(): SimilarityAnalyzer {
+    return this.unifiedSearch.getSimilarityAnalyzer();
   }
 
   /**
@@ -120,7 +123,7 @@ export class SearchMCPHandler {
     }
 
     try {
-      const context = await this.contextExtractor.extractContext(
+      const context = await this.getContextExtractor().extractContext(
         filePath, 
         startLine || 0, 
         endLine || startLine || 10
@@ -152,7 +155,7 @@ export class SearchMCPHandler {
     }
 
     try {
-      const similarityResult = await this.similarityAnalyzer.findSimilarPatterns(codeSnippet, threshold);
+      const similarityResult = await this.getSimilarityAnalyzer().findSimilarPatterns(codeSnippet, threshold);
       
       res.status(200).json({ 
         success: true,

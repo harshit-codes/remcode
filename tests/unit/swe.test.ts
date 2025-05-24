@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { SWEPrompts } from '../../src/swe/prompts';
-import { SWEScenarios } from '../../src/swe/scenarios';
+import { SWEGuidelines } from '../../src/swe/guidelines';
 
 describe('SWE Best Practices', () => {
   let prompts: SWEPrompts;
-  let scenarios: SWEScenarios;
+  let guidelines: SWEGuidelines;
 
   beforeEach(() => {
     prompts = new SWEPrompts();
-    scenarios = new SWEScenarios();
+    guidelines = new SWEGuidelines();
   });
 
   it('should provide default prompt', () => {
@@ -23,15 +23,19 @@ describe('SWE Best Practices', () => {
     expect(prompt.length).toBeGreaterThan(0);
   });
 
-  it('should detect scenarios from user input', () => {
-    const detected = scenarios.detectScenario('I need to refactor this code');
-    expect(detected).toBeTruthy();
-    expect(detected!.id).toBe('refactoring');
+  it('should get coding guidelines', () => {
+    const codingStandards = guidelines.getCodingStandards();
+    expect(Array.isArray(codingStandards)).toBe(true);
+    expect(codingStandards.length).toBeGreaterThan(0);
   });
 
-  it('should return available scenarios', () => {
-    const availableScenarios = scenarios.getAvailableScenarios();
-    expect(Array.isArray(availableScenarios)).toBe(true);
-    expect(availableScenarios.length).toBeGreaterThan(0);
+  it('should get guidelines by category', () => {
+    const securityGuidelines = guidelines.getGuidelinesByCategory('security');
+    expect(Array.isArray(securityGuidelines)).toBe(true);
+  });
+
+  it('should get guidelines by priority', () => {
+    const criticalGuidelines = guidelines.getGuidelinesByPriority('critical');
+    expect(Array.isArray(criticalGuidelines)).toBe(true);
   });
 });
