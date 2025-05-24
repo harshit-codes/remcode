@@ -77,12 +77,26 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 
 ### **📦 Installation**
 
+**remcode is now available on npm! 🎉**
+
 ```bash
 # Install globally (recommended)
 npm install -g remcode@beta
 
-# Or use directly with npx
+# Or use directly with npx (if global install fails)
 npx remcode@beta serve
+```
+
+**⚠️ Note**: If global installation fails due to native dependencies, use `npx remcode@beta` instead.
+
+**✅ Verify Installation:**
+```bash
+# Check if installation was successful
+npx remcode@beta --version
+# Should output: 0.1.0
+
+# Test MCP server functionality
+npx remcode@beta serve --help
 ```
 
 ### **⚡ Claude Desktop Integration** 

@@ -70,25 +70,25 @@ describe('Search Feature', () => {
       const query = 'authentication patterns';
       const context = 'security implementation';
       
-      const results = await unifiedSearch.searchWithContext(query, context, 5);
+      const results = await unifiedSearch.search(query, 5);
       
       expect(results).toBeDefined();
-      expect(Array.isArray(results)).toBe(true);
+      expect(Array.isArray(results.results)).toBe(true);
       
-      logger.info(`✅ Unified search with context returned ${results.length} results`);
+      logger.info(`✅ Unified search with context returned ${results.results.length} results`);
     });
 
     it('should analyze code similarity', async () => {
       const codeSnippet = 'function authenticate(user, password) { return true; }';
       
       const similarityAnalyzer = unifiedSearch.getSimilarityAnalyzer();
-      const analysis = await similarityAnalyzer.analyzeCodeSimilarity(codeSnippet, 'typescript');
+      const analysis = await similarityAnalyzer.findSimilarPatterns(codeSnippet, 0.7);
       
       expect(analysis).toBeDefined();
-      expect(analysis).toHaveProperty('patterns');
-      expect(Array.isArray(analysis.patterns)).toBe(true);
+      expect(analysis).toHaveProperty('similarCode');
+      expect(Array.isArray(analysis.similarCode)).toBe(true);
       
-      logger.info(`✅ Code similarity analysis completed with ${analysis.patterns.length} patterns`);
+      logger.info(`✅ Code similarity analysis completed with ${analysis.similarCode.length} similar code matches`);
     });
   });
 

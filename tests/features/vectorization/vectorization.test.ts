@@ -32,7 +32,11 @@ describe('Vectorization Feature', () => {
     pipeline = await TestSetupHelper.createVectorizationPipeline(TEST_INDEX);
     embeddingManager = await TestSetupHelper.createEmbeddingManager();
     storage = await TestSetupHelper.createPineconeStorage(TEST_INDEX, TEST_NAMESPACE);
-    chunkingManager = new ChunkingManager();
+    chunkingManager = new ChunkingManager({
+      clean_modules: 'function_level',
+      complex_modules: 'file_level',
+      monolithic_files: 'sliding_window_with_high_overlap'
+    });
     
     logger.info('🧪 Vectorization feature tests initialized');
   }, TEST_CONFIG.TIMEOUTS.INTEGRATION);  
@@ -48,11 +52,14 @@ describe('Vectorization Feature', () => {
         }
       `;
       
-      const chunks = await chunkingManager.chunkCode(
+      const chunks = await chunkingManager.chunkFile(
         testCode, 
-        '/test/file.ts', 
-        'typescript',
-        'function_level'
+        'function_level',
+        { 
+          file_path: '/test/file.ts',
+          language: 'typescript',
+          extension: '.ts'
+        }
       );
       
       expect(chunks).toHaveLength(2);
@@ -75,11 +82,14 @@ describe('Vectorization Feature', () => {
           }
         }
       `;      
-      const chunks = await chunkingManager.chunkCode(
+      const chunks = await chunkingManager.chunkFile(
         testCode,
-        '/test/class.ts',
-        'typescript', 
-        'class_level'
+        'class_level', 
+        {
+          file_path: '/test/class.ts',
+          language: 'typescript',
+          extension: '.ts'
+        }
       );
       
       expect(chunks).toHaveLength(1);
@@ -125,7 +135,7 @@ describe('Vectorization Feature', () => {
       }));
       
       // Store vectors
-      await storage.storeVectors(testVectors, TEST_NAMESPACE);
+      await storage.storeVectors(testVectors);
       
       // Query vectors
       const queryVector = Array(768).fill(0).map(() => Math.random());

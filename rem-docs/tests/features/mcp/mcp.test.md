@@ -19,13 +19,4 @@ Tests Model Context Protocol functionality
 - `mcpServer`
 - `mockConfig`
 - `originalEnv`
-- `serverInfo`
-- `tools`
-- `toolNames`
-- `tools`
-- `toolName`
-- `args`
-- `result`
-- `toolName`
-- `invalidArgs`
 
