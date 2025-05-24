@@ -1,11 +1,18 @@
 {
   "name": "remcode",
-  "version": "0.1.0",
-  "description": "A code vectorization and analysis tool for better understanding of codebases",
+  "version": "0.1.0-beta.1",
+  "description": "Codebase-Aware SWE Autopilot - AI assistant integration via Model Context Protocol (MCP) for intelligent code analysis and vectorization",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "./bin/remcode.js"
   },
+  "files": [
+    "dist/**/*",
+    "bin/**/*",
+    "README.md",
+    "LICENSE",
+    "CONTRIBUTING.md"
+  ],
   "scripts": {
     "start": "node bin/remcode.js",
     "test": "jest",
@@ -35,6 +42,9 @@
     "test:coverage": "jest --coverage",
     "test:coverage-full": "jest --coverage --collectCoverageFrom='src/**/*.ts' --coverageReporters=text,lcov,html",
     "build": "tsc",
+    "build:clean": "rm -rf dist && npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build:clean && npm test",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "serve": "ts-node src/index.ts serve",
     "docs": "node scripts/colocated-docs-generator.js"
@@ -44,16 +54,21 @@
     "url": "git+https://github.com/harshit-codes/remcode.git"
   },
   "keywords": [
+    "mcp",
+    "model-context-protocol", 
+    "ai-assistant",
+    "claude",
+    "codebase-analysis",
+    "code-vectorization",
+    "semantic-search",
+    "software-engineering",
     "code-analysis",
     "vectorization",
     "embeddings",
-    "semantic-search",
-    "code-quality",
     "pinecone",
     "langchain",
     "graphcodebert",
-    "mcp",
-    "model-context-protocol"
+    "code-quality"
   ],
   "author": "",
   "license": "MIT",

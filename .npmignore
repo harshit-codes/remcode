@@ -1,0 +1,46 @@
+# Development and testing files
+src/
+tests/
+rem-docs/
+test-data/
+~deps/
+coverage/
+
+# Configuration files
+.env*
+tsconfig.json
+jest.config.json
+.gitignore
+.git/
+
+# Development scripts and docs
+scripts/
+docs/
+SESSION-SUMMARY.md
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs and cache
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.cache/
+.remcode-cache/
+
+# Temporary files
+*.tmp
+*.temp
+node_modules/
+
+# Keep only essential files for distribution:
+# - dist/ (compiled code)
+# - bin/ (CLI entry point)
+# - README.md, LICENSE, CONTRIBUTING.md
+# - package.json, package-lock.json

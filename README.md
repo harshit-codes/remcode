@@ -75,7 +75,40 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 
 ## 🚀 Quick Start
 
-### 1. **Setup Repository**
+### **📦 Installation**
+
+```bash
+# Install globally (recommended)
+npm install -g remcode@beta
+
+# Or use directly with npx
+npx remcode@beta serve
+```
+
+### **⚡ Claude Desktop Integration** 
+
+1. **Add to your Claude Desktop configuration** (`~/.config/claude_desktop_config.json`):
+   ```json
+   {
+     "mcpServers": {
+       "remcode": {
+         "command": "remcode",
+         "args": ["serve"],
+         "env": {
+           "PINECONE_API_KEY": "your_pinecone_key",
+           "HUGGINGFACE_TOKEN": "your_huggingface_token",
+           "GITHUB_TOKEN": "your_github_token"
+         }
+       }
+     }
+   }
+   ```
+
+2. **Restart Claude Desktop** and ask any question about your codebase
+
+📖 **[Complete Installation Guide →](./INSTALLATION.md)**
+
+### 2. **Setup Repository (If Needed)**
 ```bash
 git init
 git add .
@@ -84,7 +117,7 @@ git remote add origin https://github.com/yourusername/your-repo.git
 git push -u origin main
 ```
 
-### 2. **Configure MCP**
+### 3. **Configure MCP (Alternative Method)**
 Add to your AI assistant's MCP configuration:
 ```json
 {
