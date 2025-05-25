@@ -6,7 +6,7 @@
 
 MCP Inspector Command
 
-Command to start the MCP Inspector for interactive testing of all 27 MCP tools
+Command to start the MCP server with SSE support for interactive testing of all 27 MCP tools
 
 ## Dependencies
 
@@ -25,5 +25,6 @@ export function inspectorCommand()
 ## Variables
 
 - `logger`
-- `inspectorProcess`
+- `port`
+- `serverProcess`
 

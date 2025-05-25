@@ -26,6 +26,7 @@ Generate repository workflows
 - `../../workflows/generator`
 - `../../setup/workflow-generator`
 - `../../setup/model-initializer`
+- `../validation/simple-validator`
 
 ## Classes
 
