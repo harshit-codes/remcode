@@ -10,7 +10,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import dotenv from 'dotenv';
 import { MCPServer } from '../mcp';
-import { getLogger } from '../utils/logger';
+import { getLogger, configureLogger, LogLevel } from '../utils/logger';
 import { TokenManager, TokenConfig } from '../utils/token-manager';
 import { PortManager } from '../utils/port-manager';
 
@@ -32,7 +32,37 @@ export function serveCommand(program: Command): void {
       // Load environment variables
       dotenv.config();
       
+      // Configure logger based on environment and CLI options
+      let logLevel = LogLevel.INFO; // Default to INFO
+      
+      if (options.verbose) {
+        logLevel = LogLevel.DEBUG;
+      } else if (process.env.LOG_LEVEL) {
+        // Support LOG_LEVEL environment variable
+        const envLevel = process.env.LOG_LEVEL.toUpperCase();
+        switch (envLevel) {
+          case 'TRACE': logLevel = LogLevel.TRACE; break;
+          case 'DEBUG': logLevel = LogLevel.DEBUG; break;
+          case 'INFO': logLevel = LogLevel.INFO; break;
+          case 'WARN': logLevel = LogLevel.WARN; break;
+          case 'ERROR': logLevel = LogLevel.ERROR; break;
+          case 'FATAL': logLevel = LogLevel.FATAL; break;
+          case 'SILENT': logLevel = LogLevel.SILENT; break;
+          default: 
+            console.log(chalk.yellow(`⚠ Unknown LOG_LEVEL: ${process.env.LOG_LEVEL}, using INFO`));
+            logLevel = LogLevel.INFO;
+        }
+      }
+      
+      // Configure the logger
+      configureLogger({ 
+        level: logLevel,
+        colors: true,
+        timestamp: true 
+      });
+      
       console.log(chalk.cyan('🚀 Starting Remcode MCP Server...\n'));
+      console.log(chalk.gray(`🔧 Debug: Log level set to ${logLevel === LogLevel.DEBUG ? 'DEBUG' : logLevel === LogLevel.INFO ? 'INFO' : 'OTHER'}`));
       
       try {
         // Step 1: Smart Port Selection

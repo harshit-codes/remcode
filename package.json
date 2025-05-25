@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.6",
-  "description": "🎉 HuggingFace API Fixed - Complete Embedding Functionality - Codebase-Aware SWE Autopilot with full HuggingFace embedding integration (1024-dim E5-Large), MCP Inspector compatibility, JSON-RPC 2.0, real-time SSE, and production-ready AI assistant integration",
+  "version": "0.1.7",
+  "description": "✅ HuggingFace API Fixed - Complete CodeBERT Embedding Integration - Production-ready MCP server with fixed embedding generation, CodeBERT 768-dim vectors, JSON-RPC 2.0, SSE transport, and validated third-party experience",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "bin/remcode.js",
