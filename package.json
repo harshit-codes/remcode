@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.3",
-  "description": "Enhanced Codebase-Aware SWE Autopilot with One-Shot Permission Validation - AI assistant integration via MCP with comprehensive token validation, intelligent port selection, and interactive MCP Inspector support",
+  "version": "0.1.4",
+  "description": "Enhanced Codebase-Aware SWE Autopilot with SSE Support - AI assistant integration via MCP with real-time Server-Sent Events, comprehensive token validation, intelligent port selection, and modern streaming architecture (STDIO bridge deprecated)",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "bin/remcode.js",
@@ -46,6 +46,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:coverage-full": "jest --coverage --collectCoverageFrom='src/**/*.ts' --coverageReporters=text,lcov,html",
+    "test:sse": "node scripts/test-sse.js",
     "build": "tsc",
     "build:clean": "rm -rf dist && npm run build",
     "prepare": "npm run build",
@@ -79,8 +80,9 @@
     "token-management",
     "port-selection",
     "npx-package",
-    "mcp-inspector",
-    "stdio-bridge",
+    "sse-support",
+    "server-sent-events",
+    "real-time-streaming",
     "interactive-testing"
   ],
   "author": "",
