@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.4",
-  "description": "Enhanced Codebase-Aware SWE Autopilot with SSE Support - AI assistant integration via MCP with real-time Server-Sent Events, comprehensive token validation, intelligent port selection, and modern streaming architecture (STDIO bridge deprecated)",
+  "version": "0.1.5",
+  "description": "Complete MCP Inspector Integration - Codebase-Aware SWE Autopilot with JSON-RPC 2.0 parameter parsing fix - AI assistant integration via MCP with real-time Server-Sent Events, comprehensive token validation, intelligent port selection, and modern streaming architecture (STDIO bridge deprecated)",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "bin/remcode.js",

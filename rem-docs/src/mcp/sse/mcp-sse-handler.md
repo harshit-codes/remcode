@@ -7,6 +7,11 @@
 MCP-Compatible SSE Handler
 
 Implements proper JSON-RPC 2.0 over Server-Sent Events for MCP Inspector compatibility.
+FIXED: Parameter parsing for MCP Inspector integration.
+
+FIXED: Handle tool call with proper MCP Inspector parameter parsing
+
+Helper to call handler methods with proper error handling
 
 ## Dependencies
 
@@ -58,7 +63,12 @@ interface JsonRpcNotification {
 - `errorResponse`
 - `response`
 - `errorMessage`
+- `toolName`
+- `toolArgs`
 - `validation`
 - `result`
-- `action`
+- `errorMessage`
+- `mockReq`
+- `result`
+- `mockRes`
 
