@@ -18,7 +18,7 @@ import { RemcodeMCPHandler } from './handlers/remcode';
 // import { SWEGuidanceMiddleware } from "./swe-guidance-middleware"; // Temporarily disabled
 import { getLogger } from '../utils/logger';
 import { SimpleValidator } from './validation/simple-validator';
-import { SSEHandler } from './sse/sse-handler';
+import { MCPSSEHandler } from './sse/mcp-sse-handler';
 
 const logger = getLogger('MCP-Server');
 
@@ -44,7 +44,7 @@ export class MCPServer {
   private processingHandler: ProcessingMCPHandler;
   private repositoryHandler: RepositoryMCPHandler;
   private remcodeHandler: RemcodeMCPHandler;
-  private sseHandler: SSEHandler;
+  private mcpSSEHandler: MCPSSEHandler;
   // sweGuidanceMiddleware: SWEGuidanceMiddleware; // Temporarily disabled
 
   constructor(options: MCPServerOptions = {}) {
@@ -77,7 +77,7 @@ export class MCPServer {
     this.processingHandler = new ProcessingMCPHandler(this.options.githubToken);
     this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
     this.remcodeHandler = new RemcodeMCPHandler();
-    this.sseHandler = new SSEHandler();
+    this.mcpSSEHandler = new MCPSSEHandler();
     // this.sweGuidanceMiddleware = new SWEGuidanceMiddleware(...); // Temporarily disabled
     
     this.configureServer();
@@ -99,27 +99,16 @@ export class MCPServer {
     });
     
     // ====================
-    // 🚀 SSE ENDPOINTS - NEW!
+    // 🚀 MCP-COMPATIBLE SSE ENDPOINTS
     // ====================
     
-    // SSE connection initialization
-    this.app.get('/sse/connect', (req, res) => {
-      const connectionId = this.sseHandler.initializeConnection(req, res);
-      logger.info(`SSE connection established: ${connectionId}`);
+    // MCP SSE connection endpoint - required by MCP Inspector
+    this.app.get('/sse', (req, res) => {
+      this.mcpSSEHandler.handleSSEConnection(req, res);
     });
     
-    // SSE health check
-    this.app.get('/sse/health', (req, res) => {
-      this.sseHandler.handleHealthCheck(req, res);
-    });
-    
-    // SSE tool list
-    this.app.get('/sse/tools', (req, res) => {
-      this.sseHandler.handleToolList(req, res);
-    });
-    
-    // SSE MCP tool execution
-    this.app.post('/sse/mcp', async (req, res) => {
+    // MCP message handling endpoint - required by MCP Inspector
+    this.app.post('/messages', async (req, res) => {
       const toolHandlers = {
         pinecone: this.pineconeHandler,
         github: this.githubHandler,
@@ -131,7 +120,12 @@ export class MCPServer {
         remcode: this.remcodeHandler
       };
       
-      await this.sseHandler.handleMCPToolRequest(req, res, toolHandlers);
+      await this.mcpSSEHandler.handleMCPMessage(req, res, toolHandlers);
+    });
+    
+    // OPTIONS for CORS preflight
+    this.app.options('/messages', (req, res) => {
+      res.status(200).end();
     });
     
     // MCP Specification endpoint (simplified route)
@@ -254,11 +248,12 @@ export class MCPServer {
       
       this.app.listen(this.port, this.host, () => {
         logger.info(`MCP Server listening at http://${this.host}:${this.port}`);
-        logger.info(`🚀 SSE endpoints available at:`);
-        logger.info(`   - SSE Connection: http://${this.host}:${this.port}/sse/connect`);
-        logger.info(`   - SSE Health: http://${this.host}:${this.port}/sse/health`);
-        logger.info(`   - SSE Tools: http://${this.host}:${this.port}/sse/tools`);
-        logger.info(`   - SSE MCP: http://${this.host}:${this.port}/sse/mcp`);
+        logger.info(`🚀 MCP-Compatible SSE endpoints:`);
+        logger.info(`   - SSE Connection: http://${this.host}:${this.port}/sse`);
+        logger.info(`   - MCP Messages: http://${this.host}:${this.port}/messages`);
+        logger.info(`   - Health Check: http://${this.host}:${this.port}/health`);
+        logger.info(`   - Specification: http://${this.host}:${this.port}/mcp/spec`);
+        logger.info(`🧪 For MCP Inspector: Use SSE transport with URL: http://${this.host}:${this.port}/sse`);
       });
     } catch (error) {
       logger.error(`Failed to start MCP server: ${error instanceof Error ? error.message : String(error)}`);
@@ -275,8 +270,8 @@ export class MCPServer {
   }
 
   public stop(): void {
-    // Close all SSE connections before stopping
-    this.sseHandler.closeAllConnections();
+    // Close all MCP SSE connections before stopping
+    this.mcpSSEHandler.closeAllConnections();
     logger.info('MCP Server stopped');
   }
 }

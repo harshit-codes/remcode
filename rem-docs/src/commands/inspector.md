@@ -6,7 +6,7 @@
 
 MCP Inspector Command
 
-Command to start the MCP server with SSE support for interactive testing of all 27 MCP tools
+Command to start MCP-compatible SSE server for MCP Inspector integration
 
 ## Dependencies
 

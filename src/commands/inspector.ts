@@ -1,7 +1,7 @@
 /**
  * MCP Inspector Command
  * 
- * Command to start the MCP server with SSE support for interactive testing of all 27 MCP tools
+ * Command to start MCP-compatible SSE server for MCP Inspector integration
  */
 
 import { Command } from 'commander';
@@ -14,29 +14,27 @@ const logger = getLogger('Inspector-Command');
 export function inspectorCommand(program: Command): void {
   program
     .command('inspector')
-    .description('Start MCP Server with SSE support for interactive tool testing')
+    .description('Start MCP Server with MCP Inspector compatible SSE transport')
     .option('--no-browser', 'Don\'t automatically open browser')
     .option('--port <port>', 'MCP server port', '3008')
     .action(async (options) => {
-      console.log(chalk.cyan('🧪 Starting MCP Server with SSE Support for Interactive Testing...\n'));
+      console.log(chalk.cyan('🧪 Starting MCP-Compatible Server for Inspector Integration...\n'));
       
-      console.log(chalk.yellow('📋 Available MCP Tools (27 total):'));
-      console.log('   📁 Repository: setup-repository, get_repository_status, list_repositories');
-      console.log('   🔍 Search: search, search_code, get_code_context');
-      console.log('   ⚙️ Processing: trigger-reprocessing, get-processing-status, get-workflow-analytics');
-      console.log('   🤖 SWE: default_prompt, get_scenarios, get_guidelines, get_contextual_guidance');
-      console.log('   🐙 GitHub: github_get_repo, github_list_files, github_get_file, github_search_code');
-      console.log('   🌲 Pinecone: pinecone_query, pinecone_list_indexes');
-      console.log('   🤗 HuggingFace: huggingface_embed_code, huggingface_embed_query, huggingface_list_models');
+      console.log(chalk.yellow('📋 MCP Inspector Setup Instructions:'));
+      console.log('   1. Run this command to start the MCP server');
+      console.log('   2. Open MCP Inspector: npx @modelcontextprotocol/inspector');
+      console.log('   3. Select "SSE" transport type');
+      console.log(`   4. Enter server URL: http://localhost:${options.port || '3008'}/sse`);
+      console.log('   5. Click "Connect" to establish connection');
       console.log('');
       
       try {
         const port = options.port || '3008';
         console.log(chalk.green(`🚀 Starting MCP Server on port ${port}...`));
-        console.log(chalk.gray('   This starts both HTTP API and SSE endpoints'));
+        console.log(chalk.gray('   JSON-RPC 2.0 over SSE protocol enabled'));
         console.log('');
         
-        // Start the MCP server with SSE support
+        // Start the MCP server with MCP-compatible SSE
         const serverProcess = spawn('node', [
           'bin/remcode.js',
           'serve',
@@ -50,30 +48,25 @@ export function inspectorCommand(program: Command): void {
         // Give server time to start
         setTimeout(() => {
           console.log('');
-          console.log(chalk.green('✅ MCP Server with SSE Support Running!'));
+          console.log(chalk.green('✅ MCP-Compatible SSE Server Running!'));
           console.log('');
-          console.log(chalk.cyan('🔗 Available Endpoints:'));
-          console.log(chalk.white(`   📊 Server Health: http://localhost:${port}/health`));
-          console.log(chalk.white(`   📋 Tool Specification: http://localhost:${port}/mcp/spec`));
-          console.log(chalk.white(`   🔌 SSE Connection: http://localhost:${port}/sse/connect`));
-          console.log(chalk.white(`   🛠 SSE Tools List: http://localhost:${port}/sse/tools`));
-          console.log(chalk.white(`   ⚡ SSE MCP Tools: http://localhost:${port}/sse/mcp`));
+          console.log(chalk.cyan('🔗 MCP Inspector Connection:'));
+          console.log(chalk.white(`   Transport: SSE`));
+          console.log(chalk.white(`   Server URL: http://localhost:${port}/sse`));
           console.log('');
-          console.log(chalk.yellow('🧪 Testing Options:'));
-          console.log(chalk.gray('   1. Direct HTTP API testing: Use curl or Postman'));
-          console.log(chalk.gray('   2. SSE streaming: Connect to SSE endpoints for real-time events'));
-          console.log(chalk.gray('   3. Web interface: Build custom frontend using SSE endpoints'));
+          console.log(chalk.cyan('🛠 Available Endpoints:'));
+          console.log(chalk.white(`   📊 Health Check: http://localhost:${port}/health`));
+          console.log(chalk.white(`   📋 MCP Spec: http://localhost:${port}/mcp/spec`));
+          console.log(chalk.white(`   🔌 SSE Connection: http://localhost:${port}/sse`));
+          console.log(chalk.white(`   📨 MCP Messages: http://localhost:${port}/messages`));
           console.log('');
-          console.log(chalk.cyan('📝 Example SSE Usage:'));
-          console.log(chalk.gray('   curl -N http://localhost:' + port + '/sse/connect'));
-          console.log(chalk.gray('   curl -N http://localhost:' + port + '/sse/tools'));
+          console.log(chalk.yellow('🧪 MCP Inspector Usage:'));
+          console.log(chalk.gray('   1. npx @modelcontextprotocol/inspector'));
+          console.log(chalk.gray('   2. Transport: SSE'));
+          console.log(chalk.gray(`   3. URL: http://localhost:${port}/sse`));
+          console.log(chalk.gray('   4. Connect and test tools!'));
           console.log('');
-          console.log(chalk.cyan('📝 Example Tool Execution:'));
-          console.log(chalk.gray('   curl -X POST http://localhost:' + port + '/sse/mcp \\'));
-          console.log(chalk.gray('     -H "Content-Type: application/json" \\'));
-          console.log(chalk.gray('     -d \'{"tool": "huggingface_list_models", "parameters": {}}\''));
-          console.log('');
-          console.log(chalk.green('🎯 No STDIO Bridge Needed - Direct SSE Communication!'));
+          console.log(chalk.green('🎯 No STDIO Bridge Required - Direct JSON-RPC 2.0 over SSE!'));
           console.log(chalk.yellow('Press Ctrl+C to stop the server'));
         }, 2000);
 

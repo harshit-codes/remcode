@@ -22,7 +22,7 @@ to allow AI assistants to interact with the remcode tools.
 - `./swe-guidance-middleware`
 - `../utils/logger`
 - `./validation/simple-validator`
-- `./sse/sse-handler`
+- `./sse/mcp-sse-handler`
 
 ## Classes
 
@@ -48,7 +48,6 @@ interface MCPServerOptions {
 
 - `logger`
 - `corsOptions`
-- `connectionId`
 - `toolHandlers`
 - `validation`
 - `errorMessage`

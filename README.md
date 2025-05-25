@@ -112,18 +112,23 @@ npm install && npm run build
 ## 🧪 Testing & Development
 
 ### **MCP Inspector (Interactive Tool Testing)**
-Test all 27 MCP tools in a web interface:
+Test all MCP tools using the industry-standard MCP Inspector:
 
 ```bash
-# Easy way (new!)
+# 1. Start MCP server with SSE transport
 npx remcode inspector
 # OR
 remcode inspector  # if installed globally
 
-# Manual way
-npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
+# 2. Open MCP Inspector in another terminal
+npx @modelcontextprotocol/inspector
 
-# Opens: http://127.0.0.1:6274
+# 3. Configure connection in MCP Inspector UI:
+#    Transport: SSE
+#    Server URL: http://localhost:3008/sse (or displayed port)
+#    Click "Connect"
+
+# 4. Test tools interactively!
 ```
 
 **Available Tools:**
@@ -135,10 +140,7 @@ npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 - 🌲 **Pinecone**: pinecone_query, pinecone_list_indexes
 - 🤗 **HuggingFace**: huggingface_embed_code, huggingface_embed_query
 
-**Usage:**
-1. Click "Connect" → "List Tools"
-2. Select any tool and click "Run Tool"
-3. View results and debug in real-time
+**Protocol**: JSON-RPC 2.0 over Server-Sent Events (SSE) - industry standard!
 
 
 ## 🔧 Configuration
