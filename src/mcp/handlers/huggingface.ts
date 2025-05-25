@@ -26,43 +26,44 @@ interface ModelInfo {
 }
 
 // Working embedding models confirmed from HuggingFace Inference API documentation
+// Using the same models as EmbeddingManager for consistency
 const EMBEDDING_MODELS: Record<string, ModelInfo> = {
-  'intfloat/multilingual-e5-large-instruct': {
-    id: 'intfloat/multilingual-e5-large-instruct',
-    name: 'E5-Large-Instruct',
-    embeddingDimension: 1024,
-    strategy: 'text',
+  'microsoft/codebert-base': {
+    id: 'microsoft/codebert-base',
+    name: 'CodeBERT-Base',
+    embeddingDimension: 768,
+    strategy: 'code',
     apiType: 'feature_extraction'
   },
-  'sentence-transformers/all-MiniLM-L6-v2': {
-    id: 'sentence-transformers/all-MiniLM-L6-v2',
-    name: 'MiniLM-L6-v2',
-    embeddingDimension: 384,
-    strategy: 'text',
-    apiType: 'feature_extraction'
-  },
-  'sentence-transformers/all-mpnet-base-v2': {
-    id: 'sentence-transformers/all-mpnet-base-v2',
-    name: 'MPNet-Base',
+  'BAAI/bge-base-en-v1.5': {
+    id: 'BAAI/bge-base-en-v1.5',
+    name: 'BGE-Base',
     embeddingDimension: 768,
     strategy: 'text',
     apiType: 'feature_extraction'
   },
-  'thenlper/gte-large': {
-    id: 'thenlper/gte-large',
-    name: 'GTE-Large',
-    embeddingDimension: 1024,
+  'sentence-transformers/all-MiniLM-L12-v2': {
+    id: 'sentence-transformers/all-MiniLM-L12-v2',
+    name: 'MiniLM-L12',
+    embeddingDimension: 384,
+    strategy: 'text',
+    apiType: 'feature_extraction'
+  },
+  'BAAI/bge-small-en-v1.5': {
+    id: 'BAAI/bge-small-en-v1.5',
+    name: 'BGE-Small',
+    embeddingDimension: 384,
     strategy: 'text',
     apiType: 'feature_extraction'
   }
 };
 
-// Model hierarchy: E5-Large -> MiniLM -> MPNet -> GTE
-const DEFAULT_MODEL = EMBEDDING_MODELS['intfloat/multilingual-e5-large-instruct'];
+// Model hierarchy: CodeBERT -> BGE-Base -> MiniLM -> BGE-Small (same as EmbeddingManager)
+const DEFAULT_MODEL = EMBEDDING_MODELS['microsoft/codebert-base'];
 const FALLBACK_MODELS = [
-  'sentence-transformers/all-MiniLM-L6-v2',
-  'sentence-transformers/all-mpnet-base-v2',
-  'thenlper/gte-large'
+  'BAAI/bge-base-en-v1.5',
+  'sentence-transformers/all-MiniLM-L12-v2',
+  'BAAI/bge-small-en-v1.5'
 ];
 
 export class HuggingFaceMCPHandler {
@@ -74,19 +75,24 @@ export class HuggingFaceMCPHandler {
 
   constructor(options: HuggingFaceMCPOptions) {
     this.options = options;
+    console.log(`🔧 [FORCE LOG] HuggingFace handler created with token: ${options.token ? options.token.substring(0, 10) + '...' : 'MISSING'}`);
+    logger.debug(`🔧 HuggingFace handler created with token: ${options.token ? options.token.substring(0, 10) + '...' : 'MISSING'}`);
   }
 
   async initialize(): Promise<void> {
     try {
+      logger.debug(`🔧 HuggingFace initialize called with token: ${this.options.token ? this.options.token.substring(0, 10) + '...' : 'MISSING'}`);
+      
       if (!this.options.token) {
         logger.warn('HuggingFace token not provided. HuggingFace MCP handler will not be fully functional.');
         return;
       }
 
-      // Test and find a working model
-      await this.findWorkingModel();
+      // Temporary: Use known working model directly for debugging
+      this.workingModel = 'microsoft/codebert-base';
       this.initialized = true;
-      logger.info(`HuggingFace MCP handler initialized successfully with model: ${this.workingModel}`);
+      logger.info(`🔧 HuggingFace MCP handler initialized successfully with model: ${this.workingModel}`);
+      logger.info(`🔧 Token available: ${this.options.token.substring(0, 10)}...`);
     } catch (error) {
       logger.error(`Failed to initialize HuggingFace MCP handler: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
@@ -208,24 +214,34 @@ export class HuggingFaceMCPHandler {
 
   /**
    * Get embedding from model using correct HuggingFace Inference API format
+   * Uses the same patterns as the working EmbeddingManager
    */
   private async getEmbeddingFromModel(text: string, modelId: string): Promise<number[]> {
+    // Preprocess text
+    const processedText = this.preprocessText(text);
+    const modelInfo = EMBEDDING_MODELS[modelId] || DEFAULT_MODEL;
+    
+    // Declare variables in function scope for error logging
+    let requestBody: any = {};
+    let apiUrl: string = '';
+    
     try {
-      // Preprocess text
-      const processedText = this.preprocessText(text);
-      const modelInfo = EMBEDDING_MODELS[modelId] || DEFAULT_MODEL;
-      
-      // Use correct format for HuggingFace Inference API
-      const requestBody = { 
-        inputs: processedText,
-        options: { 
-          wait_for_model: true,
-          use_cache: false
-        }
-      };
-      
-      // Use standard model API endpoint
-      const apiUrl = `${this.baseUrl}/${modelId}`;
+      // Use different API formats for different model types (corrected based on testing)
+      if (modelId.includes('sentence-transformers')) {
+        // For sentence transformers, use array format
+        requestBody = { 
+          inputs: [processedText], // Array format for sentence transformers
+          options: { wait_for_model: true }
+        };
+        apiUrl = `${this.baseUrl}/${modelId}`;
+      } else {
+        // For all other models (including CodeBERT), use standard endpoint
+        requestBody = { 
+          inputs: processedText,
+          options: { wait_for_model: true }
+        };
+        apiUrl = `${this.baseUrl}/${modelId}`;
+      }
       
       const response = await axios.post(
         apiUrl,
@@ -239,32 +255,37 @@ export class HuggingFaceMCPHandler {
         }
       );
       
+      logger.debug(`✅ API call successful for ${modelId}: ${response.status}`);
       return this.processEmbeddingResult(response.data, modelInfo);
     } catch (error) {
       logger.error(`Error generating embeddings with ${modelId}: ${error instanceof Error ? error.message : String(error)}`);
-      if (axios.isAxiosError(error) && error.response) {
-        logger.error(`API Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          logger.error(`API Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+          logger.error(`Request URL: ${apiUrl}`);
+          logger.error(`Request Body: ${JSON.stringify(requestBody)}`);
+          logger.error(`Auth Header: Bearer ${this.options.token.substring(0, 10)}...`);
+        } else if (error.request) {
+          logger.error(`No response received: ${error.request}`);
+        } else {
+          logger.error(`Request setup error: ${error.message}`);
+        }
       }
       throw error;
     }
   }
 
   /**
-   * Process embedding result from API
+   * Process embedding result from API (same logic as EmbeddingManager)
    */
   private processEmbeddingResult(result: any, modelInfo: ModelInfo): number[] {
-    // Most models return direct array of numbers for single input
+    // BGE models return direct array of numbers - perfect!
     if (Array.isArray(result) && typeof result[0] === 'number') {
       return result as number[];
     }
     
-    // Handle nested arrays (some models return array of arrays)
-    if (Array.isArray(result) && Array.isArray(result[0])) {
-      // For single input, return the first embedding
-      if (result.length === 1) {
-        return result[0] as number[];
-      }
-      // For multiple tokens, average them
+    // Handle array of token embeddings (average them)
+    if (Array.isArray(result) && Array.isArray(result[0]) && typeof result[0][0] === 'number') {
       return this.averageEmbeddings(result as number[][]);
     }
     
@@ -273,18 +294,24 @@ export class HuggingFaceMCPHandler {
       return result.embedding;
     }
     
+    // Default: try to extract first array
+    if (Array.isArray(result) && result.length > 0) {
+      return Array.isArray(result[0]) ? result[0] : result;
+    }
+    
     throw new Error(`Unexpected embedding result format for ${modelInfo.name}: ${JSON.stringify(result).substring(0, 200)}...`);
   }
 
   /**
-   * Preprocess text for better embedding quality
+   * Preprocess text for better embedding quality (same as EmbeddingManager)
    */
   private preprocessText(text: string): string {
+    // Remove excessive whitespace but preserve code structure
     let processed = text.replace(/\s+/g, ' ').trim();
     
-    // Limit length to avoid API limits
-    if (processed.length > 500) {
-      processed = processed.substring(0, 500);
+    // Limit length to avoid API limits (CodeBERT works well with 512 tokens)
+    if (processed.length > 400) {
+      processed = processed.substring(0, 400);
     }
     
     return processed;
@@ -318,6 +345,9 @@ export class HuggingFaceMCPHandler {
     const requestParams = params || req.body;
     const { code, model, batch = false } = requestParams;
 
+    logger.debug(`🔧 handleEmbedCode called with: code length=${code?.length}, model=${model}, batch=${batch}`);
+    logger.debug(`🔧 Current working model: ${this.workingModel}`);
+
     if (!code) {
       res.status(400).json({ error: 'Code content is required' });
       return;
@@ -326,6 +356,7 @@ export class HuggingFaceMCPHandler {
     try {
       // Use working model or specified model
       const modelToUse = model || this.workingModel;
+      logger.debug(`🔧 Using model: ${modelToUse}`);
       
       if (batch && Array.isArray(code)) {
         // Handle batch embedding
@@ -338,6 +369,7 @@ export class HuggingFaceMCPHandler {
       } else {
         // Handle single embedding
         const embedding = await this.getEmbeddings(code, modelToUse);
+        logger.debug(`✅ Successfully generated embedding with dimension: ${embedding.length}`);
         res.status(200).json({ embedding });
       }
     } catch (error) {

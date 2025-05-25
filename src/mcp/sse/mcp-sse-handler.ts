@@ -247,10 +247,10 @@ export class MCPSSEHandler {
       let result: any;
 
       if (toolName === 'huggingface_list_models') {
-        result = await this.callHandlerMethod(toolHandlers.huggingface, 'handleListModels', {});
+        result = await this.callHandlerMethod(toolHandlers.huggingface, 'handleToolRequest', { tool: 'huggingface_list_models', parameters: {} });
       }
       else if (toolName === 'huggingface_embed_code') {
-        result = await this.callHandlerMethod(toolHandlers.huggingface, 'handleEmbedCode', toolArgs);
+        result = await this.callHandlerMethod(toolHandlers.huggingface, 'handleToolRequest', { tool: 'huggingface_embed_code', parameters: toolArgs });
       }
       else if (toolName === 'pinecone_query') {
         result = await this.callHandlerMethod(toolHandlers.pinecone, 'handleQuery', toolArgs);
