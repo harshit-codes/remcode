@@ -8,9 +8,16 @@ const logger = getLogger('RemcodeConfigManager');
 /**
  * Available embedding models
  */
+/**
+ * Available embedding models (Inference API compatible)
+ */
 export enum EmbeddingModel {
-  GRAPHCODEBERT = 'microsoft/graphcodebert-base',
   CODEBERT = 'microsoft/codebert-base',
+  BGE_BASE = 'BAAI/bge-base-en-v1.5',
+  BGE_SMALL = 'BAAI/bge-small-en-v1.5',
+  MINILM = 'sentence-transformers/all-MiniLM-L12-v2',
+  // Legacy models (may not be available via Inference API)
+  GRAPHCODEBERT = 'microsoft/graphcodebert-base',
   UNIXCODER = 'microsoft/unixcoder-base',
   CODELLAMA = 'codellama/CodeLlama-7b-hf'
 }
@@ -65,11 +72,13 @@ export interface VectorizationConfig {
   provider: VectorProvider;
   indexName: string;
   namespace: string;
-  embeddingModel: EmbeddingModel;
+  embeddingModel: EmbeddingModel | string;
+  embeddingModelName?: string;
   embeddingDimension: number;
   chunkSize?: number;
-  chunkOverlap?: number;
-  customEndpoint?: string;
+  modelHealthy?: boolean;
+  lastModelCheck?: string;
+  availableModels?: Array<{ id: string; name: string; isHealthy: boolean; }>;
 }
 
 /**
@@ -387,10 +396,13 @@ export class RemcodeConfigManager {
         provider: VectorProvider.PINECONE,
         indexName: `remcode-${repo.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
         namespace: 'main',
-        embeddingModel: EmbeddingModel.GRAPHCODEBERT,
+        embeddingModel: EmbeddingModel.CODEBERT,
+        embeddingModelName: 'CodeBERT-Base',
         embeddingDimension: 768,
         chunkSize: 1000,
-        chunkOverlap: 200
+        modelHealthy: false,
+        lastModelCheck: new Date().toISOString(),
+        availableModels: []
       },
       statistics: {
         filesProcessed: 0,
@@ -486,10 +498,6 @@ export class RemcodeConfigManager {
       // Add new fields to vectorization
       if (!config.vectorization.chunkSize) {
         config.vectorization.chunkSize = 1000;
-      }
-      
-      if (!config.vectorization.chunkOverlap) {
-        config.vectorization.chunkOverlap = 200;
       }
       
       // Update version

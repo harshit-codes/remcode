@@ -17,9 +17,25 @@ interface ModelInfo {
   apiType: 'feature_extraction' | 'sentence_similarity';
 }
 
-// Working embedding models with their configurations
+// Working embedding models available on HuggingFace Inference API (Free Tier Compatible)
 const EMBEDDING_MODELS: Record<string, ModelInfo> = {
-  // Using models that work well with feature extraction API
+  // Primary code-specific model (Inference API compatible)
+  'microsoft/codebert-base': {
+    id: 'microsoft/codebert-base',
+    name: 'CodeBERT-Base',
+    embeddingDimension: 768,
+    strategy: 'code',
+    apiType: 'feature_extraction'
+  },
+  // High-quality general embedding model (works well with code)
+  'BAAI/bge-base-en-v1.5': {
+    id: 'BAAI/bge-base-en-v1.5',
+    name: 'BGE-Base',
+    embeddingDimension: 768,
+    strategy: 'text',
+    apiType: 'feature_extraction'
+  },
+  // Lightweight fallback model
   'sentence-transformers/all-MiniLM-L12-v2': {
     id: 'sentence-transformers/all-MiniLM-L12-v2',
     name: 'MiniLM-L12',
@@ -27,29 +43,26 @@ const EMBEDDING_MODELS: Record<string, ModelInfo> = {
     strategy: 'text',
     apiType: 'feature_extraction'
   },
+  // Small BGE model for rate-limited scenarios
   'BAAI/bge-small-en-v1.5': {
     id: 'BAAI/bge-small-en-v1.5',
     name: 'BGE-Small',
     embeddingDimension: 384,
     strategy: 'text',
     apiType: 'feature_extraction'
-  },
-  'BAAI/bge-base-en-v1.5': {
-    id: 'BAAI/bge-base-en-v1.5',
-    name: 'BGE-Base',
-    embeddingDimension: 768,
-    strategy: 'text',
-    apiType: 'feature_extraction'
   }
 };
 
-const DEFAULT_MODEL = EMBEDDING_MODELS['BAAI/bge-base-en-v1.5'];
-const FALLBACK_MODEL = EMBEDDING_MODELS['BAAI/bge-small-en-v1.5'];
+// Updated model hierarchy: CodeBERT -> BGE-Base -> MiniLM -> BGE-Small
+const DEFAULT_MODEL = EMBEDDING_MODELS['microsoft/codebert-base'];
+const FALLBACK_MODEL = EMBEDDING_MODELS['BAAI/bge-base-en-v1.5'];
+const LIGHTWEIGHT_MODEL = EMBEDDING_MODELS['sentence-transformers/all-MiniLM-L12-v2'];
 
 export class EmbeddingManager {
   private options: EmbeddingManagerOptions;
   private hfClient: HfInference | null = null;
   private apiBaseUrl = 'https://api-inference.huggingface.co/models';
+  private healthCheckedModels: Set<string> = new Set();
 
   constructor(options: EmbeddingManagerOptions) {
     this.options = {
@@ -67,6 +80,106 @@ export class EmbeddingManager {
   }
 
   /**
+   * Initialize and validate the embedding model
+   * Tests the primary model and falls back to alternatives if needed
+   * @returns The initialized model ID and configuration
+   */
+  async initializeModel(): Promise<{ modelId: string; modelInfo: ModelInfo; isHealthy: boolean }> {
+    if (!this.options.token) {
+      logger.error('No HuggingFace token available for model initialization');
+      throw new Error('HuggingFace token is required for model initialization');
+    }
+
+    const modelsToTry = [
+      this.options.primary || DEFAULT_MODEL.id,
+      FALLBACK_MODEL.id,
+      LIGHTWEIGHT_MODEL.id,
+      'BAAI/bge-small-en-v1.5'
+    ].filter((id, index, array) => array.indexOf(id) === index); // Remove duplicates
+
+    logger.info(`🔧 Initializing embedding model. Testing models: ${modelsToTry.join(', ')}`);
+
+    for (const modelId of modelsToTry) {
+      try {
+        logger.debug(`Testing model: ${modelId}`);
+        const isHealthy = await this.checkModelHealth(modelId);
+        
+        if (isHealthy) {
+          const modelInfo = EMBEDDING_MODELS[modelId] || DEFAULT_MODEL;
+          logger.info(`✅ Model initialized successfully: ${modelInfo.name} (${modelId})`);
+          
+          // Update options with working model
+          this.options.primary = modelId;
+          this.options.dimension = modelInfo.embeddingDimension;
+          
+          return { modelId, modelInfo, isHealthy: true };
+        }
+      } catch (error) {
+        logger.warn(`❌ Model ${modelId} failed health check: ${error instanceof Error ? error.message : String(error)}`);
+        continue;
+      }
+    }
+
+    // If all models fail, return the primary model anyway but mark as unhealthy
+    const fallbackModelId = this.options.primary || DEFAULT_MODEL.id;
+    const fallbackModelInfo = EMBEDDING_MODELS[fallbackModelId] || DEFAULT_MODEL;
+    logger.error(`🚨 All models failed health checks. Using ${fallbackModelId} as fallback.`);
+    
+    return { 
+      modelId: fallbackModelId, 
+      modelInfo: fallbackModelInfo, 
+      isHealthy: false 
+    };
+  }
+
+  /**
+   * Check if a model is healthy and available via Inference API
+   * @param modelId The model ID to check
+   * @returns True if the model is available and working
+   */
+  async checkModelHealth(modelId: string): Promise<boolean> {
+    if (this.healthCheckedModels.has(modelId)) {
+      return true; // Already verified this session
+    }
+
+    try {
+      // Use a simple test input for health check
+      const testInput = "function test() { return 'hello world'; }";
+      const embedding = await this.getEmbeddingFromModel(testInput, modelId);
+      
+      if (embedding && embedding.length > 0) {
+        this.healthCheckedModels.add(modelId);
+        logger.debug(`✅ Model health check passed: ${modelId} (dimension: ${embedding.length})`);
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      logger.debug(`❌ Model health check failed: ${modelId} - ${error instanceof Error ? error.message : String(error)}`);
+      return false;
+    }
+  }
+
+  /**
+   * Get available models with their health status
+   * @returns Array of available models with health information
+   */
+  async getAvailableModelsWithHealth(): Promise<Array<ModelInfo & { isHealthy: boolean }>> {
+    const results = [];
+    
+    for (const [modelId, modelInfo] of Object.entries(EMBEDDING_MODELS)) {
+      try {
+        const isHealthy = await this.checkModelHealth(modelId);
+        results.push({ ...modelInfo, isHealthy });
+      } catch (error) {
+        results.push({ ...modelInfo, isHealthy: false });
+      }
+    }
+    
+    return results;
+  }
+
+  /**
    * Embeds code chunks using the specified model
    * @param chunks Array of code chunks to embed
    * @returns The chunks with embeddings added
@@ -76,7 +189,13 @@ export class EmbeddingManager {
       return [];
     }
 
-    logger.info(`Embedding ${chunks.length} chunks with ${this.options.primary}`);
+    // Ensure we have a working model before processing
+    if (!this.healthCheckedModels.has(this.options.primary)) {
+      logger.info('🔧 Initializing embedding model for chunk processing...');
+      await this.initializeModel();
+    }
+
+    logger.info(`📊 Embedding ${chunks.length} chunks with ${this.options.primary} (${this.getModelInfo().name})`);
     
     if (!this.options.token) {
       logger.warn('No HuggingFace token available. Returning random embeddings as fallback.');

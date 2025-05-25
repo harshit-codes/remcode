@@ -7,6 +7,7 @@ import { RemcodeConfigManager } from '../../setup/remcode-config';
 import { SecretsManager } from '../../setup/secrets';
 import { WorkflowGenerator } from '../../workflows/generator';
 import { WorkflowTemplateType } from '../../setup/workflow-generator';
+import { ModelInitializer, ModelInitializationResult } from '../../setup/model-initializer';
 
 const logger = getLogger('SetupMCPHandler');
 
@@ -154,6 +155,60 @@ export class SetupMCPHandler {
         // Non-fatal, continue with setup
       }
       
+      // Initialize embedding model (critical for vectorization)
+      let modelInitResult: ModelInitializationResult = { 
+        success: false, 
+        modelId: '', 
+        modelName: '', 
+        embeddingDimension: 0, 
+        isHealthy: false,
+        error: undefined,
+        availableModels: []
+      };
+      try {
+        const huggingfaceToken = process.env.HUGGINGFACE_TOKEN;
+        if (huggingfaceToken) {
+          logger.info('🔧 Initializing embedding model for codebase vectorization...');
+          
+          const modelInitializer = new ModelInitializer(huggingfaceToken);
+          modelInitResult = await modelInitializer.initializeEmbeddingModel({
+            token: huggingfaceToken,
+            preferredModel: 'microsoft/codebert-base',
+            testEmbedding: true
+          });
+
+          if (modelInitResult.success) {
+            logger.info(`✅ Embedding model initialized: ${modelInitResult.modelName} (${modelInitResult.modelId})`);
+            
+            // Update config with model information
+            try {
+              const modelConfig = ModelInitializer.getModelConfiguration(modelInitResult);
+              const currentConfig = await this.configManager.readConfig();
+              const updatedConfig = {
+                ...currentConfig,
+                vectorization: {
+                  ...currentConfig.vectorization,
+                  ...modelConfig
+                }
+              };
+              await this.configManager.updateConfig(updatedConfig);
+              logger.info('📝 Model configuration saved to .remcode file');
+            } catch (configUpdateError) {
+              logger.warn(`Warning: Could not update config with model info: ${configUpdateError instanceof Error ? configUpdateError.message : String(configUpdateError)}`);
+            }
+          } else {
+            logger.warn(`⚠️ Model initialization failed: ${modelInitResult.error || 'Unknown error'}`);
+            logger.warn('🔄 Proceeding with setup - embeddings may use fallback models');
+          }
+        } else {
+          logger.warn('⚠️ No HuggingFace token found. Skipping model initialization.');
+          logger.info('💡 Add HUGGINGFACE_TOKEN to environment variables for embedding functionality');
+        }
+      } catch (modelError) {
+        logger.error(`❌ Model initialization failed: ${modelError instanceof Error ? modelError.message : String(modelError)}`);
+        logger.warn('🔄 Proceeding with setup - embeddings will use fallback models');
+      }
+      
       // Generate workflows if not skipped
       let workflowResult;
       if (!skipWorkflows) {
@@ -201,7 +256,15 @@ export class SetupMCPHandler {
         repository: { owner, repo, branch },
         config: configResult?.success ? 'configured' : 'skipped',
         workflows: workflowResult && 'success' in workflowResult && workflowResult.success ? 'generated' : (skipWorkflows ? 'skipped' : 'failed'),
-        secrets: secretsResult?.success ? 'configured' : (skipSecrets ? 'skipped' : 'failed')
+        secrets: secretsResult?.success ? 'configured' : (skipSecrets ? 'skipped' : 'failed'),
+        embeddings: {
+          status: modelInitResult.success ? 'initialized' : 'failed',
+          modelId: modelInitResult.modelId,
+          modelName: modelInitResult.modelName,
+          dimension: modelInitResult.embeddingDimension,
+          healthy: modelInitResult.isHealthy,
+          availableModels: modelInitResult.availableModels?.length || 0
+        }
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);

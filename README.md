@@ -44,6 +44,7 @@ npm install && npm run build
 - **🤖 Zero-Setup AI Integration**: Automatic processing via GitHub Actions - no local setup required
 - **🔗 MCP Protocol Support**: Direct integration with AI assistants like Claude, ChatGPT, and others
 - **🧠 Codebase-Aware Intelligence**: ✅ **WORKING** - Real CodeBERT embeddings analyze your code patterns, architecture, and conventions
+- **🎯 Smart Model Initialization**: ✅ **NEW** - Automatic deployment and validation of CodeBERT models via HuggingFace Inference API
 - **📊 Incremental Processing**: Only analyzes changed files for efficient continuous integration
 - **🔍 Semantic Code Search**: ✅ **FOUNDATION READY** - Vectorization pipeline functional, search layer in development
 - **🎯 Enhanced SWE Best Practices**: ✅ **NEW** - Comprehensive guidance across 13 software engineering scenarios with automatic injection
@@ -66,11 +67,12 @@ npm install && npm run build
 1. **Prerequisites Check**: Verify `.git` exists, no uncommitted changes, GitHub repository access
 2. **Setup Heads-up**: Inform user about initial setup process and files that will be created
 3. **User Confirmation**: Wait for user to confirm proceeding with automated setup
-4. **Repository Setup**: Use GitHub API to configure repository secrets (Pinecone, HuggingFace)
-5. **Workflow Generation & Commit**: Create `.github/workflows/remcode.yml` file and auto-commit changes
-6. **Initial Processing**: GitHub Actions automatically triggered, analyzes entire codebase
-7. **Vectorization**: Generate embeddings and store in Pinecone with metadata
-8. **Configuration**: Create `.remcode` file with project settings and processing state
+4. **Model Initialization**: Deploy and validate CodeBERT embedding model via HuggingFace Inference API
+5. **Repository Setup**: Use GitHub API to configure repository secrets (Pinecone, HuggingFace)
+6. **Workflow Generation & Commit**: Create `.github/workflows/remcode.yml` file and auto-commit changes
+7. **Initial Processing**: GitHub Actions automatically triggered, analyzes entire codebase
+8. **Vectorization**: Generate embeddings using initialized CodeBERT model and store in Pinecone
+9. **Configuration**: Create `.remcode` file with project settings, model configuration, and processing state
 
 ### **Phase 2: Continuous Updates (Incremental Processing)**
 
@@ -168,8 +170,23 @@ After initialization, your repository will contain a `.remcode` file:
     "provider": "pinecone",
     "indexName": "remcode-my-awesome-project",
     "namespace": "main",
-    "embeddingModel": "microsoft/graphcodebert-base",
-    "embeddingDimension": 768
+    "embeddingModel": "microsoft/codebert-base",
+    "embeddingModelName": "CodeBERT-Base",
+    "embeddingDimension": 768,
+    "modelHealthy": true,
+    "lastModelCheck": "2025-05-22T10:30:45Z",
+    "availableModels": [
+      {
+        "id": "microsoft/codebert-base",
+        "name": "CodeBERT-Base", 
+        "isHealthy": true
+      },
+      {
+        "id": "BAAI/bge-base-en-v1.5",
+        "name": "BGE-Base",
+        "isHealthy": true
+      }
+    ]
   },
   
   "chunking": {

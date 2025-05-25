@@ -4,6 +4,17 @@
 
 ## Overview
 
+Initialize and validate the embedding model
+Tests the primary model and falls back to alternatives if needed
+@returns The initialized model ID and configuration
+
+Check if a model is healthy and available via Inference API
+@param modelId The model ID to check
+@returns True if the model is available and working
+
+Get available models with their health status
+@returns Array of available models with health information
+
 Embeds code chunks using the specified model
 @param chunks Array of code chunks to embed
 @returns The chunks with embeddings added
@@ -56,12 +67,31 @@ interface ModelInfo {
 }
 ```
 
+## Functions
+
+### `test()`
+
+```typescript
+export function test()
+```
+
 ## Variables
 
 - `logger`
 - `EMBEDDING_MODELS`
 - `DEFAULT_MODEL`
 - `FALLBACK_MODEL`
+- `LIGHTWEIGHT_MODEL`
+- `modelsToTry`
+- `modelId`
+- `isHealthy`
+- `modelInfo`
+- `fallbackModelId`
+- `fallbackModelInfo`
+- `testInput`
+- `embedding`
+- `results`
+- `isHealthy`
 - `result`
 - `i`
 - `chunk`

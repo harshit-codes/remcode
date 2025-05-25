@@ -6,6 +6,8 @@
 
 Available embedding models
 
+Available embedding models (Inference API compatible)
+
 Vector DB providers
 
 Processing status values

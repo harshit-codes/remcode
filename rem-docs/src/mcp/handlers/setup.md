@@ -25,6 +25,7 @@ Generate repository workflows
 - `../../setup/secrets`
 - `../../workflows/generator`
 - `../../setup/workflow-generator`
+- `../../setup/model-initializer`
 
 ## Classes
 
@@ -63,6 +64,12 @@ interface SetupOptions {
 - `exists`
 - `defaultConfig`
 - `currentConfig`
+- `modelInitResult`
+- `huggingfaceToken`
+- `modelInitializer`
+- `modelConfig`
+- `currentConfig`
+- `updatedConfig`
 - `workflowResult`
 - `secretsResult`
 - `secretsOperationResult`
