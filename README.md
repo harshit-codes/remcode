@@ -243,78 +243,29 @@ npx remcode inspector  # Easy way!
 # OR: npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
 # Opens: http://127.0.0.1:6274 - Test all 27 tools interactively
 
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### **Development & Testing:**
+```bash
+# Setup
+npm install && npm run build
+
+# Testing - All suites now operational
+npm run test:unit         # Core functionality tests
+npm run test:integration  # Integration tests  
+npm run test:mcp         # MCP server tests
+npm run test:e2e         # End-to-end tests
+npm run test:performance # Performance benchmarks
+
+# Interactive MCP Testing
+npx remcode inspector  # Easy way!
+# Opens MCP Inspector for interactive tool testing
+
 # Documentation
 npm run docs             # Regenerate all -rem.md files
 ```
-
-## 🚀 Next Steps & Future Development
-
-### **✅ Current Status: Model Initialization Complete + Enhanced NPX Package + Comprehensive Testing Framework!**
-
-Remcode now offers a **production-ready codebase analysis experience** with:
-- 🤖 **Programmatic Model Deployment**: Automatic CodeBERT initialization via HuggingFace Inference API
-- 🔧 **Smart Model Management**: Intelligent health checking and fallback strategies  
-- 🔑 Smart token management and auto-detection
-- 🚪 Intelligent port conflict resolution  
-- ⚡ <30-second setup from fresh install to working MCP server
-- 🎯 Clear status messages and helpful error guidance
-- **🧪 NEW: Comprehensive automated testing framework with real-world validation**
-
-### **🤖 MODEL INITIALIZATION DELIVERED (Session: 2025-05-25)**
-
-#### **📊 Free-Tier HuggingFace Strategy Implemented**
-**Zero-Cost Model Deployment with Intelligent Fallbacks!**
-
-**✅ Model Hierarchy (Production Ready):**
-- **Primary**: `microsoft/codebert-base` (768-dim, code-optimized) ✅
-- **Fallback**: `BAAI/bge-base-en-v1.5` (768-dim, general-purpose) ✅  
-- **Lightweight**: `sentence-transformers/all-MiniLM-L12-v2` (384-dim, fast) ✅
-- **All models** compatible with HuggingFace Inference API free tier ✅
-
-#### **🔧 Key Technical Features**
-- **Zero Configuration**: Models initialize automatically during repository setup
-- **Health Checking**: Validates model availability before processing
-- **Intelligent Fallbacks**: Switches to available models if primary fails
-- **Enhanced Metadata**: Model status and health stored in `.remcode` configuration
-- **Setup Integration**: Seamless integration with `setup-repository` MCP call
-
-### **🧪 TESTING FRAMEWORK DELIVERED (Session: 2025-05-24)**
-
-#### **📊 MCP Tools Validation Results**
-**Overall Success Rate: 3/6 tools (50%) - Significant Progress!**
-
-**✅ Working Tools (Production Ready):**
-- **GitHub Tool** - Repository information retrieval ✅
-- **Pinecone Tool** - Vector database operations ✅  
-- **Processing Tool** - Workflow management ✅
-
-**🔧 Issues Identified & Action Items:**
-- **Setup Tool** - Git configuration requirements identified and resolved
-- **Search Tool** - Working correctly, needs repository processing to populate results
-- **HuggingFace Tool** - API connectivity issue requiring investigation
-
-#### **🎯 Smart Testing Strategy**
-Created production-ready automated testing in **separate `remcode-test` project**:
-- **No file migration** between projects - clean separation
-- **Real JavaScript patterns** - AuthManager, TaskManager, design patterns
-- **15+ search scenarios** - authentication, async patterns, factories, singletons
-- **Automated test suites** - MCP tools, pipeline, search accuracy validation
-
-#### **📋 Key Technical Discoveries**
-- **MCP Server Architecture**: ✅ All 35 tools properly defined, correct endpoint routing
-- **Search Engine Status**: ✅ Query processing working, performance 250-1500ms
-- **Integration Points**: GitHub/Pinecone functional, HuggingFace needs debugging
-- **Repository Requirements**: Git remote + initial processing needed for search results
-
-
-### **🤝 Contributing**
-
-We welcome contributions! The enhanced NPX package provides a solid foundation for:
-- **User Experience Improvements**: Building on our token/port management
-- **Core Feature Development**: Leveraging the production-ready infrastructure
-- **Documentation & Examples**: Helping new users get started quickly
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
 
 ### 📦 Tech Stack
 
