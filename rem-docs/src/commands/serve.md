@@ -28,6 +28,8 @@ export function serveCommand()
 ## Variables
 
 - `logger`
+- `logLevel`
+- `envLevel`
 - `preferredPort`
 - `selectedPort`
 - `tokenManager`

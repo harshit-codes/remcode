@@ -16,10 +16,11 @@ Find a working embedding model from our hierarchy
 Check if a model is healthy and available
 
 Get embedding from model using correct HuggingFace Inference API format
+Uses the same patterns as the working EmbeddingManager
 
-Process embedding result from API
+Process embedding result from API (same logic as EmbeddingManager)
 
-Preprocess text for better embedding quality
+Preprocess text for better embedding quality (same as EmbeddingManager)
 
 Average token embeddings to get a single vector
 
@@ -62,6 +63,12 @@ interface ModelInfo {
 
 ```typescript
 export function test()
+```
+
+### `scope()`
+
+```typescript
+export function scope()
 ```
 
 ## Variables
