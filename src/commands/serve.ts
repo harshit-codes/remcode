@@ -121,7 +121,7 @@ export function serveCommand(program: Command): void {
           console.log(chalk.cyan('📍 Server Information:'));
           console.log(`   🌐 URL: ${chalk.white(`http://${options.host}:${selectedPort}`)}`);
           console.log(`   🔗 Health Check: ${chalk.white(`http://${options.host}:${selectedPort}/health`)}`);
-          console.log(`   📊 API Spec: ${chalk.white(`http://${options.host}:${selectedPort}/v1/mcp/spec`)}`);
+          console.log(`   📊 API Spec: ${chalk.white(`http://${options.host}:${selectedPort}/mcp/spec`)}`);
           console.log('');
           
           // Display token status

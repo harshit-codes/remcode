@@ -17,6 +17,7 @@ import { RepositoryMCPHandler } from './handlers/repository';
 import { RemcodeMCPHandler } from './handlers/remcode';
 // import { SWEGuidanceMiddleware } from "./swe-guidance-middleware"; // Temporarily disabled
 import { getLogger } from '../utils/logger';
+import { SimpleValidator } from './validation/simple-validator';
 
 const logger = getLogger('MCP-Server');
 
@@ -101,8 +102,8 @@ export class MCPServer {
       res.status(200).json({ status: 'OK' });
     });
     
-    // MCP Specification endpoint
-    this.app.get('/v1/mcp/spec', (req, res) => {
+    // MCP Specification endpoint (simplified route)
+    this.app.get('/mcp/spec', (req, res) => {
       res.status(200).json({
         name: 'remcode-mcp',
         version: '0.1.0',
@@ -415,72 +416,110 @@ export class MCPServer {
       });
     });
     
-    // Register MCP endpoints
-    this.app.post('/v1/mcp/pinecone/:action', this.pineconeHandler.handleRequest.bind(this.pineconeHandler));
-    this.app.post('/v1/mcp/github/:action', this.githubHandler.handleRequest.bind(this.githubHandler));
-    this.app.post('/v1/mcp/huggingface/:action', this.huggingfaceHandler.handleRequest.bind(this.huggingfaceHandler));
+    // Register MCP endpoints (simplified routes)
+    this.app.post('/mcp/pinecone/:action', this.pineconeHandler.handleRequest.bind(this.pineconeHandler));
+    this.app.post('/mcp/github/:action', this.githubHandler.handleRequest.bind(this.githubHandler));
+    this.app.post('/mcp/huggingface/:action', this.huggingfaceHandler.handleRequest.bind(this.huggingfaceHandler));
     
-    // Main MCP endpoint that routes to the appropriate handler
-    this.app.post('/v1/mcp', (req, res) => {
+    // Main MCP endpoint with ONE-SHOT VALIDATION for ALL tools
+    this.app.post('/mcp', async (req, res) => {
       const { tool } = req.body;
       
-      if (tool && tool.startsWith('pinecone_')) {
-        return this.pineconeHandler.handleToolRequest(req, res);
-      } else if (tool && tool.startsWith('github_')) {
-        return this.githubHandler.handleToolRequest(req, res);
-      } else if (tool && tool.startsWith('huggingface_')) {
-        return this.huggingfaceHandler.handleToolRequest(req, res);
-      } else if (tool === 'setup-repository') {
-        return this.setupHandler.handleSetupRepository(req, res, req.body.parameters);
-      } else if (tool === 'check-prerequisites') {
-        return this.setupHandler.handleCheckPrerequisites(req, res, req.body.parameters);
-      } else if (tool === 'configure-repository') {
-        return this.setupHandler.handleConfigureRepository(req, res, req.body.parameters);
-      } else if (tool === 'setup-secrets') {
-        return this.setupHandler.handleSetupSecrets(req, res, req.body.parameters);
-      } else if (tool === 'generate-workflows') {
-        return this.setupHandler.handleGenerateWorkflows(req, res, req.body.parameters);
-      } else if (tool === 'search') {
-        return this.searchHandler.handleSearch(req, res, req.body.parameters);
-      } else if (tool === 'search_code') {
-        return this.searchHandler.handleSearchCode(req, res, req.body.parameters);
-      } else if (tool === 'get_code_context') {
-        return this.searchHandler.handleGetCodeContext(req, res, req.body.parameters);
-      } else if (tool === 'trigger-reprocessing') {
-        return this.processingHandler.handleTriggerReprocessing(req, res, req.body.parameters);
-      } else if (tool === 'get-processing-status') {
-        return this.processingHandler.handleGetProcessingStatus(req, res, req.body.parameters);
-      } else if (tool === 'get-processing-history') {
-        return this.processingHandler.handleGetProcessingHistory(req, res, req.body.parameters);
-      } else if (tool === 'cancel-processing') {
-        return this.processingHandler.handleCancelProcessing(req, res, req.body.parameters);
-      } else if (tool === 'retry-processing') {
-        return this.processingHandler.handleRetryProcessing(req, res, req.body.parameters);
-      } else if (tool === 'get-processing-logs') {
-        return this.processingHandler.handleGetProcessingLogs(req, res, req.body.parameters);
-      } else if (tool === 'get-processing-metrics') {
-        return this.processingHandler.handleGetProcessingMetrics(req, res, req.body.parameters);
-      } else if (tool === 'get-workflow-analytics') {
-        return this.processingHandler.handleGetWorkflowAnalytics(req, res, req.body.parameters);
-      } else if (tool === 'monitor-workflow-health') {
-        return this.processingHandler.handleMonitorWorkflowHealth(req, res, req.body.parameters);
-      } else if (tool === 'get-workflow-recommendations') {
-        return this.processingHandler.handleGetWorkflowRecommendations(req, res, req.body.parameters);
-      } else if (tool === 'get_repository_status') {
-        return this.repositoryHandler.handleGetRepositoryStatus(req, res, req.body.parameters);
-      } else if (tool === 'list_repositories') {
-        return this.repositoryHandler.handleListRepositories(req, res, req.body.parameters);
-      } else if (tool === 'default_prompt') {
-        return this.remcodeHandler.handleDefaultPrompt(req, res, req.body.parameters);
-      } else if (tool === 'get_scenarios') {
-        return this.remcodeHandler.handleGetScenarios(req, res, req.body.parameters);
-      } else if (tool === 'get_guidelines') {
-        return this.remcodeHandler.handleGetGuidelines(req, res, req.body.parameters);
-      } else if (tool === 'get_contextual_guidance') {
-        return this.remcodeHandler.handleGetContextualGuidance(req, res, req.body.parameters);
+      try {
+        // 🛡️ ONE-SHOT PERMISSION VALIDATION FOR ALL MCP TOOLS
+        logger.info(`🔍 Validating permissions for MCP tool: ${tool}`);
+        const validation = await SimpleValidator.validateQuick();
+        
+        if (!validation.allValid) {
+          logger.warn(`❌ Permission validation failed for tool: ${tool}`);
+          return res.status(400).json({
+            status: 'setup_required',
+            tool: tool,
+            message: 'Missing required API tokens',
+            validation: {
+              github: validation.github,
+              huggingface: validation.huggingface,
+              pinecone: validation.pinecone
+            },
+            setupUrls: validation.setupUrls,
+            instructions: [
+              '1. Create required API tokens using the URLs above',
+              '2. Add tokens to your .env file',
+              '3. Restart the MCP server',
+              '4. Try again'
+            ]
+          });
+        }
+        
+        logger.info(`✅ All API tokens validated for tool: ${tool}`);
+        
+        // Route to appropriate handler AFTER validation passes
+        if (tool && tool.startsWith('pinecone_')) {
+          return this.pineconeHandler.handleToolRequest(req, res);
+        } else if (tool && tool.startsWith('github_')) {
+          return this.githubHandler.handleToolRequest(req, res);
+        } else if (tool && tool.startsWith('huggingface_')) {
+          return this.huggingfaceHandler.handleToolRequest(req, res);
+        } else if (tool === 'setup-repository') {
+          return this.setupHandler.handleSetupRepository(req, res, req.body.parameters);
+        } else if (tool === 'check-prerequisites') {
+          return this.setupHandler.handleCheckPrerequisites(req, res, req.body.parameters);
+        } else if (tool === 'configure-repository') {
+          return this.setupHandler.handleConfigureRepository(req, res, req.body.parameters);
+        } else if (tool === 'setup-secrets') {
+          return this.setupHandler.handleSetupSecrets(req, res, req.body.parameters);
+        } else if (tool === 'generate-workflows') {
+          return this.setupHandler.handleGenerateWorkflows(req, res, req.body.parameters);
+        } else if (tool === 'search') {
+          return this.searchHandler.handleSearch(req, res, req.body.parameters);
+        } else if (tool === 'search_code') {
+          return this.searchHandler.handleSearchCode(req, res, req.body.parameters);
+        } else if (tool === 'get_code_context') {
+          return this.searchHandler.handleGetCodeContext(req, res, req.body.parameters);
+        } else if (tool === 'trigger-reprocessing') {
+          return this.processingHandler.handleTriggerReprocessing(req, res, req.body.parameters);
+        } else if (tool === 'get-processing-status') {
+          return this.processingHandler.handleGetProcessingStatus(req, res, req.body.parameters);
+        } else if (tool === 'get-processing-history') {
+          return this.processingHandler.handleGetProcessingHistory(req, res, req.body.parameters);
+        } else if (tool === 'cancel-processing') {
+          return this.processingHandler.handleCancelProcessing(req, res, req.body.parameters);
+        } else if (tool === 'retry-processing') {
+          return this.processingHandler.handleRetryProcessing(req, res, req.body.parameters);
+        } else if (tool === 'get-processing-logs') {
+          return this.processingHandler.handleGetProcessingLogs(req, res, req.body.parameters);
+        } else if (tool === 'get-processing-metrics') {
+          return this.processingHandler.handleGetProcessingMetrics(req, res, req.body.parameters);
+        } else if (tool === 'get-workflow-analytics') {
+          return this.processingHandler.handleGetWorkflowAnalytics(req, res, req.body.parameters);
+        } else if (tool === 'monitor-workflow-health') {
+          return this.processingHandler.handleMonitorWorkflowHealth(req, res, req.body.parameters);
+        } else if (tool === 'get-workflow-recommendations') {
+          return this.processingHandler.handleGetWorkflowRecommendations(req, res, req.body.parameters);
+        } else if (tool === 'get_repository_status') {
+          return this.repositoryHandler.handleGetRepositoryStatus(req, res, req.body.parameters);
+        } else if (tool === 'list_repositories') {
+          return this.repositoryHandler.handleListRepositories(req, res, req.body.parameters);
+        } else if (tool === 'default_prompt') {
+          return this.remcodeHandler.handleDefaultPrompt(req, res, req.body.parameters);
+        } else if (tool === 'get_scenarios') {
+          return this.remcodeHandler.handleGetScenarios(req, res, req.body.parameters);
+        } else if (tool === 'get_guidelines') {
+          return this.remcodeHandler.handleGetGuidelines(req, res, req.body.parameters);
+        } else if (tool === 'get_contextual_guidance') {
+          return this.remcodeHandler.handleGetContextualGuidance(req, res, req.body.parameters);
+        }
+        
+        res.status(400).json({ error: 'Unknown tool type' });
+        
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        logger.error(`MCP validation error: ${errorMessage}`);
+        res.status(500).json({ 
+          error: 'Validation failed', 
+          message: errorMessage 
+        });
       }
-      
-      res.status(400).json({ error: 'Unknown tool type' });
     });
     
     // Error handler

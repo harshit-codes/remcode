@@ -64,32 +64,8 @@ export class SetupMCPHandler {
     }
 
     try {
-      // 🛡️ ONE-SHOT PERMISSION VALIDATION
-      logger.info('🔍 Validating all permissions before setup...');
-      const validation = await SimpleValidator.validateQuick();
-      
-      if (!validation.allValid) {
-        logger.warn('❌ Permission validation failed');
-        res.status(400).json({
-          status: 'setup_required',
-          message: 'Missing required API tokens',
-          validation: {
-            github: validation.github,
-            huggingface: validation.huggingface,
-            pinecone: validation.pinecone
-          },
-          setupUrls: validation.setupUrls,
-          instructions: [
-            '1. Create required API tokens using the URLs above',
-            '2. Add tokens to your .env file',
-            '3. Restart the MCP server',
-            '4. Try setup again'
-          ]
-        });
-        return;
-      }
-
-      logger.info('✅ All API tokens validated successfully');
+      // Validation is now handled globally in the main MCP router
+      logger.info(`Setting up repository: ${owner}/${repo}`);
 
       // Check prerequisites
       const prereqChecks = await this.prerequisites.checkAll();
