@@ -1,11 +1,11 @@
 {
   "name": "remcode",
-  "version": "0.1.2",
-  "description": "Enhanced Codebase-Aware SWE Autopilot with Smart Setup - AI assistant integration via MCP with automatic token management, intelligent port selection, and interactive MCP Inspector support",
+  "version": "0.1.3",
+  "description": "Enhanced Codebase-Aware SWE Autopilot with One-Shot Permission Validation - AI assistant integration via MCP with comprehensive token validation, intelligent port selection, and interactive MCP Inspector support",
   "main": "bin/remcode.js",
   "bin": {
-    "remcode": "./bin/remcode.js",
-    "remcode-stdio": "./bin/remcode-stdio.js"
+    "remcode": "bin/remcode.js",
+    "remcode-stdio": "bin/remcode-stdio.js"
   },
   "files": [
     "dist/**/*",
