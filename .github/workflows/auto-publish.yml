@@ -34,7 +34,7 @@ jobs:
         run: npm run build
         
       - name: Run tests
-        run: npm run test:core && npm run test:mcp && npm run test:swe
+        run: npm run test:unit && npm run test:mcp && npm run test:production
 
   publish:
     needs: test
