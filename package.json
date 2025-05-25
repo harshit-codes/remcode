@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.5",
-  "description": "Complete MCP Inspector Integration - Codebase-Aware SWE Autopilot with JSON-RPC 2.0 parameter parsing fix - AI assistant integration via MCP with real-time Server-Sent Events, comprehensive token validation, intelligent port selection, and modern streaming architecture (STDIO bridge deprecated)",
+  "version": "0.1.6",
+  "description": "🎉 HuggingFace API Fixed - Complete Embedding Functionality - Codebase-Aware SWE Autopilot with full HuggingFace embedding integration (1024-dim E5-Large), MCP Inspector compatibility, JSON-RPC 2.0, real-time SSE, and production-ready AI assistant integration",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "bin/remcode.js",
