@@ -16,8 +16,18 @@ No overview provided.
 - `./commands/process`
 - `./commands/inspector`
 
+## Functions
+
+### `getPackageVersion()`
+
+```typescript
+export function getPackageVersion()
+```
+
 ## Variables
 
+- `packageJsonPath`
+- `packageJson`
 - `program`
 - `availableCommands`
 

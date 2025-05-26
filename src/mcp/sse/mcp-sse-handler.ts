@@ -262,7 +262,7 @@ export class MCPSSEHandler {
         result = await this.callHandlerMethod(toolHandlers.search, 'handleSearch', toolArgs);
       }
       else if (toolName === 'setup-repository') {
-        result = { message: 'Setup tool integration in progress', status: 'working_on_compatibility' };
+        result = await this.callHandlerMethod(toolHandlers.setup, 'handleSetupRepository', toolArgs);
       }
       else {
         return {

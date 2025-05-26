@@ -7,9 +7,23 @@ import { processCommand } from './commands/process';
 import { inspectorCommand } from './commands/inspector';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Load environment variables
 dotenv.config();
+
+// Get version from package.json dynamically
+function getPackageVersion(): string {
+  try {
+    const packageJsonPath = path.join(__dirname, '..', 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    return packageJson.version;
+  } catch (error) {
+    // Fallback version if package.json cannot be read
+    return '0.1.7';
+  }
+}
 
 // Create the program
 const program = new Command();
@@ -18,7 +32,7 @@ const program = new Command();
 program
   .name('remcode')
   .description('A code vectorization and analysis tool for better understanding of codebases')
-  .version('0.1.2');
+  .version(getPackageVersion());
 
 // Add commands
 analyzeCommand(program);

@@ -135,15 +135,14 @@ export function serveCommand(program: Command): void {
         const server = new MCPServer({
           port: selectedPort,
           host: options.host,
-          pineconeApiKey: finalTokens.PINECONE_API_KEY || process.env.PINECONE_API_KEY,
-          githubToken: finalTokens.GITHUB_TOKEN || process.env.GITHUB_TOKEN,
-          huggingfaceToken: finalTokens.HUGGINGFACE_TOKEN || process.env.HUGGINGFACE_TOKEN,
-          corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS
+          corsOptions: {
+            origin: options.corsOrigins?.split(',') || ['http://localhost:3000', 'http://127.0.0.1:3000']
+          }
         });
 
         // Step 5: Start the server with enhanced error handling
         try {
-          await server.start();
+          await server.start(selectedPort, options.host);
           spinner.succeed(chalk.green(`✅ MCP server started successfully!`));
           
           // Display server information

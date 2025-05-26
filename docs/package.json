@@ -1,0 +1,19 @@
+{
+  "name": "remcode-session-scripts",
+  "version": "1.0.0",
+  "description": "Session tracking and analysis scripts for Remcode development",
+  "scripts": {
+    "validate": "node scripts/validate-session.js validate",
+    "add-session": "node scripts/session-helper.js interactive", 
+    "quick-session": "node scripts/session-helper.js quick",
+    "analyze-progress": "node scripts/analyze-progress.js",
+    "analyze-blockers": "node scripts/analyze-blockers.js", 
+    "analyze-codebase": "node scripts/analyze-codebase.js",
+    "generate-summary": "node scripts/generate-summary.js all",
+    "session-summary": "node scripts/generate-summary.js",
+    "clean-csv": "node scripts/validate-session.js validate"
+  },
+  "keywords": ["session-tracking", "development", "analysis"],
+  "author": "harshit-codes",
+  "license": "MIT"
+}

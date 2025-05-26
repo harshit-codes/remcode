@@ -9,8 +9,11 @@ MCP Server Module
 This module provides Model Context Protocol (MCP) server functionality
 to allow AI assistants to interact with the remcode tools.
 
+Get MCP tool specifications for all available tools
+
 ## Dependencies
 
+- `../utils/logger`
 - `./handlers/pinecone`
 - `./handlers/github`
 - `./handlers/huggingface`
@@ -19,8 +22,6 @@ to allow AI assistants to interact with the remcode tools.
 - `./handlers/processing`
 - `./handlers/repository`
 - `./handlers/remcode`
-- `./swe-guidance-middleware`
-- `../utils/logger`
 - `./validation/simple-validator`
 - `./sse/mcp-sse-handler`
 
@@ -47,8 +48,13 @@ interface MCPServerOptions {
 ## Variables
 
 - `logger`
+- `githubToken`
+- `pineconeApiKey`
+- `huggingfaceToken`
 - `corsOptions`
 - `toolHandlers`
+- `tool`
 - `validation`
+- `errorMessage`
 - `errorMessage`
 

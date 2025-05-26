@@ -1,12 +1,8 @@
-/**
- * MCP Server Module
- * 
- * This module provides Model Context Protocol (MCP) server functionality
- * to allow AI assistants to interact with the remcode tools.
- */
-
 import express from 'express';
 import cors from 'cors';
+import { getLogger } from '../utils/logger';
+
+// MCP Handlers
 import { PineconeMCPHandler } from './handlers/pinecone';
 import { GitHubMCPHandler } from './handlers/github';
 import { HuggingFaceMCPHandler } from './handlers/huggingface';
@@ -15,27 +11,30 @@ import { SearchMCPHandler } from './handlers/search';
 import { ProcessingMCPHandler } from './handlers/processing';
 import { RepositoryMCPHandler } from './handlers/repository';
 import { RemcodeMCPHandler } from './handlers/remcode';
-// import { SWEGuidanceMiddleware } from "./swe-guidance-middleware"; // Temporarily disabled
-import { getLogger } from '../utils/logger';
+// SWE guidance middleware not implemented yet
 import { SimpleValidator } from './validation/simple-validator';
 import { MCPSSEHandler } from './sse/mcp-sse-handler';
 
-const logger = getLogger('MCP-Server');
+const logger = getLogger('MCPServer');
 
 export interface MCPServerOptions {
   port?: number;
   host?: string;
-  pineconeApiKey?: string;
-  githubToken?: string;
-  huggingfaceToken?: string;
-  corsOrigins?: string;
+  corsOptions?: cors.CorsOptions;
 }
 
+/**
+ * MCP Server Module
+ * 
+ * This module provides Model Context Protocol (MCP) server functionality
+ * to allow AI assistants to interact with the remcode tools.
+ */
 export class MCPServer {
   private app: express.Application;
-  private port: number;
-  private host: string;
-  public options: MCPServerOptions;
+  private server?: any;
+  private mcpSSEHandler: MCPSSEHandler;
+
+  // Tool Handlers
   private pineconeHandler: PineconeMCPHandler;
   private githubHandler: GitHubMCPHandler;
   private huggingfaceHandler: HuggingFaceMCPHandler;
@@ -44,70 +43,80 @@ export class MCPServer {
   private processingHandler: ProcessingMCPHandler;
   private repositoryHandler: RepositoryMCPHandler;
   private remcodeHandler: RemcodeMCPHandler;
-  private mcpSSEHandler: MCPSSEHandler;
-  // sweGuidanceMiddleware: SWEGuidanceMiddleware; // Temporarily disabled
 
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
-    this.port = options.port || (process.env.MCP_PORT ? parseInt(process.env.MCP_PORT) : 3000);
-    this.host = options.host || process.env.MCP_HOST || 'localhost';
-    this.options = {
-      pineconeApiKey: options.pineconeApiKey || process.env.PINECONE_API_KEY || '',
-      githubToken: options.githubToken || process.env.GITHUB_TOKEN || '',
-      huggingfaceToken: options.huggingfaceToken || process.env.HUGGINGFACE_TOKEN || '',
-      corsOrigins: options.corsOrigins || process.env.MCP_CORS_ORIGINS || '*'
-    };
     
-    // Initialize handlers
-    this.pineconeHandler = new PineconeMCPHandler({
-      apiKey: this.options.pineconeApiKey || ''
-    });
-    
-    this.githubHandler = new GitHubMCPHandler({
-      token: this.options.githubToken || ''
-    });
-    
-    this.huggingfaceHandler = new HuggingFaceMCPHandler({
-      token: this.options.huggingfaceToken || ''
-    });
-
-    // Initialize new handlers with GitHub token for authorization
-    this.setupHandler = new SetupMCPHandler(this.options.githubToken);
-    this.searchHandler = new SearchMCPHandler();
-    this.processingHandler = new ProcessingMCPHandler(this.options.githubToken);
-    this.repositoryHandler = new RepositoryMCPHandler(this.options.githubToken || '');
-    this.remcodeHandler = new RemcodeMCPHandler();
+    // Initialize SSE Handler
     this.mcpSSEHandler = new MCPSSEHandler();
-    // this.sweGuidanceMiddleware = new SWEGuidanceMiddleware(...); // Temporarily disabled
     
-    this.configureServer();
+    // Initialize handlers with proper tokens
+    const githubToken = process.env.GITHUB_TOKEN;
+    const pineconeApiKey = process.env.PINECONE_API_KEY;
+    const huggingfaceToken = process.env.HUGGINGFACE_TOKEN;
+    
+    this.pineconeHandler = new PineconeMCPHandler({ apiKey: pineconeApiKey || '' });
+    this.githubHandler = new GitHubMCPHandler({ token: githubToken || '' });
+    this.huggingfaceHandler = new HuggingFaceMCPHandler({ token: huggingfaceToken || '' });
+    this.setupHandler = new SetupMCPHandler(githubToken);
+    this.searchHandler = new SearchMCPHandler();
+    this.processingHandler = new ProcessingMCPHandler(githubToken);
+    this.repositoryHandler = new RepositoryMCPHandler(githubToken || '');
+    this.remcodeHandler = new RemcodeMCPHandler();
+
+    this.setupMiddleware(options);
+    this.setupRoutes();
+    
+    logger.info('MCP Server initialized with universal validation');
   }
 
-  private configureServer(): void {
-    // Configure middleware
-    const corsOptions = {
-      origin: this.options.corsOrigins?.split(',') || '*',
-      methods: ['GET', 'POST'],
-      allowedHeaders: ['Content-Type', 'Authorization']
+  private setupMiddleware(options: MCPServerOptions) {
+    // CORS configuration
+    const corsOptions: cors.CorsOptions = {
+      origin: true,
+      credentials: true,
+      methods: ['GET', 'POST', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      ...options.corsOptions
     };
+    
     this.app.use(cors(corsOptions));
     this.app.use(express.json());
+    this.app.use(express.text());
     
+    // SWE Guidance Middleware (placeholder)
+    // this.app.use(sweGuidanceMiddleware);
+    
+    logger.debug('Middleware configured');
+  }
+
+  private setupRoutes() {
     // Health check endpoint
     this.app.get('/health', (req, res) => {
-      res.status(200).json({ status: 'OK' });
+      res.json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        version: '0.1.8',
+        services: ['pinecone', 'github', 'huggingface', 'setup', 'search', 'processing']
+      });
     });
-    
-    // ====================
-    // 🚀 MCP-COMPATIBLE SSE ENDPOINTS
-    // ====================
-    
-    // MCP SSE connection endpoint - required by MCP Inspector
+
+    // MCP specification endpoint
+    this.app.get('/mcp/spec', (req, res) => {
+      res.json({
+        tools: this.getMCPToolSpecs(),
+        version: '0.1.8',
+        protocol: 'MCP',
+        transport: 'SSE'
+      });
+    });
+
+    // SSE endpoint for MCP Inspector
     this.app.get('/sse', (req, res) => {
       this.mcpSSEHandler.handleSSEConnection(req, res);
     });
-    
-    // MCP message handling endpoint - required by MCP Inspector
+
+    // JSON-RPC 2.0 messages endpoint for MCP Inspector
     this.app.post('/messages', async (req, res) => {
       const toolHandlers = {
         pinecone: this.pineconeHandler,
@@ -119,159 +128,180 @@ export class MCPServer {
         repository: this.repositoryHandler,
         remcode: this.remcodeHandler
       };
-      
       await this.mcpSSEHandler.handleMCPMessage(req, res, toolHandlers);
     });
-    
-    // OPTIONS for CORS preflight
-    this.app.options('/messages', (req, res) => {
-      res.status(200).end();
-    });
-    
-    // MCP Specification endpoint (simplified route)
-    this.app.get('/mcp/spec', (req, res) => {
-      res.status(200).json({
-        name: 'remcode-mcp',
-        version: '0.1.0',
-        description: 'Remcode Model Context Protocol server for code analysis and vectorization with SSE support',
-        tools: [
-          {
-            name: 'setup-repository',
-            description: 'Set up a repository with Remcode',
-            parameters: {
-              owner: { type: 'string', description: 'Repository owner' },
-              repo: { type: 'string', description: 'Repository name' },
-              token: { type: 'string', description: 'GitHub token (optional)' },
-              branch: { type: 'string', description: 'Repository branch (default: main)' },
-              configOverrides: { type: 'object', description: 'Remcode config overrides' },
-              workflowType: { type: 'string', description: 'Type of workflow to generate: basic, scheduled, advanced, all' },
-              skipWorkflows: { type: 'boolean', description: 'Skip workflow generation' },
-              skipSecrets: { type: 'boolean', description: 'Skip secrets setup' },
-              confirm: { type: 'boolean', description: 'Confirm setup' }
-            }
-          },
-          {
-            name: 'huggingface_embed_code',
-            description: 'Generate embeddings for code using HuggingFace models',
-            parameters: {
-              code: { type: 'string', description: 'Code content to embed' },
-              model: { type: 'string', description: 'Model to use (default: microsoft/graphcodebert-base)', optional: true },
-              batch: { type: 'boolean', description: 'Whether to process as batch (for array input)', optional: true }
-            }
-          },
-          {
-            name: 'pinecone_query',
-            description: 'Search for vectors in Pinecone',
-            parameters: {
-              text: { type: 'string', description: 'Search text to convert to embedding' },
-              topK: { type: 'number', description: 'Number of results to return', optional: true }
-            }
-          }
-        ]
-      });
-    });
-    
-    // Main MCP endpoint with ONE-SHOT VALIDATION for ALL tools
-    this.app.post('/mcp', async (req, res) => {
-      const { tool } = req.body;
+
+    // Universal MCP tool router with validation guard
+    this.app.post('/mcp/:tool', async (req, res, next) => {
+      const tool = req.params.tool;
       
       try {
-        // 🛡️ ONE-SHOT PERMISSION VALIDATION FOR ALL MCP TOOLS
-        logger.info(`🔍 Validating permissions for MCP tool: ${tool}`);
+        // Universal validation for ALL MCP tools
         const validation = await SimpleValidator.validateQuick();
-        
         if (!validation.allValid) {
-          logger.warn(`❌ Permission validation failed for tool: ${tool}`);
-          return res.status(400).json({
-            status: 'setup_required',
-            tool: tool,
-            message: 'Missing required API tokens',
-            validation: {
-              github: validation.github,
-              huggingface: validation.huggingface,
-              pinecone: validation.pinecone
-            },
-            setupUrls: validation.setupUrls,
+          const errorMessage = `Missing required services. Configure: ${!validation.github.valid ? 'GitHub token, ' : ''}${!validation.huggingface.valid ? 'HuggingFace token, ' : ''}${!validation.pinecone.valid ? 'Pinecone API key' : ''}`.replace(/, $/, '');
+          
+          res.status(400).json({
+            error: 'Service Configuration Required',
+            message: errorMessage,
+            services: validation,
             instructions: [
-              '1. Create required API tokens using the URLs above',
-              '2. Add tokens to your .env file',
-              '3. Restart the MCP server',
-              '4. Try again'
+              'Set GITHUB_TOKEN environment variable with your GitHub token',
+              'Set HUGGINGFACE_TOKEN environment variable with your HuggingFace token', 
+              'Set PINECONE_API_KEY environment variable with your Pinecone API key',
+              'Restart the MCP server after setting environment variables'
             ]
           });
+          return;
         }
-        
-        logger.info(`✅ All API tokens validated for tool: ${tool}`);
-        
-        // Route to appropriate handler AFTER validation passes
-        if (tool && tool.startsWith('pinecone_')) {
-          return this.pineconeHandler.handleToolRequest(req, res);
-        } else if (tool && tool.startsWith('github_')) {
-          return this.githubHandler.handleToolRequest(req, res);
-        } else if (tool && tool.startsWith('huggingface_')) {
-          return this.huggingfaceHandler.handleToolRequest(req, res);
-        } else if (tool === 'setup-repository') {
-          return this.setupHandler.handleSetupRepository(req, res, req.body.parameters);
+
+        // Route to appropriate handler
+        if (tool === 'pinecone_query' || tool === 'pinecone_upsert' || tool === 'pinecone_list_indexes') {
+          return this.pineconeHandler.handleRequest(req, res);
+        } else if (tool === 'github_get_repo' || tool === 'github_list_files' || tool === 'github_get_file') {
+          return this.githubHandler.handleRequest(req, res);
+        } else if (tool === 'huggingface_embed_code' || tool === 'huggingface_embed_query' || tool === 'huggingface_list_models') {
+          return this.huggingfaceHandler.handleRequest(req, res);
+        } else if (tool === 'setup-repository' || tool === 'check-prerequisites' || tool === 'configure-repository' || tool === 'setup-secrets' || tool === 'generate-workflows') {
+          return this.setupHandler.handleSetupRepository(req, res);
+        } else if (tool === 'search' || tool === 'search_code' || tool === 'get_code_context') {
+          return this.searchHandler.handleSearch(req, res);
+        } else if (tool === 'trigger-reprocessing' || tool === 'get-processing-status') {
+          return this.processingHandler.handleTriggerReprocessing(req, res);
+        } else if (tool === 'list_repositories' || tool === 'get_repository_status') {
+          // Use a basic method for repository handler
+          res.status(200).json({ message: 'Repository handler not fully implemented' });
+        } else if (tool === 'default_prompt' || tool === 'get_scenarios' || tool === 'get_guidelines') {
+          // Use a basic method for remcode handler
+          res.status(200).json({ message: 'SWE guidance handler not fully implemented' });
+        } else {
+          res.status(404).json({ error: `Unknown tool: ${tool}` });
         }
-        
-        res.status(400).json({ error: 'Unknown tool type' });
-        
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        logger.error(`MCP validation error: ${errorMessage}`);
-        res.status(500).json({ 
-          error: 'Validation failed', 
-          message: errorMessage 
-        });
+        logger.error(`MCP tool error for ${tool}: ${errorMessage}`);
+        res.status(500).json({ error: errorMessage });
       }
     });
-    
-    // Error handler
-    this.app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-      logger.error(`Error: ${err.message}`);
-      res.status(500).json({ error: err.message });
+
+    logger.info('Routes configured with universal validation guard');
+  }
+
+  /**
+   * Get MCP tool specifications for all available tools
+   */
+  private getMCPToolSpecs() {
+    return [
+      // Setup Tools
+      {
+        name: 'setup-repository',
+        description: 'Initialize and configure repository for remcode usage',
+        parameters: {
+          owner: { type: 'string', description: 'Repository owner' },
+          repo: { type: 'string', description: 'Repository name' },
+          token: { type: 'string', description: 'GitHub token (optional)', optional: true },
+          branch: { type: 'string', description: 'Default branch (optional, default: main)', optional: true },
+          workflowType: { type: 'string', description: 'Workflow type: basic, advanced, scheduled (optional)', optional: true },
+          skipWorkflows: { type: 'boolean', description: 'Skip GitHub Actions workflow creation (optional)', optional: true },
+          skipSecrets: { type: 'boolean', description: 'Skip repository secrets configuration (optional)', optional: true },
+          confirm: { type: 'boolean', description: 'Confirm setup (optional, default: false)', optional: true }
+        }
+      },
+      // Search Tools  
+      {
+        name: 'search',
+        description: 'Search for code patterns and functions in the codebase',
+        parameters: {
+          text: { type: 'string', description: 'Search query text' },
+          topK: { type: 'number', description: 'Number of results to return (optional, default: 5)', optional: true },
+          includeContent: { type: 'boolean', description: 'Include full content in results (optional)', optional: true }
+        }
+      },
+      // GitHub Tools
+      {
+        name: 'github_get_repo',
+        description: 'Get repository information from GitHub',
+        parameters: {
+          owner: { type: 'string', description: 'Repository owner' },
+          repo: { type: 'string', description: 'Repository name' }
+        }
+      },
+      // Pinecone Tools
+      {
+        name: 'pinecone_query',
+        description: 'Query vectors in Pinecone database',
+        parameters: {
+          text: { type: 'string', description: 'Query text to search for' },
+          topK: { type: 'number', description: 'Number of results to return (optional, default: 5)', optional: true },
+          namespace: { type: 'string', description: 'Pinecone namespace (optional)', optional: true }
+        }
+      },
+      // HuggingFace Tools
+      {
+        name: 'huggingface_embed_code',
+        description: 'Generate embeddings for code using HuggingFace models',
+        parameters: {
+          code: { type: 'string', description: 'Code to embed' },
+          model: { type: 'string', description: 'Model to use (optional)', optional: true }
+        }
+      },
+      // Processing Tools
+      {
+        name: 'trigger-reprocessing',
+        description: 'Trigger reprocessing of repository codebase',
+        parameters: {
+          force: { type: 'boolean', description: 'Force full reprocessing (optional)', optional: true }
+        }
+      },
+      // Repository Tools
+      {
+        name: 'get_repository_status',
+        description: 'Get current repository processing status',
+        parameters: {}
+      },
+      // SWE Tools
+      {
+        name: 'default_prompt',
+        description: 'Get default software engineering prompt with Remcode MCP integration',
+        parameters: {
+          scenario: { type: 'string', description: 'Specific scenario (optional)', optional: true }
+        }
+      }
+    ];
+  }
+
+  async start(port: number = 3000, host: string = 'localhost'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.server = this.app.listen(port, host, () => {
+          logger.info(`🚀 MCP Server running on http://${host}:${port}`);
+          logger.info(`📡 SSE endpoint: http://${host}:${port}/sse`);
+          logger.info(`🔧 Health check: http://${host}:${port}/health`);
+          logger.info(`📋 MCP spec: http://${host}:${port}/mcp/spec`);
+          resolve();
+        });
+
+        this.server.on('error', (error: Error) => {
+          logger.error(`Server error: ${error.message}`);
+          reject(error);
+        });
+      } catch (error) {
+        logger.error(`Failed to start server: ${error}`);
+        reject(error);
+      }
     });
   }
 
-  public async start(): Promise<void> {
-    try {
-      // Validate required API keys
-      this.validateApiKeys();
-      
-      // Initialize handlers
-      await this.pineconeHandler.initialize();
-      await this.huggingfaceHandler.initialize();
-      
-      if (!this.options.githubToken) {
-        logger.warn('GitHub token not provided. GitHub-related functionality will be limited.');
-      }
-      
-      this.app.listen(this.port, this.host, () => {
-        logger.info(`MCP Server listening at http://${this.host}:${this.port}`);
-        logger.info(`🚀 MCP-Compatible SSE endpoints:`);
-        logger.info(`   - SSE Connection: http://${this.host}:${this.port}/sse`);
-        logger.info(`   - MCP Messages: http://${this.host}:${this.port}/messages`);
-        logger.info(`   - Health Check: http://${this.host}:${this.port}/health`);
-        logger.info(`   - Specification: http://${this.host}:${this.port}/mcp/spec`);
-        logger.info(`🧪 For MCP Inspector: Use SSE transport with URL: http://${this.host}:${this.port}/sse`);
+  async stop(): Promise<void> {
+    if (this.server) {
+      return new Promise((resolve) => {
+        this.server.close(() => {
+          logger.info('MCP Server stopped');
+          resolve();
+        });
       });
-    } catch (error) {
-      logger.error(`Failed to start MCP server: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
     }
   }
-  
-  private validateApiKeys(): void {
-    logger.info(`MCP Server configured with:
-      - Pinecone API Key: ${this.options.pineconeApiKey ? '✓ Provided' : '✗ Missing'}
-      - GitHub Token: ${this.options.githubToken ? '✓ Provided' : '✗ Missing'}
-      - HuggingFace Token: ${this.options.huggingfaceToken ? '✓ Provided' : '✗ Missing'}
-    `);
-  }
-
-  public stop(): void {
-    // Close all MCP SSE connections before stopping
-    this.mcpSSEHandler.closeAllConnections();
-    logger.info('MCP Server stopped');
-  }
 }
+
+export default MCPServer;
