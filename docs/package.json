@@ -1,17 +1,9 @@
 {
   "name": "remcode-session-scripts",
-  "version": "3.0.0",
-  "description": "Complete JSON-based session tracking with Phase 3 ecosystem integration",
+  "version": "3.1.0",
+  "description": "Streamlined JSON-based session tracking system - Legacy CSV components removed",
   "scripts": {
     "validate": "node scripts/validate-session.js validate",
-    "add-session": "node scripts/session-helper.js interactive",
-    "quick-session": "node scripts/session-helper.js quick",
-    "analyze-progress": "node scripts/analyze-progress.js",
-    "analyze-blockers": "node scripts/analyze-blockers.js",
-    "analyze-codebase": "node scripts/analyze-codebase.js",
-    "generate-summary": "node scripts/generate-summary.js all",
-    "session-summary": "node scripts/generate-summary.js",
-    "clean-csv": "node scripts/validate-session.js validate",
     "migrate": "node scripts/migrate-csv-to-json.js migrate",
     "json:list": "node scripts/session-manager.js list",
     "json:analytics": "node scripts/session-manager.js analytics",
@@ -43,7 +35,9 @@
     "migration-complete",
     "phase3",
     "ecosystem-integration",
-    "github-actions"
+    "github-actions",
+    "streamlined",
+    "clean"
   ],
   "author": "harshit-codes",
   "license": "MIT",
