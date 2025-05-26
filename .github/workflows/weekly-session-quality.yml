@@ -16,35 +16,49 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: 'scripts/package-lock.json'
+    
+    - name: Install dependencies
+      working-directory: scripts
+      run: npm ci
     
     - name: Validate session data
       run: |
-        cd docs
+        cd scripts
         echo "🔍 Running weekly session quality check..."
         
-        # Basic CSV validation
-        if [[ -f "SESSIONS.csv" ]]; then
-          TOTAL_SESSIONS=$(tail -n +2 SESSIONS.csv | wc -l)
-          COMPLETED_SESSIONS=$(tail -n +2 SESSIONS.csv | grep -c ",completed," || true)
-          BLOCKED_SESSIONS=$(tail -n +2 SESSIONS.csv | grep -c ",blocked," || true)
+        if [[ -f "../sessions/sessions.json" ]]; then
+          # Use jq to analyze session data
+          TOTAL_SESSIONS=$(jq '.sessions | length' ../sessions/sessions.json)
+          COMPLETED_SESSIONS=$(jq '.sessions[] | select(.status=="completed") | .sessionId' ../sessions/sessions.json | wc -l)
+          BLOCKED_SESSIONS=$(jq '.sessions[] | select(.status=="blocked") | .sessionId' ../sessions/sessions.json | wc -l)
+          IN_PROGRESS_SESSIONS=$(jq '.sessions[] | select(.status=="in_progress") | .sessionId' ../sessions/sessions.json | wc -l)
           
           echo "📊 Weekly Session Quality Report"
           echo "Total Sessions: $TOTAL_SESSIONS"
           echo "Completed: $COMPLETED_SESSIONS"
+          echo "In Progress: $IN_PROGRESS_SESSIONS"
           echo "Blocked: $BLOCKED_SESSIONS"
           
           if [ $BLOCKED_SESSIONS -gt 0 ]; then
             echo "⚠️ Warning: $BLOCKED_SESSIONS blocked sessions detected"
+            # List blocked sessions
+            echo "Blocked sessions:"
+            jq -r '.sessions[] | select(.status=="blocked") | "  - " + .sessionId + ": " + .blockers' ../sessions/sessions.json
           else
             echo "✅ No blocked sessions"
           fi
+          
+          # Validate all sessions
+          npm run session:validate
         else
-          echo "❌ SESSIONS.csv not found"
+          echo "❌ sessions/sessions.json not found"
           exit 1
         fi
     
     - name: Generate quality summary
+      working-directory: scripts
       run: |
-        cd docs
-        node generate-session-report.js
+        npm run session:report
         echo "✅ Weekly quality check completed"

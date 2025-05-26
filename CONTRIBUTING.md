@@ -347,9 +347,9 @@ git commit -m "feat(contributing): enhance documentation system"
 #### **README Badge Integration**
 ```markdown
 <!-- Dynamic badges from automated metrics -->
-![Sessions](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/docs/session-metrics.json&query=$.total_sessions&label=Sessions&color=blue)
-![Dev Time](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/docs/session-metrics.json&query=$.total_time_hours&label=Dev%20Time&suffix=h&color=green)
-![Completion](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/docs/session-metrics.json&query=$.completion_rate&label=Completion&suffix=%25&color=brightgreen)
+![Sessions](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/sessions/session-metrics.json&query=$.total_sessions&label=Sessions&color=blue)
+![Dev Time](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/sessions/session-metrics.json&query=$.total_time_hours&label=Dev%20Time&suffix=h&color=green)
+![Completion](https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/harshit-codes/remcode/main/sessions/session-metrics.json&query=$.completion_rate&label=Completion&suffix=%25&color=brightgreen)
 ```
 
 #### **Real-time Development Dashboard**

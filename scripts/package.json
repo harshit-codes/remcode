@@ -1,0 +1,28 @@
+{
+  "name": "remcode-scripts",
+  "version": "1.0.0",
+  "description": "Consolidated utilities for Remcode development workflow",
+  "private": true,
+  "scripts": {
+    "session:validate": "ts-node --transpile-only session/validator.ts --validate-all",
+    "session:template": "ts-node --transpile-only session/session-manager.ts --template",
+    "session:report": "ts-node --transpile-only session/report-generator.ts",
+    "session:add": "ts-node --transpile-only session/session-manager.ts --add-session",
+    "install-hooks": "bash install-hooks.sh",
+    "validate-features": "node validate-features.js",
+    "validate-model": "node validate-model-init.js",
+    "e2e-test": "node e2e-test.js",
+    "e2e-workflow": "node e2e-workflow-test.js",
+    "bump-version": "node bump-version.js"
+  },
+  "author": "harshit-codes",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

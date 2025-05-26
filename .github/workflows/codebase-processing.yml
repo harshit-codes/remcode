@@ -65,20 +65,44 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
+        cache-dependency-path: 'package-lock.json'
 
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --no-audit --prefer-offline
+
+    - name: Check cache for previous processing
+      id: cache-processing
+      uses: actions/cache@v3
+      with:
+        path: .remcode
+        key: remcode-${{ github.sha }}
+        restore-keys: |
+          remcode-
 
     - name: Process with Remcode
       run: |
-        npx remcode process \
-          --type ${{ needs.determine-strategy.outputs.processing_type }} \
-          --timeout 5400 \
-          --report processing-report.json
+        CACHE_HIT=${{ steps.cache-processing.outputs.cache-hit }}
+        PROCESSING_TYPE=${{ needs.determine-strategy.outputs.processing_type }}
+        
+        # If force rebuild or no cache hit, use specified type
+        if [ "$CACHE_HIT" != 'true' ] || [ "$PROCESSING_TYPE" = "full" ]; then
+          echo "Running $PROCESSING_TYPE processing (cache hit: $CACHE_HIT)"
+          npx remcode process \
+            --type $PROCESSING_TYPE \
+            --timeout 5400 \
+            --report processing-report.json
+        else
+          echo "Using cached processing with incremental updates"
+          npx remcode process \
+            --type incremental \
+            --timeout 3600 \
+            --report processing-report.json
+        fi
       env:
         PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
         HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NODE_ENV: production
 
     - name: Upload processing artifacts
       if: always()
