@@ -8,6 +8,7 @@
     "session:template": "ts-node --transpile-only session/session-manager.ts --template",
     "session:report": "ts-node --transpile-only session/report-generator.ts",
     "session:add": "ts-node --transpile-only session/session-manager.ts --add-session",
+    "session:document": "ts-node --transpile-only session/document-session.ts",
     "install-hooks": "bash install-hooks.sh",
     "validate-features": "node validate-features.js",
     "validate-model": "node validate-model-init.js",
