@@ -1,17 +1,17 @@
 # Codebase Context Analysis Report
 
-Generated: 2025-05-26T10:12:19.564Z
+Generated: 2025-05-26T10:21:22.894Z
 
 🏗️  CODEBASE CONTEXT ANALYSIS
 ==================================================
 
 📁 FILE CHANGES OVERVIEW
-• Total Files Modified: 83
+• Total Files Modified: 89
 
 📂 MOST ACTIVE DIRECTORIES
-• docs: 16 changes
+• docs: 18 changes
+• docs/scripts: 13 changes
 • root: 12 changes
-• docs/scripts: 10 changes
 • .github/workflows: 7 changes
 • src/mcp/sse: 6 changes
 • src/mcp/handlers: 5 changes
@@ -20,9 +20,9 @@ Generated: 2025-05-26T10:12:19.564Z
 
 📄 FILE TYPES MODIFIED
 • .ts: 25 files
-• .js: 18 files
-• .md: 15 files
-• .json: 9 files
+• .js: 21 files
+• .md: 16 files
+• .json: 11 files
 • .yml: 7 files
 • .csv: 6 files
 • .py: 2 files
@@ -35,8 +35,8 @@ Generated: 2025-05-26T10:12:19.564Z
 • docs/SUMMARY.md: 4 times
 • src/mcp/index.ts: 4 times
 • src/mcp/handlers/huggingface.ts: 3 times
+• docs/package.json: 3 times
 • README.md: 3 times
-• bin/remcode-stdio.js: 3 times
 
 🧠 KEY TECHNICAL LEARNINGS
 1. Free-tier HuggingFace models work well with health checking
@@ -54,13 +54,16 @@ Generated: 2025-05-26T10:12:19.564Z
 5. Need to be more careful with file editing when dealing with class structures
    Context: Fixing TypeScript Compilation Errors
 
+🏛️  ARCHITECTURAL INSIGHTS
+1. Enhanced analytics provide deep insights into development patterns. Interactive ...
+
 🛠️  TOOLS & LIBRARIES
 1. Only setup-repository has validation - all other tools bypass it
 2. HuggingFace API integration was working correctly - previous 400 errors were due...
 3. Parameter parsing was the key issue - MCP Inspector sends {name: tool-name argum...
 
 📈 CODEBASE EVOLUTION
-• New Features: 13
+• New Features: 14
 • Refactoring Sessions: 0
 • Bug Fixes: 6
 • Major Changes: 15
