@@ -1,0 +1,91 @@
+name: Codebase Processing Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+    paths: ['src/**', 'tests/**']
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly
+  workflow_dispatch:
+    inputs:
+      processing_type:
+        description: 'Processing type'
+        type: choice
+        options: [auto, full, incremental]
+        default: auto
+      force_rebuild:
+        description: 'Force complete rebuild'
+        type: boolean
+        default: false
+
+jobs:
+  determine-strategy:
+    runs-on: ubuntu-latest
+    outputs:
+      should_process: ${{ steps.check.outputs.should_process }}
+      processing_type: ${{ steps.check.outputs.processing_type }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Check if processing needed
+      id: check
+      run: |
+        CHANGED_FILES=$(git diff --name-only HEAD^ HEAD | grep -E '\.(ts|js|jsx|tsx)$' || true)
+        
+        if [ -z "$CHANGED_FILES" ] && [ "${{ github.event.inputs.force_rebuild }}" != "true" ]; then
+          echo "should_process=false" >> $GITHUB_OUTPUT
+          echo "No relevant files changed, skipping processing"
+        else
+          echo "should_process=true" >> $GITHUB_OUTPUT
+          
+          if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+            echo "processing_type=full" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.inputs.processing_type }}" != "" ]; then
+            echo "processing_type=${{ github.event.inputs.processing_type }}" >> $GITHUB_OUTPUT
+          else
+            echo "processing_type=auto" >> $GITHUB_OUTPUT
+          fi
+        fi
+  process:
+    needs: determine-strategy
+    if: needs.determine-strategy.outputs.should_process == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Process with Remcode
+      run: |
+        npx remcode process \
+          --type ${{ needs.determine-strategy.outputs.processing_type }} \
+          --timeout 5400 \
+          --report processing-report.json
+      env:
+        PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+        HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload processing artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: processing-results-${{ github.sha }}
+        path: |
+          processing-report.json
+          .remcode
+        retention-days: 7

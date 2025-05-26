@@ -63,6 +63,7 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "serve": "ts-node src/index.ts serve",
     "docs": "node scripts/colocated-docs-generator.js",
+    "session-report": "cd docs && node generate-session-report.js",
     "validate-features": "node scripts/validate-features.js",
     "setup-npm-token": "node scripts/setup-npm-token.js",
     "setup-github-secret": "node scripts/setup-github-secret.js"

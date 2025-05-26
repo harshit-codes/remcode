@@ -1,0 +1,50 @@
+name: Weekly Session Quality
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Monday 9 AM UTC
+  workflow_dispatch:
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Validate session data
+      run: |
+        cd docs
+        echo "🔍 Running weekly session quality check..."
+        
+        # Basic CSV validation
+        if [[ -f "SESSIONS.csv" ]]; then
+          TOTAL_SESSIONS=$(tail -n +2 SESSIONS.csv | wc -l)
+          COMPLETED_SESSIONS=$(tail -n +2 SESSIONS.csv | grep -c ",completed," || true)
+          BLOCKED_SESSIONS=$(tail -n +2 SESSIONS.csv | grep -c ",blocked," || true)
+          
+          echo "📊 Weekly Session Quality Report"
+          echo "Total Sessions: $TOTAL_SESSIONS"
+          echo "Completed: $COMPLETED_SESSIONS"
+          echo "Blocked: $BLOCKED_SESSIONS"
+          
+          if [ $BLOCKED_SESSIONS -gt 0 ]; then
+            echo "⚠️ Warning: $BLOCKED_SESSIONS blocked sessions detected"
+          else
+            echo "✅ No blocked sessions"
+          fi
+        else
+          echo "❌ SESSIONS.csv not found"
+          exit 1
+        fi
+    
+    - name: Generate quality summary
+      run: |
+        cd docs
+        node generate-session-report.js
+        echo "✅ Weekly quality check completed"
