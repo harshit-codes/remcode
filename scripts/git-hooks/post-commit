@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Post-commit hook for session insights
+# Automatically suggests session entry after significant commits
+
+echo "📝 Post-commit: Checking for session entry opportunity..."
+
+# Get commit message and changed files
+COMMIT_MSG=$(git log -1 --pretty=%B)
+CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+FILE_COUNT=$(echo "$CHANGED_FILES" | wc -l)
+
+# Check if this looks like a development session
+if [[ $FILE_COUNT -gt 3 ]] || echo "$COMMIT_MSG" | grep -Eq "(feat|fix|refactor|docs|test|chore):" ; then
+    echo ""
+    echo "🎯 This looks like a development session!"
+    echo "📊 Files changed: $FILE_COUNT"
+    echo "💬 Commit: $(echo "$COMMIT_MSG" | head -1)"
+    echo ""
+    echo "💡 Consider adding a session entry:"
+    echo "   cd docs && npm run add-session"
+    echo ""
+    echo "🚀 Or use quick entry:"
+    echo "   npm run session:quick \"Your focus\" \"Your achievements\" \"Next steps\" duration"
+    echo ""
+else
+    echo "📋 Minor changes detected, no session entry needed"
+fi
+
+exit 0

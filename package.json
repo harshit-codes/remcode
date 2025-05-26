@@ -35,6 +35,7 @@
     "session:blockers": "cd docs && node scripts/analyze-blockers.js",
     "session:codebase": "cd docs && node scripts/analyze-codebase.js",
     "session:summary": "cd docs && node scripts/generate-summary.js all",
+    "session:install-hooks": "bash scripts/git-hooks/install-hooks.sh",
     "test:external-api": "jest tests/external-api",
     "test:external-api:setup": "jest tests/external-api/pinecone-setup.test.ts tests/external-api/huggingface-setup.test.ts",
     "test:external-api:e2e": "jest tests/external-api/e2e-integration.test.ts",

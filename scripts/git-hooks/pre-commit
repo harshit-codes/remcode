@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# Pre-commit hook for session data validation
+# Validates SESSIONS.csv before allowing commits
+
+echo "🔍 Pre-commit: Validating session data..."
+
+# Check if SESSIONS.csv is being committed
+if git diff --cached --name-only | grep -q "docs/SESSIONS.csv"; then
+    echo "📊 SESSIONS.csv detected in commit, running validation..."
+    
+    # Navigate to docs directory and validate
+    cd docs 2>/dev/null || {
+        echo "❌ Error: docs directory not found"
+        exit 1
+    }
+    
+    # Check if validation script exists
+    if [[ ! -f "scripts/validate-session.js" ]]; then
+        echo "⚠️ Warning: Validation script not found, skipping validation"
+        exit 0
+    fi
+    
+    # Run validation
+    if node scripts/validate-session.js validate > /dev/null 2>&1; then
+        echo "✅ Session data validation passed"
+        
+        # Auto-generate insights if validation passes
+        echo "📈 Generating updated insights..."
+        if node scripts/generate-summary.js all > /dev/null 2>&1; then
+            echo "📊 Session insights updated"
+            
+            # Add generated files to the commit
+            git add COMPREHENSIVE_SUMMARY.md PROGRESS_ANALYSIS.md BLOCKERS_ANALYSIS.md CODEBASE_ANALYSIS.md session-metrics.json 2>/dev/null
+        else
+            echo "⚠️ Warning: Could not generate insights, but proceeding with commit"
+        fi
+    else
+        echo "❌ Session data validation failed!"
+        echo ""
+        echo "Please fix the validation errors before committing:"
+        node scripts/validate-session.js validate
+        echo ""
+        echo "💡 Tip: Use 'npm run session:validate' to check your data"
+        exit 1
+    fi
+else
+    echo "📋 No session data changes detected"
+fi
+
+echo "✅ Pre-commit validation complete"
+exit 0

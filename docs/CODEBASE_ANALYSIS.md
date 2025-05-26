@@ -1,35 +1,36 @@
 # Codebase Context Analysis Report
 
-Generated: 2025-05-26T04:47:01.754Z
+Generated: 2025-05-26T05:14:26.927Z
 
 🏗️  CODEBASE CONTEXT ANALYSIS
 ==================================================
 
 📁 FILE CHANGES OVERVIEW
-• Total Files Modified: 70
+• Total Files Modified: 76
 
 📂 MOST ACTIVE DIRECTORIES
-• docs: 12 changes
-• root: 11 changes
+• docs: 13 changes
+• root: 12 changes
+• .github/workflows: 7 changes
 • src/mcp/sse: 6 changes
 • docs/scripts: 6 changes
 • src/mcp/handlers: 5 changes
 • src/commands: 4 changes
-• .github/workflows: 4 changes
 • src/mcp: 4 changes
 
 📄 FILE TYPES MODIFIED
 • .ts: 25 files
 • .js: 14 files
-• .md: 13 files
-• .json: 6 files
+• .md: 14 files
+• .yml: 7 files
+• .json: 7 files
 • .csv: 6 files
-• .yml: 4 files
 • .py: 2 files
+• .sh: 1 files
 
 🔥 MOST FREQUENTLY CHANGED FILES
+• package.json: 6 times
 • src/mcp/sse/mcp-sse-handler.ts: 5 times
-• package.json: 5 times
 • docs/SESSIONS.csv: 5 times
 • docs/SUMMARY.md: 4 times
 • src/mcp/index.ts: 4 times
@@ -59,7 +60,7 @@ Generated: 2025-05-26T04:47:01.754Z
 3. Parameter parsing was the key issue - MCP Inspector sends {name: tool-name argum...
 
 📈 CODEBASE EVOLUTION
-• New Features: 11
+• New Features: 12
 • Refactoring Sessions: 0
 • Bug Fixes: 6
 • Major Changes: 15
