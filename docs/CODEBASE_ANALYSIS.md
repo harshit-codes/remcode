@@ -1,16 +1,16 @@
 # Codebase Context Analysis Report
 
-Generated: 2025-05-26T05:14:26.927Z
+Generated: 2025-05-26T05:48:12.912Z
 
 🏗️  CODEBASE CONTEXT ANALYSIS
 ==================================================
 
 📁 FILE CHANGES OVERVIEW
-• Total Files Modified: 76
+• Total Files Modified: 79
 
 📂 MOST ACTIVE DIRECTORIES
-• docs: 13 changes
-• root: 12 changes
+• docs: 15 changes
+• root: 13 changes
 • .github/workflows: 7 changes
 • src/mcp/sse: 6 changes
 • docs/scripts: 6 changes
@@ -20,18 +20,18 @@ Generated: 2025-05-26T05:14:26.927Z
 
 📄 FILE TYPES MODIFIED
 • .ts: 25 files
+• .md: 16 files
 • .js: 14 files
-• .md: 14 files
 • .yml: 7 files
 • .json: 7 files
-• .csv: 6 files
+• .csv: 7 files
 • .py: 2 files
 • .sh: 1 files
 
 🔥 MOST FREQUENTLY CHANGED FILES
 • package.json: 6 times
+• docs/SESSIONS.csv: 6 times
 • src/mcp/sse/mcp-sse-handler.ts: 5 times
-• docs/SESSIONS.csv: 5 times
 • docs/SUMMARY.md: 4 times
 • src/mcp/index.ts: 4 times
 • src/mcp/handlers/huggingface.ts: 3 times
@@ -63,7 +63,7 @@ Generated: 2025-05-26T05:14:26.927Z
 • New Features: 12
 • Refactoring Sessions: 0
 • Bug Fixes: 6
-• Major Changes: 15
+• Major Changes: 16
 
 🚀 RECENT MAJOR CHANGES
 1. ModelInitializer class, Enhanced EmbeddingManager, Setup integration, Testing fr...
