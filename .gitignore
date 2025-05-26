@@ -23,6 +23,7 @@ build/
 .idea/
 *.swp
 *.swo
+.windsurf/
 *~
 
 # OS generated files
