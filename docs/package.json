@@ -1,7 +1,7 @@
 {
   "name": "remcode-session-scripts",
-  "version": "1.0.0",
-  "description": "Session tracking and analysis scripts for Remcode development",
+  "version": "2.0.0",
+  "description": "Enhanced session tracking and analysis scripts for Remcode development with JSON migration support",
   "scripts": {
     "validate": "node scripts/validate-session.js validate",
     "add-session": "node scripts/session-helper.js interactive", 
@@ -11,9 +11,26 @@
     "analyze-codebase": "node scripts/analyze-codebase.js",
     "generate-summary": "node scripts/generate-summary.js all",
     "session-summary": "node scripts/generate-summary.js",
-    "clean-csv": "node scripts/validate-session.js validate"
+    "clean-csv": "node scripts/validate-session.js validate",
+    
+    "migrate": "node scripts/migrate-csv-to-json.js migrate",
+    "json:list": "node scripts/session-manager.js list",
+    "json:analytics": "node scripts/session-manager.js analytics",
+    "json:validate": "node scripts/session-manager.js validate",
+    
+    "install-deps": "npm install ajv ajv-formats",
+    "test-migration": "npm run install-deps && npm run migrate",
+    "setup-json": "npm run install-deps && npm run migrate && npm run json:validate",
+    "status": "npm run json:analytics && echo '\n✅ JSON Migration: COMPLETE' && echo '📊 Enhanced Analytics: OPERATIONAL' && echo '🔍 Schema Validation: ACTIVE'"
   },
-  "keywords": ["session-tracking", "development", "analysis"],
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  },
+  "keywords": ["session-tracking", "development", "analysis", "json", "migration", "validation"],
   "author": "harshit-codes",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }

@@ -1,16 +1,16 @@
 # Codebase Context Analysis Report
 
-Generated: 2025-05-26T05:55:57.661Z
+Generated: 2025-05-26T06:04:35.857Z
 
 🏗️  CODEBASE CONTEXT ANALYSIS
 ==================================================
 
 📁 FILE CHANGES OVERVIEW
-• Total Files Modified: 79
+• Total Files Modified: 77
 
 📂 MOST ACTIVE DIRECTORIES
-• docs: 15 changes
-• root: 13 changes
+• docs: 14 changes
+• root: 12 changes
 • .github/workflows: 7 changes
 • src/mcp/sse: 6 changes
 • docs/scripts: 6 changes
@@ -20,8 +20,8 @@ Generated: 2025-05-26T05:55:57.661Z
 
 📄 FILE TYPES MODIFIED
 • .ts: 25 files
-• .md: 16 files
 • .js: 14 files
+• .md: 14 files
 • .yml: 7 files
 • .json: 7 files
 • .csv: 7 files
@@ -63,7 +63,7 @@ Generated: 2025-05-26T05:55:57.661Z
 • New Features: 12
 • Refactoring Sessions: 0
 • Bug Fixes: 6
-• Major Changes: 16
+• Major Changes: 15
 
 🚀 RECENT MAJOR CHANGES
 1. ModelInitializer class, Enhanced EmbeddingManager, Setup integration, Testing fr...
