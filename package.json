@@ -1,6 +1,6 @@
 {
   "name": "remcode",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "✅ HuggingFace API Fixed - Complete CodeBERT Embedding Integration - Production-ready MCP server with fixed embedding generation, CodeBERT 768-dim vectors, JSON-RPC 2.0, SSE transport, and validated third-party experience",
   "main": "bin/remcode.js",
   "bin": {
