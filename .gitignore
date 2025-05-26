@@ -29,6 +29,10 @@ build/
 .DS_Store
 .DS_Store?
 ._*
+
+# Documentation generation files
+docs/rem-docs/**
+rem-docs/docs/scripts/**
 .Spotlight-V100
 .Trashes
 ehthumbs.db

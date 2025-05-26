@@ -2,7 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
+// Updated to only use the new rem-docs structure
 const DOCS_ROOT = path.join(PROJECT_ROOT, 'rem-docs');
+
+// Define directories to skip to prevent circular changes
+const SKIP_DIRS = [
+  path.join(PROJECT_ROOT, 'docs', 'rem-docs'),
+  path.join(PROJECT_ROOT, 'docs')
+];
 
 function extractFileInfo(filePath, content) {
   const fileName = path.basename(filePath);
@@ -182,8 +189,16 @@ function processFile(filePath) {
 }
 
 function processDirectory(dirPath) {
-  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-  let count = 0;
+  if (!fs.existsSync(dirPath)) {
+    console.error(`Directory not found: ${dirPath}`);
+    return;
+  }
+  
+  // Skip directories that are causing circular references
+  if (SKIP_DIRS.some(skipDir => dirPath.startsWith(skipDir))) {
+    console.log(`Skipping directory to prevent circular references: ${dirPath}`);
+    return;
+  }
   
   // Directories to skip
   const skippedDirs = ['node_modules', '.git', 'dist', 'coverage', '~deps'];
