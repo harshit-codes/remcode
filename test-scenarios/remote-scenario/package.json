@@ -1,0 +1,14 @@
+{
+  "name": "remcode-remote-test",
+  "version": "1.0.0",
+  "description": "Remote test environment for remcode GitHub Actions integration",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["remcode", "test", "github-actions"],
+  "author": "harshit-codes",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3"
+  }
+}
