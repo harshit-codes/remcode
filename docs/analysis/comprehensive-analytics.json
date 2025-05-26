@@ -1,0 +1,785 @@
+{
+  "metadata": {
+    "totalSessions": 33,
+    "dateRange": {
+      "start": "2025-05-25T05:00:00.000Z",
+      "end": "2025-05-26T16:00:00.000Z"
+    },
+    "analysisGenerated": "2025-05-26T10:19:15.457Z",
+    "dataVersion": "2.0.0"
+  },
+  "productivity": {
+    "totalHours": 47,
+    "totalAchievements": 81,
+    "totalBlockers": 15,
+    "averageSessionDuration": 85,
+    "productivityScore": 5.1,
+    "efficiencyScore": 1.7,
+    "blockerRate": 0.45
+  },
+  "timeAnalysis": {
+    "sessionsByDate": {
+      "2025-05-25": 22,
+      "2025-05-26": 11
+    },
+    "sessionsByHour": {
+      "0": 3,
+      "1": 3,
+      "2": 2,
+      "4": 1,
+      "5": 1,
+      "10": 1,
+      "12": 2,
+      "13": 2,
+      "14": 2,
+      "15": 4,
+      "16": 2,
+      "17": 1,
+      "18": 1,
+      "19": 1,
+      "20": 2,
+      "21": 2,
+      "22": 1,
+      "23": 2
+    },
+    "sessionsByDay": {
+      "Sunday": 18,
+      "Monday": 9,
+      "Tuesday": 6
+    },
+    "mostProductiveHour": "15",
+    "mostProductiveDay": "Sunday"
+  },
+  "technologyStack": {
+    "toolsUsage": {
+      "TypeScript": 16,
+      "MCP": 16,
+      "Testing": 14,
+      "API": 11,
+      "Git": 9,
+      "Node.js": 8,
+      "GitHub": 7,
+      "JavaScript": 7,
+      "JSON": 7,
+      "HuggingFace": 6,
+      "SSE": 5,
+      "CSV": 3
+    },
+    "tagsFrequency": {
+      "integration": 26,
+      "testing": 24,
+      "security": 18,
+      "bugfix": 13,
+      "setup": 12,
+      "feature": 12,
+      "documentation": 11,
+      "deployment": 9,
+      "refactor": 7,
+      "analysis": 5,
+      "automation": 5,
+      "optimization": 1,
+      "migration": 1
+    },
+    "averageComplexityByTag": {
+      "automation": 3.2,
+      "feature": 3,
+      "deployment": 3,
+      "optimization": 3,
+      "migration": 3,
+      "setup": 2.9,
+      "documentation": 2.8,
+      "refactor": 2.7,
+      "integration": 2.6,
+      "analysis": 2.6,
+      "security": 2.6,
+      "testing": 2.5,
+      "bugfix": 2.3
+    },
+    "mostUsedTool": "MCP",
+    "mostCommonTag": "integration"
+  },
+  "complexityEvolution": {
+    "complexityOverTime": [
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 75
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 105
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "simple",
+        "score": 1,
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 90
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "expert",
+        "score": 4,
+        "duration": 180
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 90
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "moderate",
+        "score": 2,
+        "duration": 75
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "complex",
+        "score": 3,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "expert",
+        "score": 4,
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "complexity": "expert",
+        "score": 4,
+        "duration": 150
+      }
+    ],
+    "monthlyAverages": {
+      "2025-05": 2.5
+    },
+    "trend": "stable"
+  },
+  "focusAreaTrends": {
+    "focusAreas": {
+      "huggingface": 6,
+      "validation": 6,
+      "package": 6,
+      "session": 4,
+      "inspector": 4,
+      "complete": 4,
+      "third-party": 4,
+      "tracking": 3,
+      "system": 3,
+      "github": 3,
+      "integration": 3,
+      "resolution": 3,
+      "implementation": 3,
+      "end-to-end": 3,
+      "error": 3,
+      "one-shot": 2,
+      "permission": 2,
+      "typescript": 2,
+      "compilation": 2,
+      "universal": 2,
+      "documentation": 2,
+      "actions": 2,
+      "model": 1,
+      "initialization": 1,
+      "token": 1,
+      "fixing": 1,
+      "critical": 1,
+      "only": 1,
+      "routing": 1,
+      "testing": 1,
+      "summary": 1,
+      "(server-sent": 1,
+      "events)": 1,
+      "compatible": 1,
+      "readme.md": 1,
+      "cleanup": 1,
+      "parameter": 1,
+      "parsing": 1,
+      "release": 1,
+      "diagnosis": 1,
+      "publishing": 1,
+      "comprehensive": 1,
+      "debug": 1,
+      "logging": 1,
+      "version": 1,
+      "mismatch": 1,
+      "workflow": 1,
+      "fixes": 1,
+      "ci/cd": 1
+    },
+    "focusEvolution": [
+      {
+        "date": "2025-05-25",
+        "focus": "HuggingFace Model Initialization",
+        "keywords": [
+          "huggingface",
+          "model",
+          "initialization"
+        ],
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Session Tracking System Redesign",
+        "keywords": [
+          "session",
+          "tracking",
+          "system"
+        ],
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Session Tracking System Finalization",
+        "keywords": [
+          "session",
+          "tracking",
+          "system"
+        ],
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "GitHub Token Validation & remcode-test Access",
+        "keywords": [
+          "github",
+          "token",
+          "validation"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "One-Shot Permission Validation Strategy",
+        "keywords": [
+          "one-shot",
+          "permission",
+          "validation"
+        ],
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Fixing TypeScript Compilation Errors",
+        "keywords": [
+          "fixing",
+          "typescript",
+          "compilation"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "One-Shot Permission Validation Implementation Complete",
+        "keywords": [
+          "one-shot",
+          "permission",
+          "validation"
+        ],
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Critical Gap - Validation Only on Setup Tool",
+        "keywords": [
+          "critical",
+          "validation",
+          "only"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Universal MCP Validation & Routing Simplification",
+        "keywords": [
+          "universal",
+          "validation",
+          "routing"
+        ],
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "MCP Inspector Testing & Universal Validation Verification",
+        "keywords": [
+          "inspector",
+          "testing",
+          "universal"
+        ],
+        "duration": 90
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Session Documentation & Summary Update",
+        "keywords": [
+          "session",
+          "documentation",
+          "summary"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "HuggingFace API Integration Resolution",
+        "keywords": [
+          "huggingface",
+          "integration",
+          "resolution"
+        ],
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "SSE (Server-Sent Events) Implementation & STDIO Bridge Deprecation",
+        "keywords": [
+          "(server-sent",
+          "events)",
+          "implementation"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "MCP Inspector Compatible SSE Implementation",
+        "keywords": [
+          "inspector",
+          "compatible",
+          "implementation"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "README.md Cleanup and Documentation Organization",
+        "keywords": [
+          "readme.md",
+          "cleanup",
+          "documentation"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "MCP Inspector Parameter Parsing Fix",
+        "keywords": [
+          "inspector",
+          "parameter",
+          "parsing"
+        ],
+        "duration": 75
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "MCP Inspector Integration Complete",
+        "keywords": [
+          "inspector",
+          "integration",
+          "complete"
+        ],
+        "duration": 105
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Complete NPM Package Release & Distribution",
+        "keywords": [
+          "complete",
+          "package",
+          "release"
+        ],
+        "duration": 60
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Third-Party NPM Package End-to-End Validation",
+        "keywords": [
+          "third-party",
+          "package",
+          "end-to-end"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "Third-Party Package Validation Summary & Documentation",
+        "keywords": [
+          "third-party",
+          "package",
+          "validation"
+        ],
+        "duration": 30
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "HuggingFace API 400 Error Diagnosis",
+        "keywords": [
+          "huggingface",
+          "error",
+          "diagnosis"
+        ],
+        "duration": 45
+      },
+      {
+        "date": "2025-05-25",
+        "focus": "HuggingFace API 400 Error Resolution Complete",
+        "keywords": [
+          "huggingface",
+          "error",
+          "resolution"
+        ],
+        "duration": 90
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "GitHub Actions NPM Publishing Pipeline Implementation",
+        "keywords": [
+          "github",
+          "actions",
+          "publishing"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "Complete GitHub Actions NPM Publishing Pipeline Fix & Automation",
+        "keywords": [
+          "complete",
+          "github",
+          "actions"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "Comprehensive Third-Party NPM Package Validation",
+        "keywords": [
+          "comprehensive",
+          "third-party",
+          "package"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "HuggingFace API 400 Error Resolution",
+        "keywords": [
+          "huggingface",
+          "error",
+          "resolution"
+        ],
+        "duration": 180
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "HuggingFace Debug Logging Resolution & Complete Integration Validation",
+        "keywords": [
+          "huggingface",
+          "debug",
+          "logging"
+        ],
+        "duration": 90
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "NPM Package Version Mismatch Resolution",
+        "keywords": [
+          "package",
+          "version",
+          "mismatch"
+        ],
+        "duration": 75
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "Third-Party Package End-to-End Validation Complete",
+        "keywords": [
+          "third-party",
+          "package",
+          "end-to-end"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "End-to-End Workflow Implementation Complete",
+        "keywords": [
+          "end-to-end",
+          "workflow",
+          "implementation"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "TypeScript Compilation Fixes & Enhanced Setup Testing",
+        "keywords": [
+          "typescript",
+          "compilation",
+          "fixes"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "Session Tracking System Enhancement",
+        "keywords": [
+          "session",
+          "tracking",
+          "system"
+        ],
+        "duration": 120
+      },
+      {
+        "date": "2025-05-26",
+        "focus": "Complete CI/CD Integration for Automated Session Insights",
+        "keywords": [
+          "complete",
+          "ci/cd",
+          "integration"
+        ],
+        "duration": 150
+      }
+    ],
+    "topFocusAreas": [
+      "huggingface",
+      "validation",
+      "package",
+      "session",
+      "inspector",
+      "complete",
+      "third-party",
+      "tracking",
+      "system",
+      "github"
+    ]
+  },
+  "blockersAnalysis": {
+    "totalBlockers": 15,
+    "averageBlockersPerSession": 0.5,
+    "blockersTypes": {
+      "other": 7,
+      "testing": 3,
+      "api": 3,
+      "build": 1,
+      "integration": 1
+    },
+    "resolutionRate": 30,
+    "blockersFreeSessions": 23
+  },
+  "fileChangePattterns": {
+    "fileTypes": {
+      "5": 1,
+      "no-extension": 24,
+      "ts": 15,
+      "md": 11,
+      "js": 9,
+      "csv": 6,
+      "yml": 5,
+      "json": 4,
+      "py": 2,
+      "ts validated": 1,
+      "js needs debugging": 1,
+      "md status validated": 1,
+      "0 protocol working": 1,
+      "ts complete": 1,
+      "0 protocol validated": 1,
+      "md updated": 1,
+      "5 validated across installation methods": 1,
+      "0 protocol confirmed working": 1,
+      "md updates": 1,
+      "ts completely rewritten": 1,
+      "json (lint script)": 1,
+      "yml (stable tests)": 1,
+      "js (automated)": 1,
+      "js (interactive)": 1,
+      "ts (endpoint fix)": 1,
+      "ts (routing fix)": 1,
+      "js (validation script)": 1,
+      "ts (logger config)": 1,
+      "ts (dynamic version loading)": 1,
+      "8)": 1,
+      "js (rebuilt with fix)": 1,
+      "8 validated": 1,
+      "0 confirmed working": 1,
+      "remcode": 1,
+      "ts (port fix)": 1,
+      "ts (setup integration)": 1,
+      "yml created": 1,
+      "sh": 1
+    },
+    "directories": {
+      "6": 1,
+      ".": 37,
+      "src": 25,
+      "docs": 19,
+      ".github": 7,
+      "scripts": 6,
+      "vibe-sessions": 5,
+      "bin": 3,
+      "tests": 1,
+      "rem-docs": 1,
+      "dist": 1
+    },
+    "changeTypes": {
+      "modified": 106
+    },
+    "mostChangedFileType": "no-extension",
+    "mostChangedDirectory": "."
+  },
+  "predictiveInsights": {
+    "complexityTrend": "increasing",
+    "durationTrend": "increasing",
+    "predictedNextComplexity": 4,
+    "predictedNextDuration": 180,
+    "riskAssessment": "high"
+  },
+  "recommendations": []
+}

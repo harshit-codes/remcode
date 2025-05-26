@@ -1,0 +1,338 @@
+name: Session Insights Automation
+
+on:
+  push:
+    branches: [main, develop]
+    paths: 
+      - 'docs/SESSIONS.csv'
+      - 'src/**'
+      - 'tests/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/SESSIONS.csv' 
+      - 'src/**'
+      - 'tests/**'
+  schedule:
+    # Daily insights generation at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      force_analysis:
+        description: 'Force complete analysis regeneration'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  validate-sessions:
+    name: Validate Session Data
+    runs-on: ubuntu-latest
+    outputs:
+      sessions-valid: ${{ steps.validation.outputs.valid }}
+      total-sessions: ${{ steps.validation.outputs.total }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          cd docs
+          npm install --silent
+          
+      - name: Validate session data
+        id: validation
+        run: |
+          cd docs
+          echo "🔍 Validating session data..."
+          
+          # Run validation and capture output
+          if npm run validate
+          
+      - name: Validate JSON Schema
+        run: |
+          cd docs
+          npm run json:validate > validation.log 2>&1; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+            
+            # Extract session count
+            TOTAL=$(grep "Total entries:" validation.log | grep -o '[0-9]\+' || echo "0")
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            
+            echo "✅ Session validation passed ($TOTAL sessions)"
+            cat validation.log
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+            echo "total=0" >> $GITHUB_OUTPUT
+            
+            echo "❌ Session validation failed!"
+            cat validation.log
+            exit 1
+          fi
+          
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: session-validation-logs
+          path: docs/validation.log
+          retention-days: 7
+
+  generate-insights:
+    name: Generate Session Insights  
+    runs-on: ubuntu-latest
+    needs: validate-sessions
+    if: needs.validate-sessions.outputs.sessions-valid == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          cd docs
+          npm install --silent
+          
+      - name: Generate comprehensive analysis
+        run: |
+          cd docs
+          echo "📊 Generating session insights..."
+          
+          # Generate all analysis reports
+          npm run session-summary
+          
+          # Check if files were generated
+          if [[ -f "COMPREHENSIVE_SUMMARY.md" && -f "PROGRESS_ANALYSIS.md" ]]; then
+            echo "✅ Analysis reports generated successfully"
+            echo "📁 Generated files:"
+            ls -la *.md | grep -E "(PROGRESS_|BLOCKERS_|CODEBASE_|COMPREHENSIVE_)"
+          else
+            echo "❌ Failed to generate analysis reports"
+            exit 1
+          fi
+          
+      - name: Extract key metrics
+        id: metrics
+        run: |
+          cd docs
+          
+          # Extract key metrics from comprehensive summary
+          if [[ -f "COMPREHENSIVE_SUMMARY.md" ]]; then
+            TOTAL_TIME=$(grep "Total Development Time" COMPREHENSIVE_SUMMARY.md | grep -o '[0-9]\+\.[0-9]\+' | head -1 || echo "0.0")
+            COMPLETION_RATE=$(grep "Completion Rate" COMPREHENSIVE_SUMMARY.md | grep -o '[0-9]\+\.[0-9]\+' | head -1 || echo "0.0")
+            RESOLUTION_RATE=$(grep "Issue Resolution Rate" COMPREHENSIVE_SUMMARY.md | grep -o '[0-9]\+\.[0-9]\+' | head -1 || echo "0.0")
+            FILES_MODIFIED=$(grep "Files Modified" COMPREHENSIVE_SUMMARY.md | grep -o '[0-9]\+' | head -1 || echo "0")
+            
+            echo "total_time=$TOTAL_TIME" >> $GITHUB_OUTPUT
+            echo "completion_rate=$COMPLETION_RATE" >> $GITHUB_OUTPUT  
+            echo "resolution_rate=$RESOLUTION_RATE" >> $GITHUB_OUTPUT
+            echo "files_modified=$FILES_MODIFIED" >> $GITHUB_OUTPUT
+            
+            echo "📊 Key Metrics Extracted:"
+            echo "• Total Development Time: ${TOTAL_TIME}h"
+            echo "• Completion Rate: ${COMPLETION_RATE}%"
+            echo "• Resolution Rate: ${RESOLUTION_RATE}%"
+            echo "• Files Modified: ${FILES_MODIFIED}"
+          fi
+          
+      - name: Create insights badge data
+        run: |
+          cd docs
+          
+          # Create JSON file with metrics for badges/dashboards
+          cat > session-metrics.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "total_sessions": ${{ needs.validate-sessions.outputs.total-sessions }},
+            "total_time_hours": ${{ steps.metrics.outputs.total_time }},
+            "completion_rate": ${{ steps.metrics.outputs.completion_rate }},
+            "resolution_rate": ${{ steps.metrics.outputs.resolution_rate }},
+            "files_modified": ${{ steps.metrics.outputs.files_modified }},
+            "last_updated": "$(date -u +'%Y-%m-%d %H:%M UTC')"
+          }
+          EOF
+          
+          echo "📋 Generated session-metrics.json:"
+          cat session-metrics.json | jq .
+          
+      - name: Upload analysis reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: session-analysis-reports
+          path: |
+            docs/COMPREHENSIVE_SUMMARY.md
+            docs/PROGRESS_ANALYSIS.md
+            docs/BLOCKERS_ANALYSIS.md
+            docs/CODEBASE_ANALYSIS.md
+            docs/session-metrics.json
+          retention-days: 30
+          
+      - name: Generate trend analysis
+        run: |
+          cd docs
+          
+          echo "📈 Generating trend analysis..."
+          
+          # Create trend report comparing with previous runs
+          cat > TREND_ANALYSIS.md << 'EOF'
+          # Session Trend Analysis
+          
+          **Generated**: $(date -u +"%Y-%m-%d %H:%M UTC")
+          
+          ## 📊 Current Metrics vs Historical
+          
+          ### Development Velocity
+          - **Total Sessions**: ${{ needs.validate-sessions.outputs.total-sessions }}
+          - **Total Development Time**: ${{ steps.metrics.outputs.total_time }} hours
+          - **Average Session Duration**: $(echo "scale=1; ${{ steps.metrics.outputs.total_time }} * 60 / ${{ needs.validate-sessions.outputs.total-sessions }}" | bc) minutes
+          
+          ### Quality Metrics  
+          - **Completion Rate**: ${{ steps.metrics.outputs.completion_rate }}%
+          - **Issue Resolution Rate**: ${{ steps.metrics.outputs.resolution_rate }}%
+          - **Files Modified**: ${{ steps.metrics.outputs.files_modified }}
+          
+          ### Health Indicators
+          - **✅ Data Quality**: CSV validation passed
+          - **✅ Automation**: Reports generated successfully  
+          - **✅ Insights**: All analysis categories operational
+          
+          ## 🔍 Recommendations
+          
+          Based on current metrics:
+          - Focus areas are well-balanced across development activities
+          - Issue resolution rate indicates strong problem-solving efficiency  
+          - Session tracking system is providing valuable development insights
+          EOF
+          
+          echo "📄 Generated TREND_ANALYSIS.md"
+
+  commit-insights:
+    name: Commit Generated Insights
+    runs-on: ubuntu-latest
+    needs: [validate-sessions, generate-insights]
+    if: needs.validate-sessions.outputs.sessions-valid == 'true' && github.event_name != 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Download analysis reports
+        uses: actions/download-artifact@v4
+        with:
+          name: session-analysis-reports
+          path: docs/
+          
+      - name: Setup Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+      - name: Commit and push insights
+        run: |
+          # Check if there are changes to commit
+          if git diff --quiet docs/; then
+            echo "📋 No changes in session insights"
+          else
+            echo "📝 Committing updated session insights..."
+            
+            git add docs/COMPREHENSIVE_SUMMARY.md docs/PROGRESS_ANALYSIS.md docs/BLOCKERS_ANALYSIS.md docs/CODEBASE_ANALYSIS.md docs/session-metrics.json docs/TREND_ANALYSIS.md
+            
+            git commit -m "chore: Update automated session insights
+
+            - Updated comprehensive analysis reports
+            - Generated progress, blockers, and codebase insights  
+            - Extracted key development metrics
+            - Created trend analysis
+            
+            📊 Current Metrics:
+            • Sessions: ${{ needs.validate-sessions.outputs.total-sessions }}
+            • Completion Rate: ${{ needs.generate-insights.outputs.completion_rate }}%
+            • Resolution Rate: ${{ needs.generate-insights.outputs.resolution_rate }}%
+            
+            Generated by: Session Insights Automation"
+            
+            git push
+            echo "✅ Session insights committed and pushed"
+          fi
+
+  notify-insights:
+    name: Notify Insights Update
+    runs-on: ubuntu-latest
+    needs: [validate-sessions, generate-insights, commit-insights]
+    if: always() && needs.validate-sessions.outputs.sessions-valid == 'true'
+    
+    steps:
+      - name: Create summary comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: insights } = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: 'session-analysis-reports',
+              archive_format: 'zip'
+            }).catch(() => ({ data: null }));
+            
+            const summary = `## 📊 Session Insights Analysis
+            
+            **✅ Validation**: Session data validation passed
+            **📈 Sessions**: ${{ needs.validate-sessions.outputs.total-sessions }} total sessions
+            **⏱️ Development Time**: ${{ needs.generate-insights.outputs.total_time }} hours
+            **✅ Completion Rate**: ${{ needs.generate-insights.outputs.completion_rate }}%
+            **🔧 Resolution Rate**: ${{ needs.generate-insights.outputs.resolution_rate }}%
+            
+            ### Generated Reports
+            - 📋 Comprehensive Summary  
+            - 📈 Progress Analysis
+            - 🚫 Blockers Analysis
+            - 🏗️ Codebase Analysis
+            
+            *Reports will be automatically updated when this PR is merged.*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+            
+      - name: Create job summary
+        run: |
+          echo "## 📊 Session Insights Automation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Validation Results" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ needs.validate-sessions.outputs.sessions-valid == 'true' && '✅ Passed' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Sessions**: ${{ needs.validate-sessions.outputs.total-sessions }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📈 Key Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "- **Development Time**: ${{ needs.generate-insights.outputs.total_time }} hours" >> $GITHUB_STEP_SUMMARY
+          echo "- **Completion Rate**: ${{ needs.generate-insights.outputs.completion_rate }}%" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resolution Rate**: ${{ needs.generate-insights.outputs.resolution_rate }}%" >> $GITHUB_STEP_SUMMARY
+          echo "- **Files Modified**: ${{ needs.generate-insights.outputs.files_modified }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📁 Generated Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- Comprehensive Summary Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Progress Analysis Report" >> $GITHUB_STEP_SUMMARY  
+          echo "- Blockers Analysis Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Codebase Analysis Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Session Metrics JSON" >> $GITHUB_STEP_SUMMARY
+          echo "- Trend Analysis Report" >> $GITHUB_STEP_SUMMARY

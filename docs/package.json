@@ -1,7 +1,7 @@
 {
   "name": "remcode-session-scripts",
-  "version": "2.0.0",
-  "description": "Enhanced session tracking and analysis scripts for Remcode development with JSON migration support",
+  "version": "2.1.0",
+  "description": "Enhanced session tracking and analysis scripts for Remcode development with comprehensive JSON analytics and GitHub Actions integration",
   "scripts": {
     "validate": "node scripts/validate-session.js validate",
     "add-session": "node scripts/session-helper.js interactive", 
@@ -18,16 +18,22 @@
     "json:analytics": "node scripts/session-manager.js analytics",
     "json:validate": "node scripts/session-manager.js validate",
     
+    "advanced:analytics": "node scripts/advanced-analytics.js report",
+    "enhanced:create": "node scripts/enhanced-session-creator.js create",
+    "github:update": "node scripts/github-actions-updater.js update",
+    
     "install-deps": "npm install ajv ajv-formats",
     "test-migration": "npm run install-deps && npm run migrate",
     "setup-json": "npm run install-deps && npm run migrate && npm run json:validate",
-    "status": "npm run json:analytics && echo '\n✅ JSON Migration: COMPLETE' && echo '📊 Enhanced Analytics: OPERATIONAL' && echo '🔍 Schema Validation: ACTIVE'"
+    "status": "npm run json:analytics && echo '\n✅ JSON Migration: COMPLETE' && echo '📊 Enhanced Analytics: OPERATIONAL' && echo '🔍 Schema Validation: ACTIVE'",
+    "phase2": "npm run advanced:analytics && npm run github:update && echo '\n🎉 Phase 2: Enhanced Analytics & GitHub Integration COMPLETE'",
+    "comprehensive": "npm run advanced:analytics && echo '\n📊 Comprehensive Analytics Generated!' && echo '📋 Check docs/analysis/ for detailed reports'"
   },
   "dependencies": {
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1"
   },
-  "keywords": ["session-tracking", "development", "analysis", "json", "migration", "validation"],
+  "keywords": ["session-tracking", "development", "analysis", "json", "migration", "validation", "analytics", "github-actions"],
   "author": "harshit-codes",
   "license": "MIT",
   "engines": {
