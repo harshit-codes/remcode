@@ -1,8 +1,8 @@
 {
-  "total_sessions": 63,
+  "total_sessions": 52,
   "completed_sessions": 52,
-  "in_progress_sessions": 11,
+  "in_progress_sessions": 0,
   "blocked_sessions": 0,
-  "total_hours": 87,
-  "last_updated": "2025-05-27T06:08:32.906Z"
+  "total_hours": 72.75,
+  "last_updated": "2025-05-27T06:23:36.841Z"
 }
