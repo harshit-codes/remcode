@@ -1,0 +1,102 @@
+# secrets.ts
+
+**File Path**: `setup/secrets.ts`
+
+## Description
+
+Secret configuration
+
+## Classes
+
+- `SecretsManager`
+
+## Interfaces
+
+- `SecretConfig`
+- `SecretOperationResult`
+- `SecretsOperationSummary`
+
+## Documentation Comments
+
+### Comment 1
+
+Secret operation result
+
+### Comment 2
+
+Secret operation summary
+
+### Comment 3
+
+Class to manage GitHub repository secrets for Remcode
+
+### Comment 4
+
+Constructor
+ @param githubToken GitHub API token
+
+### Comment 5
+
+Configure required repository secrets
+ @param owner Repository owner
+ @param repo Repository name
+ @returns Summary of secret operations
+
+### Comment 6
+
+Get required secrets for Remcode
+ @returns List of required secrets
+
+### Comment 7
+
+Set a repository secret in GitHub
+ @param owner Repository owner
+ @param repo Repository name
+ @param secret Secret configuration
+ @returns Secret operation result
+
+### Comment 8
+
+Encrypt a secret value using sodium for GitHub
+ @param publicKey Base64-encoded public key
+ @param secretValue Secret value to encrypt
+ @returns Base64-encoded encrypted secret
+
+### Comment 9
+
+Check if a repository has a specific secret
+ @param owner Repository owner
+ @param repo Repository name
+ @param secretName Secret name to check
+ @returns True if the secret exists
+
+### Comment 10
+
+Delete a repository secret
+ @param owner Repository owner
+ @param repo Repository name
+ @param secretName Secret name to delete
+ @returns True if the secret was deleted
+
+## Code Overview
+
+```typescript
+import * as crypto from 'crypto';
+import * as sodium from 'libsodium-wrappers';
+import { Octokit } from '@octokit/rest';
+import type { RestEndpointMethodTypes } from '@octokit/plugin-rest-endpoint-methods';
+import { getLogger } from '../utils/logger';
+
+// Key exports:
+export class SecretsManager { ... }
+export interface SecretConfig { ... }
+export interface SecretOperationResult { ... }
+export interface SecretsOperationSummary { ... }
+```
+
+## File Statistics
+
+- **Lines of Code**: 304
+- **File Size**: 9109 bytes
+- **Last Modified**: 2025-05-24T01:53:45.027Z
+
