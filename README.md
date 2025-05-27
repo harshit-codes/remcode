@@ -129,7 +129,25 @@ npm test
 ## 📚 Documentation
 
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute
+- **[Strategy Framework](sessions/STRATEGY_FRAMEWORK.md)** - Development planning and session management
 - **[License](LICENSE)** - MIT License
+
+## 🛠️ Development
+
+Remcode uses a **strategy-driven development framework** for systematic progress tracking:
+
+- **Session Management**: All development work is tracked through strategic sessions
+- **Multiple Strategies**: LLM optimization, production readiness, community growth
+- **Automated Validation**: Pre-commit hooks ensure session documentation
+- **Progress Tracking**: Real-time metrics and compliance monitoring
+
+```bash
+# View current strategies and progress
+cd sessions && npm run strategies
+cd sessions && npm run status
+```
+
+For development workflow, see [Strategy Framework Documentation](sessions/STRATEGY_FRAMEWORK.md).
 
 ## 🤝 Contributing
 

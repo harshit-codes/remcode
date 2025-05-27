@@ -1,0 +1,27 @@
+{
+  "name": "remcode-sessions",
+  "version": "2.0.0",
+  "description": "Strategy-driven session management for Remcode development",
+  "scripts": {
+    "create": "node session-manager.js create",
+    "list": "node session-manager.js list",
+    "strategies": "node session-manager.js strategies", 
+    "validate": "node session-manager.js validate",
+    "migrate": "node migrate-sessions.js",
+    "summary": "node -e \"const s = require('./sessions.json'); console.log('📊 Sessions:', s.metadata.totalSessions, '| Strategies:', Object.keys(require('./strategies.json').strategies).length)\"",
+    "status": "node -e \"const s = require('./sessions.json'); const byStatus = s.sessions.reduce((acc, session) => { acc[session.status] = (acc[session.status] || 0) + 1; return acc; }, {}); console.log('📈 Status Distribution:', byStatus)\"",
+    "strategy-status": "node -e \"const s = require('./sessions.json'); const byStrategy = s.sessions.reduce((acc, session) => { acc[session.strategy] = (acc[session.strategy] || 0) + 1; return acc; }, {}); console.log('🎯 Strategy Distribution:', byStrategy)\"",
+    "help": "echo '📋 Session Management Commands:\\n  create    - Create new session\\n  list      - List sessions\\n  strategies - Show available strategies\\n  validate  - Validate all sessions\\n  summary   - Quick statistics\\n  status    - Status distribution\\n  strategy-status - Strategy distribution'"
+  },
+  "dependencies": {
+    "commander": "^9.0.0"
+  },
+  "keywords": [
+    "session-management",
+    "strategy-framework", 
+    "development-tracking",
+    "remcode"
+  ],
+  "author": "harshit-codes",
+  "license": "MIT"
+}
