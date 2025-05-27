@@ -1,7 +1,7 @@
 {
   "name": "remcode",
-  "version": "0.1.8",
-  "description": "✅ HuggingFace API Fixed - Complete CodeBERT Embedding Integration - Production-ready MCP server with fixed embedding generation, CodeBERT 768-dim vectors, JSON-RPC 2.0, SSE transport, and validated third-party experience",
+  "version": "0.2.0",
+  "description": "Turn your AI assistant into a codebase expert. Intelligent code analysis, semantic search, and software engineering guidance through MCP integration.",
   "main": "bin/remcode.js",
   "bin": {
     "remcode": "bin/remcode.js",
@@ -45,12 +45,12 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:coverage-full": "jest --coverage --collectCoverageFrom='src/**/*.ts' --coverageReporters=text,lcov,html",
-    "test:lean": "jest --config jest-lean.config.json",
-    "test:lean:unit": "jest --config jest-lean.config.json tests-lean/unit",
-    "test:lean:integration": "jest --config jest-lean.config.json tests-lean/integration", 
-    "test:lean:e2e": "jest --config jest-lean.config.json tests-lean/e2e",
-    "test:lean:watch": "jest --config jest-lean.config.json --watch",
-    "test:lean:coverage": "jest --config jest-lean.config.json --coverage",
+    "test:user-journey": "jest tests/user-journey",
+    "test:compatibility": "jest tests/compatibility",
+    "test:all": "npm run test && npm run test:user-journey && npm run test:performance",
+    "benchmark": "node scripts/run-benchmarks.js",
+    "test:ci": "npm run test:all && npm run benchmark",
+
     "build": "tsc",
     "build:clean": "rm -rf dist && npm run build",
     "prepare": "npm run build",
