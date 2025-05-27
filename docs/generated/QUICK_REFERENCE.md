@@ -1,14 +1,157 @@
 # Remcode Quick Reference Guide
 
-*Generated: 2025-05-27T19:37:42.859Z*
+*Generated: 2025-05-27T19:52:32.510Z*
 
 ## Overview
 
-- **Functions**: 32
+- **Functions**: 43
 - **Documentation Coverage**: 100%
 - **Single Function Compliance**: [object Promise]%
 
 ## Functions
+
+
+### `analyzeCommand`
+
+**Description**: *  
+**Module**: `commands/analyze`  
+**File**: `src/commands/analyze.ts`  
+**Documented**: ✅  
+**Async**: ❌
+
+```typescript
+function analyzeCommand(...)
+```
+
+
+### `processCommand`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ❌
+
+```typescript
+function processCommand(...)
+```
+
+
+### `buildProcessingOptions`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function buildProcessingOptions(...)
+```
+
+
+### `determineProcessingType`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function determineProcessingType(...)
+```
+
+
+### `showDryRun`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function showDryRun(...)
+```
+
+
+### `generateProcessingReport`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function generateProcessingReport(...)
+```
+
+
+### `generateErrorReport`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function generateErrorReport(...)
+```
+
+
+### `updateProcessingState`
+
+**Description**: *  
+**Module**: `commands/process`  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function updateProcessingState(...)
+```
+
+
+### `updateCommand`
+
+**Description**: *  
+**Module**: `commands/update`  
+**File**: `src/commands/update.ts`  
+**Documented**: ✅  
+**Async**: ❌
+
+```typescript
+function updateCommand(...)
+```
+
+
+### `vectorizeCommand`
+
+**Description**: *  
+**Module**: `commands/vectorize`  
+**File**: `src/commands/vectorize.ts`  
+**Documented**: ✅  
+**Async**: ❌
+
+```typescript
+function vectorizeCommand(...)
+```
+
+
+### `generateVectorizationReport`
+
+**Description**: *  
+**Module**: `commands/vectorize`  
+**File**: `src/commands/vectorize.ts`  
+**Documented**: ✅  
+**Async**: ✅
+
+```typescript
+function generateVectorizationReport(...)
+```
 
 
 ### `autoRoute`

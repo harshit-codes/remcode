@@ -1,12 +1,138 @@
 # Remcode Function Catalog
 
-*Generated: 2025-05-27T19:37:42.859Z*
+*Generated: 2025-05-27T19:52:32.510Z*
 
 ## Statistics
 
-- **Total Functions**: 32
+- **Total Functions**: 43
 - **Total Modules**: 60
 - **Documentation Coverage**: 100%
+
+
+## Module: `commands/analyze`
+
+
+### `analyzeCommand`
+
+**Description**: *  
+**File**: `src/commands/analyze.ts`  
+**Documented**: ✅ Yes  
+**Async**: ❌ No
+
+---
+
+
+
+## Module: `commands/process`
+
+
+### `processCommand`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ❌ No
+
+---
+
+
+### `buildProcessingOptions`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+### `determineProcessingType`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+### `showDryRun`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+### `generateProcessingReport`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+### `generateErrorReport`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+### `updateProcessingState`
+
+**Description**: *  
+**File**: `src/commands/process.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
+
+
+## Module: `commands/update`
+
+
+### `updateCommand`
+
+**Description**: *  
+**File**: `src/commands/update.ts`  
+**Documented**: ✅ Yes  
+**Async**: ❌ No
+
+---
+
+
+
+## Module: `commands/vectorize`
+
+
+### `vectorizeCommand`
+
+**Description**: *  
+**File**: `src/commands/vectorize.ts`  
+**Documented**: ✅ Yes  
+**Async**: ❌ No
+
+---
+
+
+### `generateVectorizationReport`
+
+**Description**: *  
+**File**: `src/commands/vectorize.ts`  
+**Documented**: ✅ Yes  
+**Async**: ✅ Yes
+
+---
+
 
 
 ## Module: `index`

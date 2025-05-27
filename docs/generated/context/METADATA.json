@@ -1,6 +1,105 @@
 {
   "functions": [
     {
+      "name": "analyzeCommand",
+      "description": "*",
+      "module": "commands/analyze",
+      "filePath": "src/commands/analyze.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function analyzeCommand(...)"
+    },
+    {
+      "name": "processCommand",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function processCommand(...)"
+    },
+    {
+      "name": "buildProcessingOptions",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function buildProcessingOptions(...)"
+    },
+    {
+      "name": "determineProcessingType",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function determineProcessingType(...)"
+    },
+    {
+      "name": "showDryRun",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function showDryRun(...)"
+    },
+    {
+      "name": "generateProcessingReport",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function generateProcessingReport(...)"
+    },
+    {
+      "name": "generateErrorReport",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function generateErrorReport(...)"
+    },
+    {
+      "name": "updateProcessingState",
+      "description": "*",
+      "module": "commands/process",
+      "filePath": "src/commands/process.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function updateProcessingState(...)"
+    },
+    {
+      "name": "updateCommand",
+      "description": "*",
+      "module": "commands/update",
+      "filePath": "src/commands/update.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function updateCommand(...)"
+    },
+    {
+      "name": "vectorizeCommand",
+      "description": "*",
+      "module": "commands/vectorize",
+      "filePath": "src/commands/vectorize.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function vectorizeCommand(...)"
+    },
+    {
+      "name": "generateVectorizationReport",
+      "description": "*",
+      "module": "commands/vectorize",
+      "filePath": "src/commands/vectorize.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function generateVectorizationReport(...)"
+    },
+    {
       "name": "autoRoute",
       "description": "*",
       "module": "index",
@@ -294,7 +393,17 @@
       "name": "commands/analyze",
       "path": "src/commands/analyze.ts",
       "description": "Module: commands/analyze",
-      "functions": [],
+      "functions": [
+        {
+          "name": "analyzeCommand",
+          "description": "*",
+          "module": "commands/analyze",
+          "filePath": "src/commands/analyze.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function analyzeCommand(...)"
+        }
+      ],
       "types": [
         {
           "name": "SimpleAnalysis",
@@ -321,7 +430,71 @@
       "name": "commands/process",
       "path": "src/commands/process.ts",
       "description": "Module: commands/process",
-      "functions": [],
+      "functions": [
+        {
+          "name": "processCommand",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function processCommand(...)"
+        },
+        {
+          "name": "buildProcessingOptions",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function buildProcessingOptions(...)"
+        },
+        {
+          "name": "determineProcessingType",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function determineProcessingType(...)"
+        },
+        {
+          "name": "showDryRun",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function showDryRun(...)"
+        },
+        {
+          "name": "generateProcessingReport",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function generateProcessingReport(...)"
+        },
+        {
+          "name": "generateErrorReport",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function generateErrorReport(...)"
+        },
+        {
+          "name": "updateProcessingState",
+          "description": "*",
+          "module": "commands/process",
+          "filePath": "src/commands/process.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function updateProcessingState(...)"
+        }
+      ],
       "types": [
         {
           "name": "ProcessOptions",
@@ -366,7 +539,17 @@
       "name": "commands/update",
       "path": "src/commands/update.ts",
       "description": "Module: commands/update",
-      "functions": [],
+      "functions": [
+        {
+          "name": "updateCommand",
+          "description": "*",
+          "module": "commands/update",
+          "filePath": "src/commands/update.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function updateCommand(...)"
+        }
+      ],
       "types": [
         {
           "name": "RemcodeConfig",
@@ -389,7 +572,26 @@
       "name": "commands/vectorize",
       "path": "src/commands/vectorize.ts",
       "description": "Module: commands/vectorize",
-      "functions": [],
+      "functions": [
+        {
+          "name": "vectorizeCommand",
+          "description": "*",
+          "module": "commands/vectorize",
+          "filePath": "src/commands/vectorize.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function vectorizeCommand(...)"
+        },
+        {
+          "name": "generateVectorizationReport",
+          "description": "*",
+          "module": "commands/vectorize",
+          "filePath": "src/commands/vectorize.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function generateVectorizationReport(...)"
+        }
+      ],
       "types": [],
       "exports": [
         "vectorizeCommand"
@@ -3260,11 +3462,11 @@
   ],
   "metrics": {
     "totalFiles": 60,
-    "totalFunctions": 32,
+    "totalFunctions": 43,
     "totalTypes": 158,
     "documentationCoverage": 100,
     "singleFunctionCompliance": {},
-    "lastGenerated": "2025-05-27T19:37:42.853Z"
+    "lastGenerated": "2025-05-27T19:52:32.509Z"
   },
-  "lastGenerated": "2025-05-27T19:37:42.859Z"
+  "lastGenerated": "2025-05-27T19:52:32.510Z"
 }

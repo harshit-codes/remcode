@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-05-27T19:52:15.651Z",
+  "totalFiles": 61,
+  "validationResults": {
+    "singleFunctionCompliance": false,
+    "jsdocCompleteness": true,
+    "fileOrganization": true,
+    "typeSafety": false
+  },
+  "overallCompliance": 50
+}
