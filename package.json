@@ -52,7 +52,7 @@
     "mcp:validate": "bash MCP-Inspect/scripts/validate-tools.sh",
     "test:all": "npm run test && npm run test:mcp-inspect",
     "test:ci": "npm run test:all",
-    "docs:generate": "node scripts/generate-rem-docs.js",
+    "docs:generate": "node scripts/unified-rem-docs-generator.js",
 
     "build": "tsc",
     "build:clean": "rm -rf dist && npm run build",
