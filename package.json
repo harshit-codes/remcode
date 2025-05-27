@@ -13,8 +13,7 @@
     ".npmrc",
     "README.md",
     "LICENSE",
-    "CONTRIBUTING.md",
-    "INSTALLATION.md"
+    "CONTRIBUTING.md"
   ],
   "scripts": {
     "start": "node bin/remcode.js",

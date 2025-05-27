@@ -2,22 +2,27 @@
 
 **Codebase-Aware SWE Autopilot**
 
-Remcode creates a codebase-aware autopilot trained on software engineering best practices. Your AI assistant gains deep understanding of your code patterns, architecture, and conventions. Use alongside other MCP tools to build an intelligent development workflow that follows your project's standards.
+Remcode creates a codebase-aware autopilot trained on software engineering best practices. Your AI assistant gains deep understanding of your code patterns, architecture, and conventions.
 
-## ⚡ Quick Installation
+## ⚡ 30-Second Setup
 
+### **1. Install & Start**
 ```bash
-# Single command - works everywhere
 npx remcode
 ```
 
-**That's it!** Remcode auto-detects your environment and guides you through setup.
+### **2. Add to Your AI Assistant**
 
-### **🤖 Add to AI Assistant**
+Choose your AI assistant and copy-paste the configuration:
 
-Copy-paste this configuration to your AI assistant:
+<details>
+<summary><strong>📱 Claude Desktop</strong></summary>
 
-#### **Claude Desktop**
+**File Location:**
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -33,17 +38,12 @@ Copy-paste this configuration to your AI assistant:
   }
 }
 ```
+</details>
 
-#### **Get API Keys (30 seconds total):**
-- **Pinecone**: [Get key →](https://app.pinecone.io/organizations/-/projects/-/keys)
-- **HuggingFace**: [Get token →](https://huggingface.co/settings/tokens) 
-- **GitHub**: [Get token →](https://github.com/settings/tokens/new?scopes=repo,workflow&description=Remcode%20MCP%20Tools)
+<details>
+<summary><strong>🎯 Cursor Editor</strong></summary>
 
-#### **Ready!** Ask your AI assistant about your codebase.
-
-### **🔧 More AI Assistants**
-
-#### **Cursor Editor**
+**Configuration:**
 ```json
 {
   "remcode": {
@@ -56,8 +56,14 @@ Copy-paste this configuration to your AI assistant:
   }
 }
 ```
+</details>
 
-#### **Continue Dev (VS Code)**
+<details>
+<summary><strong>🔄 Continue Dev (VS Code)</strong></summary>
+
+**File Location:** `~/.continue/config.json`
+
+**Configuration:**
 ```json
 {
   "mcpServers": {
@@ -73,6 +79,55 @@ Copy-paste this configuration to your AI assistant:
   }
 }
 ```
+</details>
+
+### **3. Get API Keys (30 seconds total)**
+
+<details>
+<summary><strong>🔑 Pinecone (Vector Database)</strong></summary>
+
+**Get Key:** [pinecone.io → API Keys](https://app.pinecone.io/organizations/-/projects/-/keys)
+
+**Steps:**
+1. Sign up free → Create project → Copy API key
+2. **Why needed:** Stores code embeddings for semantic search
+
+**Free tier:** 1GB storage, 100K vectors
+</details>
+
+<details>
+<summary><strong>🤗 HuggingFace (AI Models)</strong></summary>
+
+**Get Token:** [huggingface.co → Settings → Tokens](https://huggingface.co/settings/tokens)
+
+**Steps:**
+1. Sign up free → New token → Read permission → Copy
+2. **Why needed:** Access to CodeBERT embedding models
+
+**Free tier:** Unlimited inference API calls
+</details>
+
+<details>
+<summary><strong>🐙 GitHub (Repository Access)</strong></summary>
+
+**Get Token:** [GitHub → New Token](https://github.com/settings/tokens/new?scopes=repo,workflow&description=Remcode%20MCP%20Tools)
+
+**Steps:**
+1. Generate token → Select `repo` and `workflow` scopes → Copy
+2. **Why needed:** Repository analysis and automated processing
+
+**Required scopes:** `repo`, `workflow`
+</details>
+
+### **4. Ask Questions!**
+
+```
+"How does authentication work in this codebase?"
+"Show me error handling patterns"
+"Find functions related to user management"
+```
+
+**🎉 Ready!** Your AI assistant now understands your codebase.
 
 ## 🚀 Key Features
 

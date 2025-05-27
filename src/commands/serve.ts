@@ -105,10 +105,33 @@ export function serveCommand(program: Command): void {
           console.log(chalk.gray('       }'));
           console.log(chalk.gray('     }'));
           console.log(chalk.gray('   }'));
-          console.log(chalk.cyan('\n📚 Get API keys:'));
+          console.log(chalk.cyan('\n📚 Get API keys (30 seconds total):'));
           console.log(chalk.cyan('   • Pinecone: https://app.pinecone.io/organizations/-/projects/-/keys'));
+          console.log(chalk.gray('     → Sign up free → Create project → Copy API key'));
           console.log(chalk.cyan('   • HuggingFace: https://huggingface.co/settings/tokens'));
-          console.log(chalk.cyan('   • GitHub: https://github.com/settings/tokens/new?scopes=repo,workflow'));
+          console.log(chalk.gray('     → Sign up free → New token → Read permission → Copy'));
+          console.log(chalk.cyan('   • GitHub: https://github.com/settings/tokens/new?scopes=repo,workflow&description=Remcode%20MCP%20Tools'));
+          console.log(chalk.gray('     → Generate token → Select repo,workflow scopes → Copy'));
+          
+          // Feature availability messaging
+          console.log(chalk.cyan('\n🛠️  Available Features:'));
+          console.log(chalk.green('   ✅ SWE prompts and guidelines (no tokens required)'));
+          if (!missingTokens.includes('GITHUB_TOKEN')) {
+            console.log(chalk.green('   ✅ GitHub repository operations'));
+          } else {
+            console.log(chalk.red('   ❌ GitHub repository operations (requires GITHUB_TOKEN)'));
+          }
+          if (!missingTokens.includes('HUGGINGFACE_TOKEN')) {
+            console.log(chalk.green('   ✅ Code embedding and AI model access'));
+          } else {
+            console.log(chalk.red('   ❌ Code embedding and AI model access (requires HUGGINGFACE_TOKEN)'));
+          }
+          if (!missingTokens.includes('PINECONE_API_KEY')) {
+            console.log(chalk.green('   ✅ Vector storage and semantic search'));
+          } else {
+            console.log(chalk.red('   ❌ Vector storage and semantic search (requires PINECONE_API_KEY)'));
+          }
+          
           console.log(chalk.yellow('\n🚀 Server will start with partial functionality\n'));
         } else {
           console.log(chalk.green('\n✅ All tokens configured - full functionality available\n'));

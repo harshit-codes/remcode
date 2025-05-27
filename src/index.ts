@@ -124,8 +124,12 @@ function autoRoute(): void {
   console.log(chalk.gray('   }'));
   console.log('\n' + chalk.cyan('📚 Get API keys:'));
   console.log(chalk.cyan('   • Pinecone: https://app.pinecone.io/organizations/-/projects/-/keys'));
+  console.log(chalk.gray('     → Sign up free → Create project → Copy API key'));
   console.log(chalk.cyan('   • HuggingFace: https://huggingface.co/settings/tokens'));
-  console.log(chalk.cyan('   • GitHub: https://github.com/settings/tokens/new?scopes=repo,workflow'));
+  console.log(chalk.gray('     → Sign up free → New token → Read permission → Copy'));
+  console.log(chalk.cyan('   • GitHub: https://github.com/settings/tokens/new?scopes=repo,workflow&description=Remcode%20MCP%20Tools'));
+  console.log(chalk.gray('     → Generate token → Select repo,workflow scopes → Copy'));
+  console.log('\n' + chalk.green('💡 Total setup time: ~30 seconds'));
 }
 
 /**
