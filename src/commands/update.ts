@@ -40,6 +40,13 @@ interface RemcodeConfig {
   };
 }
 
+/**
+ * updateCommand function
+ *
+ * @description TODO: Add description
+ * @param {any} program TODO: Add parameter description
+ * @returns {Command): void} TODO: Add return description
+ */
 export function updateCommand(program: Command): void {
   program
     .command('update')

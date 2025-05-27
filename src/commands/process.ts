@@ -21,6 +21,13 @@ interface ProcessOptions {
   reportPath?: string;
 }
 
+/**
+ * processCommand function
+ *
+ * @description TODO: Add description
+ * @param {any} program TODO: Add parameter description
+ * @returns {Command): void} TODO: Add return description
+ */
 export function processCommand(program: Command): void {
   program
     .command('process')
@@ -144,6 +151,14 @@ export function processCommand(program: Command): void {
     });
 }
 
+/**
+ * buildProcessingOptions function
+ *
+ * @description TODO: Add description
+ * @param {any} config TODO: Add parameter description
+ * @param {any} options TODO: Add parameter description
+ * @returns {any, options: ProcessOptions): Promise<IncrementalProcessorOptions>} TODO: Add return description
+ */
 async function buildProcessingOptions(config: any, options: ProcessOptions): Promise<IncrementalProcessorOptions> {
   // Get API keys from environment variables (required in GitHub Actions)
   const pineconeApiKey = process.env.PINECONE_API_KEY;
@@ -181,6 +196,11 @@ async function buildProcessingOptions(config: any, options: ProcessOptions): Pro
   return processingOptions;
 }
 
+/**
+ * determineProcessingType function
+ *
+ * @description TODO: Add description
+ */
 async function determineProcessingType(
   requestedType: string | undefined, 
   stateManager: StateManager, 
@@ -217,6 +237,15 @@ async function determineProcessingType(
   return 'incremental';
 }
 
+/**
+ * showDryRun function
+ *
+ * @description TODO: Add description
+ * @param {any} repoPath TODO: Add parameter description
+ * @param {any} options TODO: Add parameter description
+ * @param {any} cmdOptions TODO: Add parameter description
+ * @returns {string, options: IncrementalProcessorOptions, cmdOptions: ProcessOptions): Promise<void>} TODO: Add return description
+ */
 async function showDryRun(repoPath: string, options: IncrementalProcessorOptions, cmdOptions: ProcessOptions): Promise<void> {
   console.log(chalk.cyan('🔍 DRY RUN - Processing Preview'));
   console.log(chalk.blue(`📁 Repository: ${repoPath}`));
@@ -229,6 +258,11 @@ async function showDryRun(repoPath: string, options: IncrementalProcessorOptions
   console.log(chalk.cyan('\n✅ Configuration is valid. Run without --dry-run to execute processing.'));
 }
 
+/**
+ * generateProcessingReport function
+ *
+ * @description TODO: Add description
+ */
 async function generateProcessingReport(
   result: any, 
   reportPath: string | undefined,
@@ -246,6 +280,11 @@ async function generateProcessingReport(
   console.log(chalk.blue(`📄 Processing report saved to: ${finalReportPath}`));
 }
 
+/**
+ * generateErrorReport function
+ *
+ * @description TODO: Add description
+ */
 async function generateErrorReport(
   error: any,
   reportPath: string | undefined,
@@ -266,6 +305,14 @@ async function generateErrorReport(
   console.error(chalk.red(`📄 Error report saved to: ${finalReportPath}`));
 }
 
+/**
+ * updateProcessingState function
+ *
+ * @description TODO: Add description
+ * @param {any} stateManager TODO: Add parameter description
+ * @param {any} result TODO: Add parameter description
+ * @returns {StateManager, result: any): Promise<void>} TODO: Add return description
+ */
 async function updateProcessingState(stateManager: StateManager, result: any): Promise<void> {
   try {
     // TODO: Fix updateStatistics call

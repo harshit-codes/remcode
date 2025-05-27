@@ -69,6 +69,13 @@ interface SimpleAnalysis {
   };
 }
 
+/**
+ * AnalyzeCommand function
+ *
+ * @description Configures and sets up the analyze command for the CLI
+ * @param {Command} program The Commander.js program instance
+ * @returns {void} Does not return a value
+ */
 export function analyzeCommand(program: Command): void {
   program
     .command('analyze')

@@ -10,6 +10,13 @@ import { getLogger } from '../utils/logger';
 
 const logger = getLogger('VectorizeCommand');
 
+/**
+ * vectorizeCommand function
+ *
+ * @description TODO: Add description
+ * @param {any} program TODO: Add parameter description
+ * @returns {Command): void} TODO: Add return description
+ */
 export function vectorizeCommand(program: Command): void {
   program
     .command('vectorize')
@@ -142,6 +149,11 @@ export function vectorizeCommand(program: Command): void {
     });
 }
 
+/**
+ * generateVectorizationReport function
+ *
+ * @description TODO: Add description
+ */
 async function generateVectorizationReport(
   result: any,
   outputPath: string,
