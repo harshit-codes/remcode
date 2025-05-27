@@ -51,10 +51,16 @@ while IFS= read -r -d '' file; do
     fi
     
     # Count exported functions
-    function_count=$(grep -c "^export.*function\|^export default.*function\|^export async function" "$file" 2>/dev/null || echo "0")
+    function_count=$(grep -c "^export.*function\|^export default.*function\|^export async function" "$file" 2>/dev/null)
+    if [ -z "$function_count" ] || [ "$function_count" = "" ]; then
+        function_count=0
+    fi
     
     # Count regular function declarations that might be exported
-    regular_functions=$(grep -c "^function\|^async function" "$file" 2>/dev/null || echo "0")
+    regular_functions=$(grep -c "^function\|^async function" "$file" 2>/dev/null)
+    if [ -z "$regular_functions" ] || [ "$regular_functions" = "" ]; then
+        regular_functions=0
+    fi
     
     total_functions=$((function_count + regular_functions))
     
