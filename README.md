@@ -6,37 +6,73 @@ Remcode creates a codebase-aware autopilot trained on software engineering best 
 
 ## ⚡ Quick Installation
 
-### **Option 1: NPX (Recommended)**
 ```bash
-# Start MCP server (auto-installs if needed)
-npx remcode serve --port 3000
-
-# Start MCP Inspector for interactive testing
-npx remcode inspector
-# OR: npx @modelcontextprotocol/inspector node bin/remcode-stdio.js
-# Opens: http://127.0.0.1:6274
+# Single command - works everywhere
+npx remcode
 ```
 
-### **Option 2: Global Install**
-```bash
-# Install globally
-npm install -g remcode
+**That's it!** Remcode auto-detects your environment and guides you through setup.
 
-# Start server and inspector
-remcode serve --port 3000
-remcode inspector  # Interactive testing
+### **🤖 Add to AI Assistant**
+
+Copy-paste this configuration to your AI assistant:
+
+#### **Claude Desktop**
+```json
+{
+  "mcpServers": {
+    "remcode": {
+      "command": "npx",
+      "args": ["remcode"],
+      "env": {
+        "PINECONE_API_KEY": "your_key_here",
+        "HUGGINGFACE_TOKEN": "your_token_here",
+        "GITHUB_TOKEN": "your_github_token"
+      }
+    }
+  }
+}
 ```
 
-### **Option 3: Clone & Build**
-```bash
-git clone https://github.com/harshit-codes/remcode.git
-cd remcode
-npm install && npm run build
-./bin/remcode.js serve --port 3000
-./bin/remcode.js inspector  # Interactive testing
+#### **Get API Keys (30 seconds total):**
+- **Pinecone**: [Get key →](https://app.pinecone.io/organizations/-/projects/-/keys)
+- **HuggingFace**: [Get token →](https://huggingface.co/settings/tokens) 
+- **GitHub**: [Get token →](https://github.com/settings/tokens/new?scopes=repo,workflow&description=Remcode%20MCP%20Tools)
+
+#### **Ready!** Ask your AI assistant about your codebase.
+
+### **🔧 More AI Assistants**
+
+#### **Cursor Editor**
+```json
+{
+  "remcode": {
+    "command": "npx remcode",
+    "env": {
+      "PINECONE_API_KEY": "your_key_here",
+      "HUGGINGFACE_TOKEN": "your_token_here",
+      "GITHUB_TOKEN": "your_github_token"
+    }
+  }
+}
 ```
 
-**[📖 Complete Setup Guide →](INSTALLATION.md)**
+#### **Continue Dev (VS Code)**
+```json
+{
+  "mcpServers": {
+    "remcode": {
+      "command": "npx",
+      "args": ["remcode"],
+      "env": {
+        "PINECONE_API_KEY": "your_key_here",
+        "HUGGINGFACE_TOKEN": "your_token_here",
+        "GITHUB_TOKEN": "your_github_token"
+      }
+    }
+  }
+}
+```
 
 ## 🚀 Key Features
 

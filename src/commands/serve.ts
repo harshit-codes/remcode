@@ -8,10 +8,8 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
-import dotenv from 'dotenv';
 import { MCPServer } from '../mcp';
 import { getLogger, configureLogger, LogLevel } from '../utils/logger';
-import { TokenManager, TokenConfig } from '../utils/token-manager';
 import { PortManager } from '../utils/port-manager';
 
 const logger = getLogger('MCP-Command');
@@ -29,9 +27,6 @@ export function serveCommand(program: Command): void {
     .option('-v, --verbose', 'Enable verbose output')
     .option('--skip-token-collection', 'Skip interactive token collection')
     .action(async (options) => {
-      // Load environment variables
-      dotenv.config();
-      
       // Configure logger based on environment and CLI options
       let logLevel = LogLevel.INFO; // Default to INFO
       
@@ -69,64 +64,54 @@ export function serveCommand(program: Command): void {
         const preferredPort = parseInt(options.port);
         const selectedPort = await PortManager.getAvailablePort(preferredPort);
         
-        // Step 2: Token Management
-        const tokenManager = new TokenManager();
-        const existingTokens = tokenManager.loadExistingTokens();
-        const cliTokens = TokenManager.cliOptionsToTokens(options);
+        // Step 2: MCP Token Management (Environment Variables Only)
+        const mcpTokens = {
+          GITHUB_TOKEN: process.env.GITHUB_TOKEN || options.githubToken || '',
+          PINECONE_API_KEY: process.env.PINECONE_API_KEY || options.pineconeKey || '',
+          HUGGINGFACE_TOKEN: process.env.HUGGINGFACE_TOKEN || options.huggingfaceToken || ''
+        };
         
-        let finalTokens: TokenConfig;
+        // Display token status (without showing actual values for security)
+        console.log(chalk.cyan('🔑 Token Status:'));
+        console.log(chalk.green(`✓ GITHUB_TOKEN: ${mcpTokens.GITHUB_TOKEN ? 'Provided via MCP environment' : 'Not provided'}`));
+        console.log(chalk.green(`✓ PINECONE_API_KEY: ${mcpTokens.PINECONE_API_KEY ? 'Provided via MCP environment' : 'Not provided'}`));
+        console.log(chalk.green(`✓ HUGGINGFACE_TOKEN: ${mcpTokens.HUGGINGFACE_TOKEN ? 'Provided via MCP environment' : 'Not provided'}`));
         
-        if (options.skipTokenCollection) {
-          // Use existing + CLI tokens without interactive collection
-          finalTokens = { ...existingTokens };
-          
-          // Override with CLI tokens if provided
-          if (cliTokens.GITHUB_TOKEN) {
-            finalTokens.GITHUB_TOKEN = cliTokens.GITHUB_TOKEN;
-            console.log(chalk.green(`✓ GITHUB_TOKEN: Provided via CLI argument`));
-          } else if (existingTokens.GITHUB_TOKEN) {
-            console.log(chalk.green(`✓ GITHUB_TOKEN: Found in .env file`));
+        // Step 3: Validate Required Tokens (Graceful Degradation)
+        const missingTokens = [];
+        if (!mcpTokens.GITHUB_TOKEN || mcpTokens.GITHUB_TOKEN.trim() === '') missingTokens.push('GITHUB_TOKEN');
+        if (!mcpTokens.PINECONE_API_KEY || mcpTokens.PINECONE_API_KEY.trim() === '') missingTokens.push('PINECONE_API_KEY');
+        if (!mcpTokens.HUGGINGFACE_TOKEN || mcpTokens.HUGGINGFACE_TOKEN.trim() === '') missingTokens.push('HUGGINGFACE_TOKEN');
+        
+        if (missingTokens.length > 0) {
+          console.log(chalk.yellow(`\n⚠️  Missing tokens: ${missingTokens.join(', ')}`));
+          console.log(chalk.cyan('💡 Add tokens to your AI assistant MCP configuration:'));
+          console.log(chalk.gray('   {'));
+          console.log(chalk.gray('     "mcpServers": {'));
+          console.log(chalk.gray('       "remcode": {'));
+          console.log(chalk.gray('         "command": "npx",'));
+          console.log(chalk.gray('         "args": ["remcode"],'));
+          console.log(chalk.gray('         "env": {'));
+          if (missingTokens.includes('PINECONE_API_KEY')) {
+            console.log(chalk.yellow('           "PINECONE_API_KEY": "your_key_here",'));
           }
-          
-          if (cliTokens.PINECONE_API_KEY) {
-            finalTokens.PINECONE_API_KEY = cliTokens.PINECONE_API_KEY;
-            console.log(chalk.green(`✓ PINECONE_API_KEY: Provided via CLI argument`));
-          } else if (existingTokens.PINECONE_API_KEY) {
-            console.log(chalk.green(`✓ PINECONE_API_KEY: Found in .env file`));
+          if (missingTokens.includes('HUGGINGFACE_TOKEN')) {
+            console.log(chalk.yellow('           "HUGGINGFACE_TOKEN": "your_token_here",'));
           }
-          
-          if (cliTokens.HUGGINGFACE_TOKEN) {
-            finalTokens.HUGGINGFACE_TOKEN = cliTokens.HUGGINGFACE_TOKEN;
-            console.log(chalk.green(`✓ HUGGINGFACE_TOKEN: Provided via CLI argument`));
-          } else if (existingTokens.HUGGINGFACE_TOKEN) {
-            console.log(chalk.green(`✓ HUGGINGFACE_TOKEN: Found in .env file`));
+          if (missingTokens.includes('GITHUB_TOKEN')) {
+            console.log(chalk.yellow('           "GITHUB_TOKEN": "your_github_token"'));
           }
-          
-          console.log(chalk.yellow('⚠ Skipping interactive token collection'));
+          console.log(chalk.gray('         }'));
+          console.log(chalk.gray('       }'));
+          console.log(chalk.gray('     }'));
+          console.log(chalk.gray('   }'));
+          console.log(chalk.cyan('\n📚 Get API keys:'));
+          console.log(chalk.cyan('   • Pinecone: https://app.pinecone.io/organizations/-/projects/-/keys'));
+          console.log(chalk.cyan('   • HuggingFace: https://huggingface.co/settings/tokens'));
+          console.log(chalk.cyan('   • GitHub: https://github.com/settings/tokens/new?scopes=repo,workflow'));
+          console.log(chalk.yellow('\n🚀 Server will start with partial functionality\n'));
         } else {
-          // Interactive token collection for missing tokens
-          finalTokens = await tokenManager.collectMissingTokens(existingTokens, cliTokens);
-        }
-        
-        // Save tokens to .env if any were collected
-        const hasNewTokens = Object.keys(finalTokens).some(key => 
-          finalTokens[key] && finalTokens[key] !== existingTokens[key]
-        );
-        
-        if (hasNewTokens) {
-          await tokenManager.saveTokensToEnv(finalTokens);
-        }
-        
-        // Step 3: Validate Required Tokens
-        const missingCriticalTokens = [];
-        if (!finalTokens.GITHUB_TOKEN || finalTokens.GITHUB_TOKEN.trim() === '') missingCriticalTokens.push('GITHUB_TOKEN');
-        if (!finalTokens.PINECONE_API_KEY || finalTokens.PINECONE_API_KEY.trim() === '') missingCriticalTokens.push('PINECONE_API_KEY');
-        if (!finalTokens.HUGGINGFACE_TOKEN || finalTokens.HUGGINGFACE_TOKEN.trim() === '') missingCriticalTokens.push('HUGGINGFACE_TOKEN');
-        
-        if (missingCriticalTokens.length > 0) {
-          console.log(chalk.red(`\n❌ Missing critical tokens: ${missingCriticalTokens.join(', ')}`));
-          console.log(chalk.yellow('💡 MCP server will start with limited functionality'));
-          console.log(chalk.gray('   Run again without --skip-token-collection to add missing tokens\n'));
+          console.log(chalk.green('\n✅ All tokens configured - full functionality available\n'));
         }
         
         // Step 4: Initialize MCP Server
@@ -155,9 +140,9 @@ export function serveCommand(program: Command): void {
           
           // Display token status
           console.log(chalk.cyan('🔑 Token Status:'));
-          console.log(`   GitHub: ${finalTokens.GITHUB_TOKEN && finalTokens.GITHUB_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
-          console.log(`   Pinecone: ${finalTokens.PINECONE_API_KEY && finalTokens.PINECONE_API_KEY.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
-          console.log(`   HuggingFace: ${finalTokens.HUGGINGFACE_TOKEN && finalTokens.HUGGINGFACE_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log(`   GitHub: ${mcpTokens.GITHUB_TOKEN && mcpTokens.GITHUB_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log(`   Pinecone: ${mcpTokens.PINECONE_API_KEY && mcpTokens.PINECONE_API_KEY.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
+          console.log(`   HuggingFace: ${mcpTokens.HUGGINGFACE_TOKEN && mcpTokens.HUGGINGFACE_TOKEN.trim() ? chalk.green('✓ Available') : chalk.red('✗ Missing')}`);
           console.log('');
           
           // Display available tools
