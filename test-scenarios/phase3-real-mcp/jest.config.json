@@ -1,9 +1,9 @@
 {
   "preset": "ts-jest",
   "testEnvironment": "node",
-  "roots": ["<rootDir>/test-scenarios/phase3-real-mcp"],
+  "roots": ["<rootDir>"],
   "testMatch": [
-    "**/test-scenarios/phase3-real-mcp/**/*.test.ts"
+    "**/*.test.ts"
   ],
   "transform": {
     "^.+\\.ts$": "ts-jest"
@@ -12,7 +12,7 @@
     "test-scenarios/phase3-real-mcp/**/*.ts",
     "!test-scenarios/phase3-real-mcp/**/*.test.ts"
   ],
-  "setupFilesAfterEnv": ["<rootDir>/test-scenarios/phase3-real-mcp/setup.ts"],
+  "setupFilesAfterEnv": ["<rootDir>/setup.ts"],
   "testTimeout": 30000,
   "verbose": true,
   "detectOpenHandles": true,

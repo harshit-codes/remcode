@@ -1,0 +1,3270 @@
+{
+  "functions": [
+    {
+      "name": "autoRoute",
+      "description": "*",
+      "module": "index",
+      "filePath": "src/index.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function autoRoute(...)"
+    },
+    {
+      "name": "isMCPEnvironment",
+      "description": "*",
+      "module": "index",
+      "filePath": "src/index.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function isMCPEnvironment(...)"
+    },
+    {
+      "name": "isGitRepository",
+      "description": "*",
+      "module": "index",
+      "filePath": "src/index.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function isGitRepository(...)"
+    },
+    {
+      "name": "hasRemcodeConfig",
+      "description": "*",
+      "module": "index",
+      "filePath": "src/index.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function hasRemcodeConfig(...)"
+    },
+    {
+      "name": "isObject",
+      "description": "*",
+      "module": "setup/remcode-config",
+      "filePath": "src/setup/remcode-config.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function isObject(...)"
+    },
+    {
+      "name": "getScenarioGuidance",
+      "description": "*",
+      "module": "swe/scenario-guidance",
+      "filePath": "src/swe/scenario-guidance.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function getScenarioGuidance(...)"
+    },
+    {
+      "name": "loadConfig",
+      "description": "*",
+      "module": "utils/config",
+      "filePath": "src/utils/config.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function loadConfig(...)"
+    },
+    {
+      "name": "loadEnvironmentConfig",
+      "description": "*",
+      "module": "utils/config",
+      "filePath": "src/utils/config.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function loadEnvironmentConfig(...)"
+    },
+    {
+      "name": "saveConfig",
+      "description": "*",
+      "module": "utils/config",
+      "filePath": "src/utils/config.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function saveConfig(...)"
+    },
+    {
+      "name": "validateConfig",
+      "description": "*",
+      "module": "utils/config",
+      "filePath": "src/utils/config.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function validateConfig(...)"
+    },
+    {
+      "name": "configureLogger",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function configureLogger(...)"
+    },
+    {
+      "name": "formatLogRecord",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function formatLogRecord(...)"
+    },
+    {
+      "name": "writeLogRecord",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function writeLogRecord(...)"
+    },
+    {
+      "name": "createLogger",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function createLogger(...)"
+    },
+    {
+      "name": "getLogger",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function getLogger(...)"
+    },
+    {
+      "name": "logError",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function logError(...)"
+    },
+    {
+      "name": "getLogLevel",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function getLogLevel(...)"
+    },
+    {
+      "name": "setLogLevel",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function setLogLevel(...)"
+    },
+    {
+      "name": "enableFileLogging",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function enableFileLogging(...)"
+    },
+    {
+      "name": "disableFileLogging",
+      "description": "*",
+      "module": "utils/logger",
+      "filePath": "src/utils/logger.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function disableFileLogging(...)"
+    },
+    {
+      "name": "resolveSource",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function resolveSource(...)"
+    },
+    {
+      "name": "parseSource",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseSource(...)"
+    },
+    {
+      "name": "parseGitHubUrl",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseGitHubUrl(...)"
+    },
+    {
+      "name": "parseGitLabUrl",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseGitLabUrl(...)"
+    },
+    {
+      "name": "parseBitbucketUrl",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseBitbucketUrl(...)"
+    },
+    {
+      "name": "parseGenericGitUrl",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseGenericGitUrl(...)"
+    },
+    {
+      "name": "parseHttpUrl",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseHttpUrl(...)"
+    },
+    {
+      "name": "parseLocalPath",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function parseLocalPath(...)"
+    },
+    {
+      "name": "resolveGitHubSource",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function resolveGitHubSource(...)"
+    },
+    {
+      "name": "resolveLocalSource",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": false,
+      "signature": "function resolveLocalSource(...)"
+    },
+    {
+      "name": "detectLanguages",
+      "description": "*",
+      "module": "utils/source",
+      "filePath": "src/utils/source.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function detectLanguages(...)"
+    },
+    {
+      "name": "createWorkflowOrchestrator",
+      "description": "*",
+      "module": "workflows/orchestrator",
+      "filePath": "src/workflows/orchestrator.ts",
+      "hasJSDoc": true,
+      "isAsync": true,
+      "signature": "function createWorkflowOrchestrator(...)"
+    }
+  ],
+  "modules": [
+    {
+      "name": "commands/analyze",
+      "path": "src/commands/analyze.ts",
+      "description": "Module: commands/analyze",
+      "functions": [],
+      "types": [
+        {
+          "name": "SimpleAnalysis",
+          "description": "Type SimpleAnalysis",
+          "module": "commands/analyze",
+          "definition": "interface SimpleAnalysis"
+        }
+      ],
+      "exports": [
+        "analyzeCommand"
+      ]
+    },
+    {
+      "name": "commands/inspector",
+      "path": "src/commands/inspector.ts",
+      "description": "Module: commands/inspector",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "inspectorCommand"
+      ]
+    },
+    {
+      "name": "commands/process",
+      "path": "src/commands/process.ts",
+      "description": "Module: commands/process",
+      "functions": [],
+      "types": [
+        {
+          "name": "ProcessOptions",
+          "description": "Type ProcessOptions",
+          "module": "commands/process",
+          "definition": "interface ProcessOptions"
+        },
+        {
+          "name": "const",
+          "description": "Type const",
+          "module": "commands/process",
+          "definition": "type\n        const"
+        },
+        {
+          "name": "determined",
+          "description": "Type determined",
+          "module": "commands/process",
+          "definition": "type determined"
+        },
+        {
+          "name": "if",
+          "description": "Type if",
+          "module": "commands/process",
+          "definition": "type\n        if"
+        }
+      ],
+      "exports": [
+        "processCommand"
+      ]
+    },
+    {
+      "name": "commands/serve",
+      "path": "src/commands/serve.ts",
+      "description": "Module: commands/serve",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "serveCommand"
+      ]
+    },
+    {
+      "name": "commands/update",
+      "path": "src/commands/update.ts",
+      "description": "Module: commands/update",
+      "functions": [],
+      "types": [
+        {
+          "name": "RemcodeConfig",
+          "description": "Type RemcodeConfig",
+          "module": "commands/update",
+          "definition": "interface RemcodeConfig"
+        },
+        {
+          "name": "if",
+          "description": "Type if",
+          "module": "commands/update",
+          "definition": "type\n          if"
+        }
+      ],
+      "exports": [
+        "updateCommand"
+      ]
+    },
+    {
+      "name": "commands/vectorize",
+      "path": "src/commands/vectorize.ts",
+      "description": "Module: commands/vectorize",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "vectorizeCommand"
+      ]
+    },
+    {
+      "name": "github/actions",
+      "path": "src/github/actions.ts",
+      "description": "Module: github/actions",
+      "functions": [],
+      "types": [
+        {
+          "name": "WorkflowRun",
+          "description": "Type WorkflowRun",
+          "module": "github/actions",
+          "definition": "interface WorkflowRun"
+        },
+        {
+          "name": "Workflow",
+          "description": "Type Workflow",
+          "module": "github/actions",
+          "definition": "interface Workflow"
+        },
+        {
+          "name": "WorkflowJob",
+          "description": "Type WorkflowJob",
+          "module": "github/actions",
+          "definition": "interface WorkflowJob"
+        },
+        {
+          "name": "WorkflowStep",
+          "description": "Type WorkflowStep",
+          "module": "github/actions",
+          "definition": "interface WorkflowStep"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "github/client",
+      "path": "src/github/client.ts",
+      "description": "Module: github/client",
+      "functions": [],
+      "types": [
+        {
+          "name": "to",
+          "description": "Type to",
+          "module": "github/client",
+          "definition": "type to"
+        },
+        {
+          "name": "InternalAxiosRequestConfig",
+          "description": "Type InternalAxiosRequestConfig",
+          "module": "github/client",
+          "definition": "interface InternalAxiosRequestConfig"
+        },
+        {
+          "name": "GitHubClientOptions",
+          "description": "Type GitHubClientOptions",
+          "module": "github/client",
+          "definition": "interface GitHubClientOptions"
+        },
+        {
+          "name": "RetryConfig",
+          "description": "Type RetryConfig",
+          "module": "github/client",
+          "definition": "interface RetryConfig"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "github/repository",
+      "path": "src/github/repository.ts",
+      "description": "Module: github/repository",
+      "functions": [],
+      "types": [
+        {
+          "name": "RepositoryPermissions",
+          "description": "Type RepositoryPermissions",
+          "module": "github/repository",
+          "definition": "interface RepositoryPermissions"
+        },
+        {
+          "name": "Repository",
+          "description": "Type Repository",
+          "module": "github/repository",
+          "definition": "interface Repository"
+        },
+        {
+          "name": "RepositoryBranch",
+          "description": "Type RepositoryBranch",
+          "module": "github/repository",
+          "definition": "interface RepositoryBranch"
+        },
+        {
+          "name": "RepositoryContributor",
+          "description": "Type RepositoryContributor",
+          "module": "github/repository",
+          "definition": "interface RepositoryContributor"
+        },
+        {
+          "name": "CreateRepositoryOptions",
+          "description": "Type CreateRepositoryOptions",
+          "module": "github/repository",
+          "definition": "interface CreateRepositoryOptions"
+        },
+        {
+          "name": "ForkRepositoryOptions",
+          "description": "Type ForkRepositoryOptions",
+          "module": "github/repository",
+          "definition": "interface ForkRepositoryOptions"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "index",
+      "path": "src/index.ts",
+      "description": "Module: index",
+      "functions": [
+        {
+          "name": "autoRoute",
+          "description": "*",
+          "module": "index",
+          "filePath": "src/index.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function autoRoute(...)"
+        },
+        {
+          "name": "isMCPEnvironment",
+          "description": "*",
+          "module": "index",
+          "filePath": "src/index.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function isMCPEnvironment(...)"
+        },
+        {
+          "name": "isGitRepository",
+          "description": "*",
+          "module": "index",
+          "filePath": "src/index.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function isGitRepository(...)"
+        },
+        {
+          "name": "hasRemcodeConfig",
+          "description": "*",
+          "module": "index",
+          "filePath": "src/index.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function hasRemcodeConfig(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "auto",
+          "description": "Type auto",
+          "module": "index",
+          "definition": "type auto"
+        }
+      ],
+      "exports": []
+    },
+    {
+      "name": "mcp/handlers/github",
+      "path": "src/mcp/handlers/github.ts",
+      "description": "Module: mcp/handlers/github",
+      "functions": [],
+      "types": [
+        {
+          "name": "GitHubMCPOptions",
+          "description": "Type GitHubMCPOptions",
+          "module": "mcp/handlers/github",
+          "definition": "interface GitHubMCPOptions"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/huggingface",
+      "path": "src/mcp/handlers/huggingface.ts",
+      "description": "Module: mcp/handlers/huggingface",
+      "functions": [],
+      "types": [
+        {
+          "name": "HuggingFaceMCPOptions",
+          "description": "Type HuggingFaceMCPOptions",
+          "module": "mcp/handlers/huggingface",
+          "definition": "interface HuggingFaceMCPOptions"
+        },
+        {
+          "name": "ModelInfo",
+          "description": "Type ModelInfo",
+          "module": "mcp/handlers/huggingface",
+          "definition": "interface ModelInfo"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/pinecone",
+      "path": "src/mcp/handlers/pinecone.ts",
+      "description": "Module: mcp/handlers/pinecone",
+      "functions": [],
+      "types": [
+        {
+          "name": "PineconeMCPOptions",
+          "description": "Type PineconeMCPOptions",
+          "module": "mcp/handlers/pinecone",
+          "definition": "interface PineconeMCPOptions"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/processing",
+      "path": "src/mcp/handlers/processing.ts",
+      "description": "Module: mcp/handlers/processing",
+      "functions": [],
+      "types": [
+        {
+          "name": "ProcessingOptions",
+          "description": "Type ProcessingOptions",
+          "module": "mcp/handlers/processing",
+          "definition": "interface ProcessingOptions"
+        },
+        {
+          "name": "ProcessingStatusResponse",
+          "description": "Type ProcessingStatusResponse",
+          "module": "mcp/handlers/processing",
+          "definition": "interface ProcessingStatusResponse"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/remcode",
+      "path": "src/mcp/handlers/remcode.ts",
+      "description": "Module: mcp/handlers/remcode",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/repository",
+      "path": "src/mcp/handlers/repository.ts",
+      "description": "Module: mcp/handlers/repository",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/search",
+      "path": "src/mcp/handlers/search.ts",
+      "description": "Module: mcp/handlers/search",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/handlers/setup",
+      "path": "src/mcp/handlers/setup.ts",
+      "description": "Module: mcp/handlers/setup",
+      "functions": [],
+      "types": [
+        {
+          "name": "SetupOptions",
+          "description": "Type SetupOptions",
+          "module": "mcp/handlers/setup",
+          "definition": "interface SetupOptions"
+        },
+        {
+          "name": "to",
+          "description": "Type to",
+          "module": "mcp/handlers/setup",
+          "definition": "type to"
+        },
+        {
+          "name": "res",
+          "description": "Type res",
+          "module": "mcp/handlers/setup",
+          "definition": "type\n        res"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/index",
+      "path": "src/mcp/index.ts",
+      "description": "Module: mcp/index",
+      "functions": [],
+      "types": [
+        {
+          "name": "MCPServerOptions",
+          "description": "Type MCPServerOptions",
+          "module": "mcp/index",
+          "definition": "interface MCPServerOptions"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class",
+        "MCPServer"
+      ]
+    },
+    {
+      "name": "mcp/sse/mcp-sse-handler",
+      "path": "src/mcp/sse/mcp-sse-handler.ts",
+      "description": "Module: mcp/sse/mcp-sse-handler",
+      "functions": [],
+      "types": [
+        {
+          "name": "JsonRpcRequest",
+          "description": "Type JsonRpcRequest",
+          "module": "mcp/sse/mcp-sse-handler",
+          "definition": "interface JsonRpcRequest"
+        },
+        {
+          "name": "JsonRpcResponse",
+          "description": "Type JsonRpcResponse",
+          "module": "mcp/sse/mcp-sse-handler",
+          "definition": "interface JsonRpcResponse"
+        },
+        {
+          "name": "JsonRpcNotification",
+          "description": "Type JsonRpcNotification",
+          "module": "mcp/sse/mcp-sse-handler",
+          "definition": "interface JsonRpcNotification"
+        }
+      ],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/sse/sse-handler",
+      "path": "src/mcp/sse/sse-handler.ts",
+      "description": "Module: mcp/sse/sse-handler",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "mcp/validation/simple-validator",
+      "path": "src/mcp/validation/simple-validator.ts",
+      "description": "Module: mcp/validation/simple-validator",
+      "functions": [],
+      "types": [
+        {
+          "name": "ValidationStatus",
+          "description": "Type ValidationStatus",
+          "module": "mcp/validation/simple-validator",
+          "definition": "interface ValidationStatus"
+        },
+        {
+          "name": "QuickValidation",
+          "description": "Type QuickValidation",
+          "module": "mcp/validation/simple-validator",
+          "definition": "interface QuickValidation"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "notifications/service",
+      "path": "src/notifications/service.ts",
+      "description": "Module: notifications/service",
+      "functions": [],
+      "types": [
+        {
+          "name": "NotificationConfig",
+          "description": "Type NotificationConfig",
+          "module": "notifications/service",
+          "definition": "interface NotificationConfig"
+        },
+        {
+          "name": "NotificationPayload",
+          "description": "Type NotificationPayload",
+          "module": "notifications/service",
+          "definition": "interface NotificationPayload"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class",
+        "const"
+      ]
+    },
+    {
+      "name": "processing/change-detector",
+      "path": "src/processing/change-detector.ts",
+      "description": "Module: processing/change-detector",
+      "functions": [],
+      "types": [
+        {
+          "name": "changed",
+          "description": "Type changed",
+          "module": "processing/change-detector",
+          "definition": "type changed"
+        }
+      ],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "processing/file-analyzer",
+      "path": "src/processing/file-analyzer.ts",
+      "description": "Module: processing/file-analyzer",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "processing/incremental",
+      "path": "src/processing/incremental.ts",
+      "description": "Module: processing/incremental",
+      "functions": [],
+      "types": [
+        {
+          "name": "casting",
+          "description": "Type casting",
+          "module": "processing/incremental",
+          "definition": "type casting"
+        }
+      ],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "processing/index",
+      "path": "src/processing/index.ts",
+      "description": "Module: processing/index",
+      "functions": [],
+      "types": [],
+      "exports": []
+    },
+    {
+      "name": "processing/pipeline",
+      "path": "src/processing/pipeline.ts",
+      "description": "Module: processing/pipeline",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "processing/state-manager",
+      "path": "src/processing/state-manager.ts",
+      "description": "Module: processing/state-manager",
+      "functions": [],
+      "types": [
+        {
+          "name": "RemcodeState",
+          "description": "Type RemcodeState",
+          "module": "processing/state-manager",
+          "definition": "interface RemcodeState"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "processing/types",
+      "path": "src/processing/types.ts",
+      "description": "Module: processing/types",
+      "functions": [],
+      "types": [
+        {
+          "name": "FileChange",
+          "description": "Type FileChange",
+          "module": "processing/types",
+          "definition": "interface FileChange"
+        },
+        {
+          "name": "FileAnalysis",
+          "description": "Type FileAnalysis",
+          "module": "processing/types",
+          "definition": "interface FileAnalysis"
+        },
+        {
+          "name": "ProcessingStats",
+          "description": "Type ProcessingStats",
+          "module": "processing/types",
+          "definition": "interface ProcessingStats"
+        },
+        {
+          "name": "AnalysisOptions",
+          "description": "Type AnalysisOptions",
+          "module": "processing/types",
+          "definition": "interface AnalysisOptions"
+        },
+        {
+          "name": "IncrementalProcessorOptions",
+          "description": "Type IncrementalProcessorOptions",
+          "module": "processing/types",
+          "definition": "interface IncrementalProcessorOptions"
+        },
+        {
+          "name": "VectorMetadata",
+          "description": "Type VectorMetadata",
+          "module": "processing/types",
+          "definition": "interface VectorMetadata"
+        }
+      ],
+      "exports": [
+        "core",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface"
+      ]
+    },
+    {
+      "name": "search/context-extractor",
+      "path": "src/search/context-extractor.ts",
+      "description": "Module: search/context-extractor",
+      "functions": [],
+      "types": [
+        {
+          "name": "CodeContext",
+          "description": "Type CodeContext",
+          "module": "search/context-extractor",
+          "definition": "interface CodeContext"
+        },
+        {
+          "name": "FileStructure",
+          "description": "Type FileStructure",
+          "module": "search/context-extractor",
+          "definition": "interface FileStructure"
+        },
+        {
+          "name": "ClassInfo",
+          "description": "Type ClassInfo",
+          "module": "search/context-extractor",
+          "definition": "interface ClassInfo"
+        },
+        {
+          "name": "FunctionInfo",
+          "description": "Type FunctionInfo",
+          "module": "search/context-extractor",
+          "definition": "interface FunctionInfo"
+        },
+        {
+          "name": "ImportInfo",
+          "description": "Type ImportInfo",
+          "module": "search/context-extractor",
+          "definition": "interface ImportInfo"
+        },
+        {
+          "name": "if",
+          "description": "Type if",
+          "module": "search/context-extractor",
+          "definition": "type\n    if"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "class",
+        "declaration"
+      ]
+    },
+    {
+      "name": "search/query-processor",
+      "path": "src/search/query-processor.ts",
+      "description": "Module: search/query-processor",
+      "functions": [],
+      "types": [
+        {
+          "name": "of",
+          "description": "Type of",
+          "module": "search/query-processor",
+          "definition": "type of"
+        },
+        {
+          "name": "QueryType",
+          "description": "Type QueryType",
+          "module": "search/query-processor",
+          "definition": "type QueryType"
+        },
+        {
+          "name": "of",
+          "description": "Type of",
+          "module": "search/query-processor",
+          "definition": "type of"
+        },
+        {
+          "name": "ResultType",
+          "description": "Type ResultType",
+          "module": "search/query-processor",
+          "definition": "type ResultType"
+        },
+        {
+          "name": "QueryIntent",
+          "description": "Type QueryIntent",
+          "module": "search/query-processor",
+          "definition": "type QueryIntent"
+        },
+        {
+          "name": "ProcessedQuery",
+          "description": "Type ProcessedQuery",
+          "module": "search/query-processor",
+          "definition": "interface ProcessedQuery"
+        },
+        {
+          "name": "QueryFilters",
+          "description": "Type QueryFilters",
+          "module": "search/query-processor",
+          "definition": "interface QueryFilters"
+        },
+        {
+          "name": "PatternRule",
+          "description": "Type PatternRule",
+          "module": "search/query-processor",
+          "definition": "interface PatternRule"
+        },
+        {
+          "name": "and",
+          "description": "Type and",
+          "module": "search/query-processor",
+          "definition": "type and"
+        },
+        {
+          "name": "const",
+          "description": "Type const",
+          "module": "search/query-processor",
+          "definition": "type\n    const"
+        },
+        {
+          "name": "markers",
+          "description": "Type markers",
+          "module": "search/query-processor",
+          "definition": "type markers"
+        },
+        {
+          "name": "specifications",
+          "description": "Type specifications",
+          "module": "search/query-processor",
+          "definition": "type specifications"
+        },
+        {
+          "name": "from",
+          "description": "Type from",
+          "module": "search/query-processor",
+          "definition": "type from"
+        },
+        {
+          "name": "if",
+          "description": "Type if",
+          "module": "search/query-processor",
+          "definition": "type if"
+        },
+        {
+          "name": "filter",
+          "description": "Type filter",
+          "module": "search/query-processor",
+          "definition": "type filter"
+        },
+        {
+          "name": "of",
+          "description": "Type of",
+          "module": "search/query-processor",
+          "definition": "type of"
+        }
+      ],
+      "exports": [
+        "type",
+        "type",
+        "type",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "search/semantic",
+      "path": "src/search/semantic.ts",
+      "description": "Module: search/semantic",
+      "functions": [],
+      "types": [
+        {
+          "name": "SemanticSearchOptions",
+          "description": "Type SemanticSearchOptions",
+          "module": "search/semantic",
+          "definition": "interface SemanticSearchOptions"
+        },
+        {
+          "name": "SearchResult",
+          "description": "Type SearchResult",
+          "module": "search/semantic",
+          "definition": "interface SearchResult"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "search/similarity",
+      "path": "src/search/similarity.ts",
+      "description": "Module: search/similarity",
+      "functions": [],
+      "types": [
+        {
+          "name": "PatternType",
+          "description": "Type PatternType",
+          "module": "search/similarity",
+          "definition": "type PatternType"
+        },
+        {
+          "name": "SimilarityResult",
+          "description": "Type SimilarityResult",
+          "module": "search/similarity",
+          "definition": "interface SimilarityResult"
+        },
+        {
+          "name": "SimilarityOptions",
+          "description": "Type SimilarityOptions",
+          "module": "search/similarity",
+          "definition": "interface SimilarityOptions"
+        },
+        {
+          "name": "of",
+          "description": "Type of",
+          "module": "search/similarity",
+          "definition": "type of"
+        },
+        {
+          "name": "of",
+          "description": "Type of",
+          "module": "search/similarity",
+          "definition": "type of"
+        },
+        {
+          "name": "const",
+          "description": "Type const",
+          "module": "search/similarity",
+          "definition": "type\n    const"
+        }
+      ],
+      "exports": [
+        "enum",
+        "type",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "search/unified-search",
+      "path": "src/search/unified-search.ts",
+      "description": "Module: search/unified-search",
+      "functions": [],
+      "types": [
+        {
+          "name": "EnhancedSearchResult",
+          "description": "Type EnhancedSearchResult",
+          "module": "search/unified-search",
+          "definition": "interface EnhancedSearchResult"
+        },
+        {
+          "name": "UnifiedSearchOptions",
+          "description": "Type UnifiedSearchOptions",
+          "module": "search/unified-search",
+          "definition": "interface UnifiedSearchOptions"
+        },
+        {
+          "name": "UnifiedSearchResult",
+          "description": "Type UnifiedSearchResult",
+          "module": "search/unified-search",
+          "definition": "interface UnifiedSearchResult"
+        },
+        {
+          "name": "let",
+          "description": "Type let",
+          "module": "search/unified-search",
+          "definition": "type\n      let"
+        },
+        {
+          "name": "matching",
+          "description": "Type matching",
+          "module": "search/unified-search",
+          "definition": "type matching"
+        },
+        {
+          "name": "if",
+          "description": "Type if",
+          "module": "search/unified-search",
+          "definition": "type\n      if"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/detector",
+      "path": "src/setup/detector.ts",
+      "description": "Module: setup/detector",
+      "functions": [],
+      "types": [
+        {
+          "name": "GitRemoteInfo",
+          "description": "Type GitRemoteInfo",
+          "module": "setup/detector",
+          "definition": "interface GitRemoteInfo"
+        },
+        {
+          "name": "SetupStatus",
+          "description": "Type SetupStatus",
+          "module": "setup/detector",
+          "definition": "interface SetupStatus"
+        }
+      ],
+      "exports": [
+        "enum",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/initializer",
+      "path": "src/setup/initializer.ts",
+      "description": "Module: setup/initializer",
+      "functions": [],
+      "types": [
+        {
+          "name": "SetupOptions",
+          "description": "Type SetupOptions",
+          "module": "setup/initializer",
+          "definition": "interface SetupOptions"
+        },
+        {
+          "name": "SetupResult",
+          "description": "Type SetupResult",
+          "module": "setup/initializer",
+          "definition": "interface SetupResult"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/model-initializer",
+      "path": "src/setup/model-initializer.ts",
+      "description": "Module: setup/model-initializer",
+      "functions": [],
+      "types": [
+        {
+          "name": "ModelInitializationResult",
+          "description": "Type ModelInitializationResult",
+          "module": "setup/model-initializer",
+          "definition": "interface ModelInitializationResult"
+        },
+        {
+          "name": "ModelInitializationOptions",
+          "description": "Type ModelInitializationOptions",
+          "module": "setup/model-initializer",
+          "definition": "interface ModelInitializationOptions"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/prerequisites",
+      "path": "src/setup/prerequisites.ts",
+      "description": "Module: setup/prerequisites",
+      "functions": [],
+      "types": [
+        {
+          "name": "PrerequisiteCheck",
+          "description": "Type PrerequisiteCheck",
+          "module": "setup/prerequisites",
+          "definition": "interface PrerequisiteCheck"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/remcode-config",
+      "path": "src/setup/remcode-config.ts",
+      "description": "Module: setup/remcode-config",
+      "functions": [
+        {
+          "name": "isObject",
+          "description": "*",
+          "module": "setup/remcode-config",
+          "filePath": "src/setup/remcode-config.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function isObject(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "RepositoryConfig",
+          "description": "Type RepositoryConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface RepositoryConfig"
+        },
+        {
+          "name": "ProcessingConfig",
+          "description": "Type ProcessingConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface ProcessingConfig"
+        },
+        {
+          "name": "VectorizationConfig",
+          "description": "Type VectorizationConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface VectorizationConfig"
+        },
+        {
+          "name": "StatisticsConfig",
+          "description": "Type StatisticsConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface StatisticsConfig"
+        },
+        {
+          "name": "AdvancedConfig",
+          "description": "Type AdvancedConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface AdvancedConfig"
+        },
+        {
+          "name": "WebhookConfig",
+          "description": "Type WebhookConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface WebhookConfig"
+        },
+        {
+          "name": "RemcodeConfig",
+          "description": "Type RemcodeConfig",
+          "module": "setup/remcode-config",
+          "definition": "interface RemcodeConfig"
+        },
+        {
+          "name": "ConfigValidationResult",
+          "description": "Type ConfigValidationResult",
+          "module": "setup/remcode-config",
+          "definition": "interface ConfigValidationResult"
+        }
+      ],
+      "exports": [
+        "enum",
+        "enum",
+        "enum",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/secrets",
+      "path": "src/setup/secrets.ts",
+      "description": "Module: setup/secrets",
+      "functions": [],
+      "types": [
+        {
+          "name": "SecretConfig",
+          "description": "Type SecretConfig",
+          "module": "setup/secrets",
+          "definition": "interface SecretConfig"
+        },
+        {
+          "name": "SecretOperationResult",
+          "description": "Type SecretOperationResult",
+          "module": "setup/secrets",
+          "definition": "interface SecretOperationResult"
+        },
+        {
+          "name": "SecretsOperationSummary",
+          "description": "Type SecretsOperationSummary",
+          "module": "setup/secrets",
+          "definition": "interface SecretsOperationSummary"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "setup/workflow-generator",
+      "path": "src/setup/workflow-generator.ts",
+      "description": "Module: setup/workflow-generator",
+      "functions": [],
+      "types": [
+        {
+          "name": "WorkflowTemplateOptions",
+          "description": "Type WorkflowTemplateOptions",
+          "module": "setup/workflow-generator",
+          "definition": "interface WorkflowTemplateOptions"
+        },
+        {
+          "name": "WorkflowGenerationResult",
+          "description": "Type WorkflowGenerationResult",
+          "module": "setup/workflow-generator",
+          "definition": "interface WorkflowGenerationResult"
+        },
+        {
+          "name": "const",
+          "description": "Type const",
+          "module": "setup/workflow-generator",
+          "definition": "type\n      const"
+        },
+        {
+          "name": "and",
+          "description": "Type and",
+          "module": "setup/workflow-generator",
+          "definition": "type and"
+        },
+        {
+          "name": "switch",
+          "description": "Type switch",
+          "module": "setup/workflow-generator",
+          "definition": "type\n    switch"
+        }
+      ],
+      "exports": [
+        "interface",
+        "enum",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "swe/guidelines",
+      "path": "src/swe/guidelines.ts",
+      "description": "Module: swe/guidelines",
+      "functions": [],
+      "types": [
+        {
+          "name": "GuidlinePriority",
+          "description": "Type GuidlinePriority",
+          "module": "swe/guidelines",
+          "definition": "type GuidlinePriority"
+        },
+        {
+          "name": "CodingGuideline",
+          "description": "Type CodingGuideline",
+          "module": "swe/guidelines",
+          "definition": "interface CodingGuideline"
+        },
+        {
+          "name": "ValidationIssue",
+          "description": "Type ValidationIssue",
+          "module": "swe/guidelines",
+          "definition": "interface ValidationIssue"
+        },
+        {
+          "name": "names",
+          "description": "Type names",
+          "module": "swe/guidelines",
+          "definition": "type names"
+        },
+        {
+          "name": "when",
+          "description": "Type when",
+          "module": "swe/guidelines",
+          "definition": "type when"
+        },
+        {
+          "name": "guards",
+          "description": "Type guards",
+          "module": "swe/guidelines",
+          "definition": "type guards"
+        },
+        {
+          "name": "checking",
+          "description": "Type checking",
+          "module": "swe/guidelines",
+          "definition": "type checking"
+        },
+        {
+          "name": "when",
+          "description": "Type when",
+          "module": "swe/guidelines",
+          "definition": "type when"
+        }
+      ],
+      "exports": [
+        "type",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "swe/prompts",
+      "path": "src/swe/prompts.ts",
+      "description": "Module: swe/prompts",
+      "functions": [],
+      "types": [
+        {
+          "name": "PromptConfig",
+          "description": "Type PromptConfig",
+          "module": "swe/prompts",
+          "definition": "interface PromptConfig"
+        }
+      ],
+      "exports": [
+        "enum",
+        "interface",
+        "const",
+        "class"
+      ]
+    },
+    {
+      "name": "swe/scenario-guidance",
+      "path": "src/swe/scenario-guidance.ts",
+      "description": "Module: swe/scenario-guidance",
+      "functions": [
+        {
+          "name": "getScenarioGuidance",
+          "description": "*",
+          "module": "swe/scenario-guidance",
+          "filePath": "src/swe/scenario-guidance.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function getScenarioGuidance(...)"
+        }
+      ],
+      "types": [],
+      "exports": [
+        "const",
+        "getScenarioGuidance"
+      ]
+    },
+    {
+      "name": "utils/config",
+      "path": "src/utils/config.ts",
+      "description": "Module: utils/config",
+      "functions": [
+        {
+          "name": "loadConfig",
+          "description": "*",
+          "module": "utils/config",
+          "filePath": "src/utils/config.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function loadConfig(...)"
+        },
+        {
+          "name": "loadEnvironmentConfig",
+          "description": "*",
+          "module": "utils/config",
+          "filePath": "src/utils/config.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function loadEnvironmentConfig(...)"
+        },
+        {
+          "name": "saveConfig",
+          "description": "*",
+          "module": "utils/config",
+          "filePath": "src/utils/config.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function saveConfig(...)"
+        },
+        {
+          "name": "validateConfig",
+          "description": "*",
+          "module": "utils/config",
+          "filePath": "src/utils/config.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function validateConfig(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "with",
+          "description": "Type with",
+          "module": "utils/config",
+          "definition": "interface with"
+        },
+        {
+          "name": "RemcodeConfig",
+          "description": "Type RemcodeConfig",
+          "module": "utils/config",
+          "definition": "interface RemcodeConfig"
+        }
+      ],
+      "exports": [
+        "interface",
+        "loadConfig",
+        "saveConfig",
+        "getConfigValue",
+        "validateConfig"
+      ]
+    },
+    {
+      "name": "utils/logger",
+      "path": "src/utils/logger.ts",
+      "description": "Module: utils/logger",
+      "functions": [
+        {
+          "name": "configureLogger",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function configureLogger(...)"
+        },
+        {
+          "name": "formatLogRecord",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function formatLogRecord(...)"
+        },
+        {
+          "name": "writeLogRecord",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function writeLogRecord(...)"
+        },
+        {
+          "name": "createLogger",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function createLogger(...)"
+        },
+        {
+          "name": "getLogger",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function getLogger(...)"
+        },
+        {
+          "name": "logError",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function logError(...)"
+        },
+        {
+          "name": "getLogLevel",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function getLogLevel(...)"
+        },
+        {
+          "name": "setLogLevel",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function setLogLevel(...)"
+        },
+        {
+          "name": "enableFileLogging",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function enableFileLogging(...)"
+        },
+        {
+          "name": "disableFileLogging",
+          "description": "*",
+          "module": "utils/logger",
+          "filePath": "src/utils/logger.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function disableFileLogging(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "LogRecord",
+          "description": "Type LogRecord",
+          "module": "utils/logger",
+          "definition": "interface LogRecord"
+        },
+        {
+          "name": "Logger",
+          "description": "Type Logger",
+          "module": "utils/logger",
+          "definition": "interface Logger"
+        },
+        {
+          "name": "LoggerConfig",
+          "description": "Type LoggerConfig",
+          "module": "utils/logger",
+          "definition": "interface LoggerConfig"
+        }
+      ],
+      "exports": [
+        "enum",
+        "const",
+        "interface",
+        "interface",
+        "interface",
+        "const",
+        "configureLogger",
+        "createLogger",
+        "const",
+        "getLogger",
+        "logError",
+        "getLogLevel",
+        "setLogLevel",
+        "enableFileLogging",
+        "disableFileLogging"
+      ]
+    },
+    {
+      "name": "utils/port-manager",
+      "path": "src/utils/port-manager.ts",
+      "description": "Module: utils/port-manager",
+      "functions": [],
+      "types": [
+        {
+          "name": "PortResult",
+          "description": "Type PortResult",
+          "module": "utils/port-manager",
+          "definition": "interface PortResult"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "utils/source",
+      "path": "src/utils/source.ts",
+      "description": "Module: utils/source",
+      "functions": [
+        {
+          "name": "resolveSource",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function resolveSource(...)"
+        },
+        {
+          "name": "parseSource",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseSource(...)"
+        },
+        {
+          "name": "parseGitHubUrl",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseGitHubUrl(...)"
+        },
+        {
+          "name": "parseGitLabUrl",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseGitLabUrl(...)"
+        },
+        {
+          "name": "parseBitbucketUrl",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseBitbucketUrl(...)"
+        },
+        {
+          "name": "parseGenericGitUrl",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseGenericGitUrl(...)"
+        },
+        {
+          "name": "parseHttpUrl",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseHttpUrl(...)"
+        },
+        {
+          "name": "parseLocalPath",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function parseLocalPath(...)"
+        },
+        {
+          "name": "resolveGitHubSource",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function resolveGitHubSource(...)"
+        },
+        {
+          "name": "resolveLocalSource",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": false,
+          "signature": "function resolveLocalSource(...)"
+        },
+        {
+          "name": "detectLanguages",
+          "description": "*",
+          "module": "utils/source",
+          "filePath": "src/utils/source.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function detectLanguages(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "SourceOptions",
+          "description": "Type SourceOptions",
+          "module": "utils/source",
+          "definition": "interface SourceOptions"
+        },
+        {
+          "name": "ResolvedSource",
+          "description": "Type ResolvedSource",
+          "module": "utils/source",
+          "definition": "interface ResolvedSource"
+        },
+        {
+          "name": "ParsedSource",
+          "description": "Type ParsedSource",
+          "module": "utils/source",
+          "definition": "interface ParsedSource"
+        }
+      ],
+      "exports": [
+        "enum",
+        "interface",
+        "async",
+        "async"
+      ]
+    },
+    {
+      "name": "utils/token-manager",
+      "path": "src/utils/token-manager.ts",
+      "description": "Module: utils/token-manager",
+      "functions": [],
+      "types": [
+        {
+          "name": "TokenConfig",
+          "description": "Type TokenConfig",
+          "module": "utils/token-manager",
+          "definition": "interface TokenConfig"
+        },
+        {
+          "name": "TokenValidationResult",
+          "description": "Type TokenValidationResult",
+          "module": "utils/token-manager",
+          "definition": "interface TokenValidationResult"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "vectorizers/chunkers/manager",
+      "path": "src/vectorizers/chunkers/manager.ts",
+      "description": "Module: vectorizers/chunkers/manager",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "vectorizers/embedders/manager",
+      "path": "src/vectorizers/embedders/manager.ts",
+      "description": "Module: vectorizers/embedders/manager",
+      "functions": [],
+      "types": [
+        {
+          "name": "ModelInfo",
+          "description": "Type ModelInfo",
+          "module": "vectorizers/embedders/manager",
+          "definition": "interface ModelInfo"
+        },
+        {
+          "name": "const",
+          "description": "Type const",
+          "module": "vectorizers/embedders/manager",
+          "definition": "type\n    const"
+        }
+      ],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "vectorizers/index",
+      "path": "src/vectorizers/index.ts",
+      "description": "Module: vectorizers/index",
+      "functions": [],
+      "types": [
+        {
+          "name": "VectorizationConfig",
+          "description": "Type VectorizationConfig",
+          "module": "vectorizers/index",
+          "definition": "interface VectorizationConfig"
+        },
+        {
+          "name": "CodeChunk",
+          "description": "Type CodeChunk",
+          "module": "vectorizers/index",
+          "definition": "interface CodeChunk"
+        },
+        {
+          "name": "VectorizationResult",
+          "description": "Type VectorizationResult",
+          "module": "vectorizers/index",
+          "definition": "interface VectorizationResult"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface"
+      ]
+    },
+    {
+      "name": "vectorizers/pipeline",
+      "path": "src/vectorizers/pipeline.ts",
+      "description": "Module: vectorizers/pipeline",
+      "functions": [],
+      "types": [],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "vectorizers/storage/pinecone",
+      "path": "src/vectorizers/storage/pinecone.ts",
+      "description": "Module: vectorizers/storage/pinecone",
+      "functions": [],
+      "types": [
+        {
+          "name": "PineconeStorageOptions",
+          "description": "Type PineconeStorageOptions",
+          "module": "vectorizers/storage/pinecone",
+          "definition": "interface PineconeStorageOptions"
+        },
+        {
+          "name": "VectorData",
+          "description": "Type VectorData",
+          "module": "vectorizers/storage/pinecone",
+          "definition": "interface VectorData"
+        }
+      ],
+      "exports": [
+        "class"
+      ]
+    },
+    {
+      "name": "vectorizers/types",
+      "path": "src/vectorizers/types.ts",
+      "description": "Module: vectorizers/types",
+      "functions": [],
+      "types": [
+        {
+          "name": "CodeChunk",
+          "description": "Type CodeChunk",
+          "module": "vectorizers/types",
+          "definition": "interface CodeChunk"
+        },
+        {
+          "name": "FileInfo",
+          "description": "Type FileInfo",
+          "module": "vectorizers/types",
+          "definition": "interface FileInfo"
+        },
+        {
+          "name": "VectorizationResult",
+          "description": "Type VectorizationResult",
+          "module": "vectorizers/types",
+          "definition": "interface VectorizationResult"
+        },
+        {
+          "name": "VectorizationOptions",
+          "description": "Type VectorizationOptions",
+          "module": "vectorizers/types",
+          "definition": "interface VectorizationOptions"
+        },
+        {
+          "name": "ChunkingStrategy",
+          "description": "Type ChunkingStrategy",
+          "module": "vectorizers/types",
+          "definition": "interface ChunkingStrategy"
+        },
+        {
+          "name": "ChunkStrategyType",
+          "description": "Type ChunkStrategyType",
+          "module": "vectorizers/types",
+          "definition": "type ChunkStrategyType"
+        },
+        {
+          "name": "EmbeddingManagerOptions",
+          "description": "Type EmbeddingManagerOptions",
+          "module": "vectorizers/types",
+          "definition": "interface EmbeddingManagerOptions"
+        },
+        {
+          "name": "PineconeStorageOptions",
+          "description": "Type PineconeStorageOptions",
+          "module": "vectorizers/types",
+          "definition": "interface PineconeStorageOptions"
+        },
+        {
+          "name": "VectorData",
+          "description": "Type VectorData",
+          "module": "vectorizers/types",
+          "definition": "interface VectorData"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "type",
+        "interface",
+        "interface",
+        "interface"
+      ]
+    },
+    {
+      "name": "workflows/generator",
+      "path": "src/workflows/generator.ts",
+      "description": "Module: workflows/generator",
+      "functions": [],
+      "types": [
+        {
+          "name": "WorkflowGenerationResult",
+          "description": "Type WorkflowGenerationResult",
+          "module": "workflows/generator",
+          "definition": "interface WorkflowGenerationResult"
+        },
+        {
+          "name": "Workflow",
+          "description": "Type Workflow",
+          "module": "workflows/generator",
+          "definition": "type Workflow"
+        },
+        {
+          "name": "Workflow",
+          "description": "Type Workflow",
+          "module": "workflows/generator",
+          "definition": "type Workflow"
+        }
+      ],
+      "exports": [
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "workflows/monitor",
+      "path": "src/workflows/monitor.ts",
+      "description": "Module: workflows/monitor",
+      "functions": [],
+      "types": [
+        {
+          "name": "WorkflowRunStatus",
+          "description": "Type WorkflowRunStatus",
+          "module": "workflows/monitor",
+          "definition": "type WorkflowRunStatus"
+        },
+        {
+          "name": "WorkflowRunConclusion",
+          "description": "Type WorkflowRunConclusion",
+          "module": "workflows/monitor",
+          "definition": "type WorkflowRunConclusion"
+        },
+        {
+          "name": "WorkflowStatusResponse",
+          "description": "Type WorkflowStatusResponse",
+          "module": "workflows/monitor",
+          "definition": "interface WorkflowStatusResponse"
+        },
+        {
+          "name": "MonitoringOptions",
+          "description": "Type MonitoringOptions",
+          "module": "workflows/monitor",
+          "definition": "interface MonitoringOptions"
+        }
+      ],
+      "exports": [
+        "type",
+        "type",
+        "interface",
+        "interface",
+        "class"
+      ]
+    },
+    {
+      "name": "workflows/orchestrator",
+      "path": "src/workflows/orchestrator.ts",
+      "description": "Module: workflows/orchestrator",
+      "functions": [
+        {
+          "name": "createWorkflowOrchestrator",
+          "description": "*",
+          "module": "workflows/orchestrator",
+          "filePath": "src/workflows/orchestrator.ts",
+          "hasJSDoc": true,
+          "isAsync": true,
+          "signature": "function createWorkflowOrchestrator(...)"
+        }
+      ],
+      "types": [
+        {
+          "name": "OrchestrationConfig",
+          "description": "Type OrchestrationConfig",
+          "module": "workflows/orchestrator",
+          "definition": "interface OrchestrationConfig"
+        },
+        {
+          "name": "OrchestrationStatus",
+          "description": "Type OrchestrationStatus",
+          "module": "workflows/orchestrator",
+          "definition": "interface OrchestrationStatus"
+        }
+      ],
+      "exports": [
+        "interface",
+        "interface",
+        "class",
+        "createWorkflowOrchestrator"
+      ]
+    },
+    {
+      "name": "workflows/templates",
+      "path": "src/workflows/templates.ts",
+      "description": "Module: workflows/templates",
+      "functions": [],
+      "types": [
+        {
+          "name": "WorkflowScheduleConfig",
+          "description": "Type WorkflowScheduleConfig",
+          "module": "workflows/templates",
+          "definition": "interface WorkflowScheduleConfig"
+        },
+        {
+          "name": "WorkflowNotificationConfig",
+          "description": "Type WorkflowNotificationConfig",
+          "module": "workflows/templates",
+          "definition": "interface WorkflowNotificationConfig"
+        },
+        {
+          "name": "WorkflowEnvironmentConfig",
+          "description": "Type WorkflowEnvironmentConfig",
+          "module": "workflows/templates",
+          "definition": "interface WorkflowEnvironmentConfig"
+        },
+        {
+          "name": "WorkflowTemplateOptions",
+          "description": "Type WorkflowTemplateOptions",
+          "module": "workflows/templates",
+          "definition": "interface WorkflowTemplateOptions"
+        },
+        {
+          "name": "and",
+          "description": "Type and",
+          "module": "workflows/templates",
+          "definition": "type and"
+        },
+        {
+          "name": "Workflow",
+          "description": "Type Workflow",
+          "module": "workflows/templates",
+          "definition": "type Workflow"
+        }
+      ],
+      "exports": [
+        "enum",
+        "interface",
+        "interface",
+        "interface",
+        "interface",
+        "class"
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "SimpleAnalysis",
+      "description": "Type SimpleAnalysis",
+      "module": "commands/analyze",
+      "definition": "interface SimpleAnalysis"
+    },
+    {
+      "name": "ProcessOptions",
+      "description": "Type ProcessOptions",
+      "module": "commands/process",
+      "definition": "interface ProcessOptions"
+    },
+    {
+      "name": "const",
+      "description": "Type const",
+      "module": "commands/process",
+      "definition": "type\n        const"
+    },
+    {
+      "name": "determined",
+      "description": "Type determined",
+      "module": "commands/process",
+      "definition": "type determined"
+    },
+    {
+      "name": "if",
+      "description": "Type if",
+      "module": "commands/process",
+      "definition": "type\n        if"
+    },
+    {
+      "name": "RemcodeConfig",
+      "description": "Type RemcodeConfig",
+      "module": "commands/update",
+      "definition": "interface RemcodeConfig"
+    },
+    {
+      "name": "if",
+      "description": "Type if",
+      "module": "commands/update",
+      "definition": "type\n          if"
+    },
+    {
+      "name": "WorkflowRun",
+      "description": "Type WorkflowRun",
+      "module": "github/actions",
+      "definition": "interface WorkflowRun"
+    },
+    {
+      "name": "Workflow",
+      "description": "Type Workflow",
+      "module": "github/actions",
+      "definition": "interface Workflow"
+    },
+    {
+      "name": "WorkflowJob",
+      "description": "Type WorkflowJob",
+      "module": "github/actions",
+      "definition": "interface WorkflowJob"
+    },
+    {
+      "name": "WorkflowStep",
+      "description": "Type WorkflowStep",
+      "module": "github/actions",
+      "definition": "interface WorkflowStep"
+    },
+    {
+      "name": "to",
+      "description": "Type to",
+      "module": "github/client",
+      "definition": "type to"
+    },
+    {
+      "name": "InternalAxiosRequestConfig",
+      "description": "Type InternalAxiosRequestConfig",
+      "module": "github/client",
+      "definition": "interface InternalAxiosRequestConfig"
+    },
+    {
+      "name": "GitHubClientOptions",
+      "description": "Type GitHubClientOptions",
+      "module": "github/client",
+      "definition": "interface GitHubClientOptions"
+    },
+    {
+      "name": "RetryConfig",
+      "description": "Type RetryConfig",
+      "module": "github/client",
+      "definition": "interface RetryConfig"
+    },
+    {
+      "name": "RepositoryPermissions",
+      "description": "Type RepositoryPermissions",
+      "module": "github/repository",
+      "definition": "interface RepositoryPermissions"
+    },
+    {
+      "name": "Repository",
+      "description": "Type Repository",
+      "module": "github/repository",
+      "definition": "interface Repository"
+    },
+    {
+      "name": "RepositoryBranch",
+      "description": "Type RepositoryBranch",
+      "module": "github/repository",
+      "definition": "interface RepositoryBranch"
+    },
+    {
+      "name": "RepositoryContributor",
+      "description": "Type RepositoryContributor",
+      "module": "github/repository",
+      "definition": "interface RepositoryContributor"
+    },
+    {
+      "name": "CreateRepositoryOptions",
+      "description": "Type CreateRepositoryOptions",
+      "module": "github/repository",
+      "definition": "interface CreateRepositoryOptions"
+    },
+    {
+      "name": "ForkRepositoryOptions",
+      "description": "Type ForkRepositoryOptions",
+      "module": "github/repository",
+      "definition": "interface ForkRepositoryOptions"
+    },
+    {
+      "name": "auto",
+      "description": "Type auto",
+      "module": "index",
+      "definition": "type auto"
+    },
+    {
+      "name": "GitHubMCPOptions",
+      "description": "Type GitHubMCPOptions",
+      "module": "mcp/handlers/github",
+      "definition": "interface GitHubMCPOptions"
+    },
+    {
+      "name": "HuggingFaceMCPOptions",
+      "description": "Type HuggingFaceMCPOptions",
+      "module": "mcp/handlers/huggingface",
+      "definition": "interface HuggingFaceMCPOptions"
+    },
+    {
+      "name": "ModelInfo",
+      "description": "Type ModelInfo",
+      "module": "mcp/handlers/huggingface",
+      "definition": "interface ModelInfo"
+    },
+    {
+      "name": "PineconeMCPOptions",
+      "description": "Type PineconeMCPOptions",
+      "module": "mcp/handlers/pinecone",
+      "definition": "interface PineconeMCPOptions"
+    },
+    {
+      "name": "ProcessingOptions",
+      "description": "Type ProcessingOptions",
+      "module": "mcp/handlers/processing",
+      "definition": "interface ProcessingOptions"
+    },
+    {
+      "name": "ProcessingStatusResponse",
+      "description": "Type ProcessingStatusResponse",
+      "module": "mcp/handlers/processing",
+      "definition": "interface ProcessingStatusResponse"
+    },
+    {
+      "name": "SetupOptions",
+      "description": "Type SetupOptions",
+      "module": "mcp/handlers/setup",
+      "definition": "interface SetupOptions"
+    },
+    {
+      "name": "to",
+      "description": "Type to",
+      "module": "mcp/handlers/setup",
+      "definition": "type to"
+    },
+    {
+      "name": "res",
+      "description": "Type res",
+      "module": "mcp/handlers/setup",
+      "definition": "type\n        res"
+    },
+    {
+      "name": "MCPServerOptions",
+      "description": "Type MCPServerOptions",
+      "module": "mcp/index",
+      "definition": "interface MCPServerOptions"
+    },
+    {
+      "name": "JsonRpcRequest",
+      "description": "Type JsonRpcRequest",
+      "module": "mcp/sse/mcp-sse-handler",
+      "definition": "interface JsonRpcRequest"
+    },
+    {
+      "name": "JsonRpcResponse",
+      "description": "Type JsonRpcResponse",
+      "module": "mcp/sse/mcp-sse-handler",
+      "definition": "interface JsonRpcResponse"
+    },
+    {
+      "name": "JsonRpcNotification",
+      "description": "Type JsonRpcNotification",
+      "module": "mcp/sse/mcp-sse-handler",
+      "definition": "interface JsonRpcNotification"
+    },
+    {
+      "name": "ValidationStatus",
+      "description": "Type ValidationStatus",
+      "module": "mcp/validation/simple-validator",
+      "definition": "interface ValidationStatus"
+    },
+    {
+      "name": "QuickValidation",
+      "description": "Type QuickValidation",
+      "module": "mcp/validation/simple-validator",
+      "definition": "interface QuickValidation"
+    },
+    {
+      "name": "NotificationConfig",
+      "description": "Type NotificationConfig",
+      "module": "notifications/service",
+      "definition": "interface NotificationConfig"
+    },
+    {
+      "name": "NotificationPayload",
+      "description": "Type NotificationPayload",
+      "module": "notifications/service",
+      "definition": "interface NotificationPayload"
+    },
+    {
+      "name": "changed",
+      "description": "Type changed",
+      "module": "processing/change-detector",
+      "definition": "type changed"
+    },
+    {
+      "name": "casting",
+      "description": "Type casting",
+      "module": "processing/incremental",
+      "definition": "type casting"
+    },
+    {
+      "name": "RemcodeState",
+      "description": "Type RemcodeState",
+      "module": "processing/state-manager",
+      "definition": "interface RemcodeState"
+    },
+    {
+      "name": "FileChange",
+      "description": "Type FileChange",
+      "module": "processing/types",
+      "definition": "interface FileChange"
+    },
+    {
+      "name": "FileAnalysis",
+      "description": "Type FileAnalysis",
+      "module": "processing/types",
+      "definition": "interface FileAnalysis"
+    },
+    {
+      "name": "ProcessingStats",
+      "description": "Type ProcessingStats",
+      "module": "processing/types",
+      "definition": "interface ProcessingStats"
+    },
+    {
+      "name": "AnalysisOptions",
+      "description": "Type AnalysisOptions",
+      "module": "processing/types",
+      "definition": "interface AnalysisOptions"
+    },
+    {
+      "name": "IncrementalProcessorOptions",
+      "description": "Type IncrementalProcessorOptions",
+      "module": "processing/types",
+      "definition": "interface IncrementalProcessorOptions"
+    },
+    {
+      "name": "VectorMetadata",
+      "description": "Type VectorMetadata",
+      "module": "processing/types",
+      "definition": "interface VectorMetadata"
+    },
+    {
+      "name": "CodeContext",
+      "description": "Type CodeContext",
+      "module": "search/context-extractor",
+      "definition": "interface CodeContext"
+    },
+    {
+      "name": "FileStructure",
+      "description": "Type FileStructure",
+      "module": "search/context-extractor",
+      "definition": "interface FileStructure"
+    },
+    {
+      "name": "ClassInfo",
+      "description": "Type ClassInfo",
+      "module": "search/context-extractor",
+      "definition": "interface ClassInfo"
+    },
+    {
+      "name": "FunctionInfo",
+      "description": "Type FunctionInfo",
+      "module": "search/context-extractor",
+      "definition": "interface FunctionInfo"
+    },
+    {
+      "name": "ImportInfo",
+      "description": "Type ImportInfo",
+      "module": "search/context-extractor",
+      "definition": "interface ImportInfo"
+    },
+    {
+      "name": "if",
+      "description": "Type if",
+      "module": "search/context-extractor",
+      "definition": "type\n    if"
+    },
+    {
+      "name": "of",
+      "description": "Type of",
+      "module": "search/query-processor",
+      "definition": "type of"
+    },
+    {
+      "name": "QueryType",
+      "description": "Type QueryType",
+      "module": "search/query-processor",
+      "definition": "type QueryType"
+    },
+    {
+      "name": "of",
+      "description": "Type of",
+      "module": "search/query-processor",
+      "definition": "type of"
+    },
+    {
+      "name": "ResultType",
+      "description": "Type ResultType",
+      "module": "search/query-processor",
+      "definition": "type ResultType"
+    },
+    {
+      "name": "QueryIntent",
+      "description": "Type QueryIntent",
+      "module": "search/query-processor",
+      "definition": "type QueryIntent"
+    },
+    {
+      "name": "ProcessedQuery",
+      "description": "Type ProcessedQuery",
+      "module": "search/query-processor",
+      "definition": "interface ProcessedQuery"
+    },
+    {
+      "name": "QueryFilters",
+      "description": "Type QueryFilters",
+      "module": "search/query-processor",
+      "definition": "interface QueryFilters"
+    },
+    {
+      "name": "PatternRule",
+      "description": "Type PatternRule",
+      "module": "search/query-processor",
+      "definition": "interface PatternRule"
+    },
+    {
+      "name": "and",
+      "description": "Type and",
+      "module": "search/query-processor",
+      "definition": "type and"
+    },
+    {
+      "name": "const",
+      "description": "Type const",
+      "module": "search/query-processor",
+      "definition": "type\n    const"
+    },
+    {
+      "name": "markers",
+      "description": "Type markers",
+      "module": "search/query-processor",
+      "definition": "type markers"
+    },
+    {
+      "name": "specifications",
+      "description": "Type specifications",
+      "module": "search/query-processor",
+      "definition": "type specifications"
+    },
+    {
+      "name": "from",
+      "description": "Type from",
+      "module": "search/query-processor",
+      "definition": "type from"
+    },
+    {
+      "name": "if",
+      "description": "Type if",
+      "module": "search/query-processor",
+      "definition": "type if"
+    },
+    {
+      "name": "filter",
+      "description": "Type filter",
+      "module": "search/query-processor",
+      "definition": "type filter"
+    },
+    {
+      "name": "of",
+      "description": "Type of",
+      "module": "search/query-processor",
+      "definition": "type of"
+    },
+    {
+      "name": "SemanticSearchOptions",
+      "description": "Type SemanticSearchOptions",
+      "module": "search/semantic",
+      "definition": "interface SemanticSearchOptions"
+    },
+    {
+      "name": "SearchResult",
+      "description": "Type SearchResult",
+      "module": "search/semantic",
+      "definition": "interface SearchResult"
+    },
+    {
+      "name": "PatternType",
+      "description": "Type PatternType",
+      "module": "search/similarity",
+      "definition": "type PatternType"
+    },
+    {
+      "name": "SimilarityResult",
+      "description": "Type SimilarityResult",
+      "module": "search/similarity",
+      "definition": "interface SimilarityResult"
+    },
+    {
+      "name": "SimilarityOptions",
+      "description": "Type SimilarityOptions",
+      "module": "search/similarity",
+      "definition": "interface SimilarityOptions"
+    },
+    {
+      "name": "of",
+      "description": "Type of",
+      "module": "search/similarity",
+      "definition": "type of"
+    },
+    {
+      "name": "of",
+      "description": "Type of",
+      "module": "search/similarity",
+      "definition": "type of"
+    },
+    {
+      "name": "const",
+      "description": "Type const",
+      "module": "search/similarity",
+      "definition": "type\n    const"
+    },
+    {
+      "name": "EnhancedSearchResult",
+      "description": "Type EnhancedSearchResult",
+      "module": "search/unified-search",
+      "definition": "interface EnhancedSearchResult"
+    },
+    {
+      "name": "UnifiedSearchOptions",
+      "description": "Type UnifiedSearchOptions",
+      "module": "search/unified-search",
+      "definition": "interface UnifiedSearchOptions"
+    },
+    {
+      "name": "UnifiedSearchResult",
+      "description": "Type UnifiedSearchResult",
+      "module": "search/unified-search",
+      "definition": "interface UnifiedSearchResult"
+    },
+    {
+      "name": "let",
+      "description": "Type let",
+      "module": "search/unified-search",
+      "definition": "type\n      let"
+    },
+    {
+      "name": "matching",
+      "description": "Type matching",
+      "module": "search/unified-search",
+      "definition": "type matching"
+    },
+    {
+      "name": "if",
+      "description": "Type if",
+      "module": "search/unified-search",
+      "definition": "type\n      if"
+    },
+    {
+      "name": "GitRemoteInfo",
+      "description": "Type GitRemoteInfo",
+      "module": "setup/detector",
+      "definition": "interface GitRemoteInfo"
+    },
+    {
+      "name": "SetupStatus",
+      "description": "Type SetupStatus",
+      "module": "setup/detector",
+      "definition": "interface SetupStatus"
+    },
+    {
+      "name": "SetupOptions",
+      "description": "Type SetupOptions",
+      "module": "setup/initializer",
+      "definition": "interface SetupOptions"
+    },
+    {
+      "name": "SetupResult",
+      "description": "Type SetupResult",
+      "module": "setup/initializer",
+      "definition": "interface SetupResult"
+    },
+    {
+      "name": "ModelInitializationResult",
+      "description": "Type ModelInitializationResult",
+      "module": "setup/model-initializer",
+      "definition": "interface ModelInitializationResult"
+    },
+    {
+      "name": "ModelInitializationOptions",
+      "description": "Type ModelInitializationOptions",
+      "module": "setup/model-initializer",
+      "definition": "interface ModelInitializationOptions"
+    },
+    {
+      "name": "PrerequisiteCheck",
+      "description": "Type PrerequisiteCheck",
+      "module": "setup/prerequisites",
+      "definition": "interface PrerequisiteCheck"
+    },
+    {
+      "name": "RepositoryConfig",
+      "description": "Type RepositoryConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface RepositoryConfig"
+    },
+    {
+      "name": "ProcessingConfig",
+      "description": "Type ProcessingConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface ProcessingConfig"
+    },
+    {
+      "name": "VectorizationConfig",
+      "description": "Type VectorizationConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface VectorizationConfig"
+    },
+    {
+      "name": "StatisticsConfig",
+      "description": "Type StatisticsConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface StatisticsConfig"
+    },
+    {
+      "name": "AdvancedConfig",
+      "description": "Type AdvancedConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface AdvancedConfig"
+    },
+    {
+      "name": "WebhookConfig",
+      "description": "Type WebhookConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface WebhookConfig"
+    },
+    {
+      "name": "RemcodeConfig",
+      "description": "Type RemcodeConfig",
+      "module": "setup/remcode-config",
+      "definition": "interface RemcodeConfig"
+    },
+    {
+      "name": "ConfigValidationResult",
+      "description": "Type ConfigValidationResult",
+      "module": "setup/remcode-config",
+      "definition": "interface ConfigValidationResult"
+    },
+    {
+      "name": "SecretConfig",
+      "description": "Type SecretConfig",
+      "module": "setup/secrets",
+      "definition": "interface SecretConfig"
+    },
+    {
+      "name": "SecretOperationResult",
+      "description": "Type SecretOperationResult",
+      "module": "setup/secrets",
+      "definition": "interface SecretOperationResult"
+    },
+    {
+      "name": "SecretsOperationSummary",
+      "description": "Type SecretsOperationSummary",
+      "module": "setup/secrets",
+      "definition": "interface SecretsOperationSummary"
+    },
+    {
+      "name": "WorkflowTemplateOptions",
+      "description": "Type WorkflowTemplateOptions",
+      "module": "setup/workflow-generator",
+      "definition": "interface WorkflowTemplateOptions"
+    },
+    {
+      "name": "WorkflowGenerationResult",
+      "description": "Type WorkflowGenerationResult",
+      "module": "setup/workflow-generator",
+      "definition": "interface WorkflowGenerationResult"
+    },
+    {
+      "name": "const",
+      "description": "Type const",
+      "module": "setup/workflow-generator",
+      "definition": "type\n      const"
+    },
+    {
+      "name": "and",
+      "description": "Type and",
+      "module": "setup/workflow-generator",
+      "definition": "type and"
+    },
+    {
+      "name": "switch",
+      "description": "Type switch",
+      "module": "setup/workflow-generator",
+      "definition": "type\n    switch"
+    },
+    {
+      "name": "GuidlinePriority",
+      "description": "Type GuidlinePriority",
+      "module": "swe/guidelines",
+      "definition": "type GuidlinePriority"
+    },
+    {
+      "name": "CodingGuideline",
+      "description": "Type CodingGuideline",
+      "module": "swe/guidelines",
+      "definition": "interface CodingGuideline"
+    },
+    {
+      "name": "ValidationIssue",
+      "description": "Type ValidationIssue",
+      "module": "swe/guidelines",
+      "definition": "interface ValidationIssue"
+    },
+    {
+      "name": "names",
+      "description": "Type names",
+      "module": "swe/guidelines",
+      "definition": "type names"
+    },
+    {
+      "name": "when",
+      "description": "Type when",
+      "module": "swe/guidelines",
+      "definition": "type when"
+    },
+    {
+      "name": "guards",
+      "description": "Type guards",
+      "module": "swe/guidelines",
+      "definition": "type guards"
+    },
+    {
+      "name": "checking",
+      "description": "Type checking",
+      "module": "swe/guidelines",
+      "definition": "type checking"
+    },
+    {
+      "name": "when",
+      "description": "Type when",
+      "module": "swe/guidelines",
+      "definition": "type when"
+    },
+    {
+      "name": "PromptConfig",
+      "description": "Type PromptConfig",
+      "module": "swe/prompts",
+      "definition": "interface PromptConfig"
+    },
+    {
+      "name": "with",
+      "description": "Type with",
+      "module": "utils/config",
+      "definition": "interface with"
+    },
+    {
+      "name": "RemcodeConfig",
+      "description": "Type RemcodeConfig",
+      "module": "utils/config",
+      "definition": "interface RemcodeConfig"
+    },
+    {
+      "name": "LogRecord",
+      "description": "Type LogRecord",
+      "module": "utils/logger",
+      "definition": "interface LogRecord"
+    },
+    {
+      "name": "Logger",
+      "description": "Type Logger",
+      "module": "utils/logger",
+      "definition": "interface Logger"
+    },
+    {
+      "name": "LoggerConfig",
+      "description": "Type LoggerConfig",
+      "module": "utils/logger",
+      "definition": "interface LoggerConfig"
+    },
+    {
+      "name": "PortResult",
+      "description": "Type PortResult",
+      "module": "utils/port-manager",
+      "definition": "interface PortResult"
+    },
+    {
+      "name": "SourceOptions",
+      "description": "Type SourceOptions",
+      "module": "utils/source",
+      "definition": "interface SourceOptions"
+    },
+    {
+      "name": "ResolvedSource",
+      "description": "Type ResolvedSource",
+      "module": "utils/source",
+      "definition": "interface ResolvedSource"
+    },
+    {
+      "name": "ParsedSource",
+      "description": "Type ParsedSource",
+      "module": "utils/source",
+      "definition": "interface ParsedSource"
+    },
+    {
+      "name": "TokenConfig",
+      "description": "Type TokenConfig",
+      "module": "utils/token-manager",
+      "definition": "interface TokenConfig"
+    },
+    {
+      "name": "TokenValidationResult",
+      "description": "Type TokenValidationResult",
+      "module": "utils/token-manager",
+      "definition": "interface TokenValidationResult"
+    },
+    {
+      "name": "ModelInfo",
+      "description": "Type ModelInfo",
+      "module": "vectorizers/embedders/manager",
+      "definition": "interface ModelInfo"
+    },
+    {
+      "name": "const",
+      "description": "Type const",
+      "module": "vectorizers/embedders/manager",
+      "definition": "type\n    const"
+    },
+    {
+      "name": "VectorizationConfig",
+      "description": "Type VectorizationConfig",
+      "module": "vectorizers/index",
+      "definition": "interface VectorizationConfig"
+    },
+    {
+      "name": "CodeChunk",
+      "description": "Type CodeChunk",
+      "module": "vectorizers/index",
+      "definition": "interface CodeChunk"
+    },
+    {
+      "name": "VectorizationResult",
+      "description": "Type VectorizationResult",
+      "module": "vectorizers/index",
+      "definition": "interface VectorizationResult"
+    },
+    {
+      "name": "PineconeStorageOptions",
+      "description": "Type PineconeStorageOptions",
+      "module": "vectorizers/storage/pinecone",
+      "definition": "interface PineconeStorageOptions"
+    },
+    {
+      "name": "VectorData",
+      "description": "Type VectorData",
+      "module": "vectorizers/storage/pinecone",
+      "definition": "interface VectorData"
+    },
+    {
+      "name": "CodeChunk",
+      "description": "Type CodeChunk",
+      "module": "vectorizers/types",
+      "definition": "interface CodeChunk"
+    },
+    {
+      "name": "FileInfo",
+      "description": "Type FileInfo",
+      "module": "vectorizers/types",
+      "definition": "interface FileInfo"
+    },
+    {
+      "name": "VectorizationResult",
+      "description": "Type VectorizationResult",
+      "module": "vectorizers/types",
+      "definition": "interface VectorizationResult"
+    },
+    {
+      "name": "VectorizationOptions",
+      "description": "Type VectorizationOptions",
+      "module": "vectorizers/types",
+      "definition": "interface VectorizationOptions"
+    },
+    {
+      "name": "ChunkingStrategy",
+      "description": "Type ChunkingStrategy",
+      "module": "vectorizers/types",
+      "definition": "interface ChunkingStrategy"
+    },
+    {
+      "name": "ChunkStrategyType",
+      "description": "Type ChunkStrategyType",
+      "module": "vectorizers/types",
+      "definition": "type ChunkStrategyType"
+    },
+    {
+      "name": "EmbeddingManagerOptions",
+      "description": "Type EmbeddingManagerOptions",
+      "module": "vectorizers/types",
+      "definition": "interface EmbeddingManagerOptions"
+    },
+    {
+      "name": "PineconeStorageOptions",
+      "description": "Type PineconeStorageOptions",
+      "module": "vectorizers/types",
+      "definition": "interface PineconeStorageOptions"
+    },
+    {
+      "name": "VectorData",
+      "description": "Type VectorData",
+      "module": "vectorizers/types",
+      "definition": "interface VectorData"
+    },
+    {
+      "name": "WorkflowGenerationResult",
+      "description": "Type WorkflowGenerationResult",
+      "module": "workflows/generator",
+      "definition": "interface WorkflowGenerationResult"
+    },
+    {
+      "name": "Workflow",
+      "description": "Type Workflow",
+      "module": "workflows/generator",
+      "definition": "type Workflow"
+    },
+    {
+      "name": "Workflow",
+      "description": "Type Workflow",
+      "module": "workflows/generator",
+      "definition": "type Workflow"
+    },
+    {
+      "name": "WorkflowRunStatus",
+      "description": "Type WorkflowRunStatus",
+      "module": "workflows/monitor",
+      "definition": "type WorkflowRunStatus"
+    },
+    {
+      "name": "WorkflowRunConclusion",
+      "description": "Type WorkflowRunConclusion",
+      "module": "workflows/monitor",
+      "definition": "type WorkflowRunConclusion"
+    },
+    {
+      "name": "WorkflowStatusResponse",
+      "description": "Type WorkflowStatusResponse",
+      "module": "workflows/monitor",
+      "definition": "interface WorkflowStatusResponse"
+    },
+    {
+      "name": "MonitoringOptions",
+      "description": "Type MonitoringOptions",
+      "module": "workflows/monitor",
+      "definition": "interface MonitoringOptions"
+    },
+    {
+      "name": "OrchestrationConfig",
+      "description": "Type OrchestrationConfig",
+      "module": "workflows/orchestrator",
+      "definition": "interface OrchestrationConfig"
+    },
+    {
+      "name": "OrchestrationStatus",
+      "description": "Type OrchestrationStatus",
+      "module": "workflows/orchestrator",
+      "definition": "interface OrchestrationStatus"
+    },
+    {
+      "name": "WorkflowScheduleConfig",
+      "description": "Type WorkflowScheduleConfig",
+      "module": "workflows/templates",
+      "definition": "interface WorkflowScheduleConfig"
+    },
+    {
+      "name": "WorkflowNotificationConfig",
+      "description": "Type WorkflowNotificationConfig",
+      "module": "workflows/templates",
+      "definition": "interface WorkflowNotificationConfig"
+    },
+    {
+      "name": "WorkflowEnvironmentConfig",
+      "description": "Type WorkflowEnvironmentConfig",
+      "module": "workflows/templates",
+      "definition": "interface WorkflowEnvironmentConfig"
+    },
+    {
+      "name": "WorkflowTemplateOptions",
+      "description": "Type WorkflowTemplateOptions",
+      "module": "workflows/templates",
+      "definition": "interface WorkflowTemplateOptions"
+    },
+    {
+      "name": "and",
+      "description": "Type and",
+      "module": "workflows/templates",
+      "definition": "type and"
+    },
+    {
+      "name": "Workflow",
+      "description": "Type Workflow",
+      "module": "workflows/templates",
+      "definition": "type Workflow"
+    }
+  ],
+  "metrics": {
+    "totalFiles": 60,
+    "totalFunctions": 32,
+    "totalTypes": 158,
+    "documentationCoverage": 100,
+    "singleFunctionCompliance": {},
+    "lastGenerated": "2025-05-27T19:37:42.853Z"
+  },
+  "lastGenerated": "2025-05-27T19:37:42.859Z"
+}

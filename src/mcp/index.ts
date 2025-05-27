@@ -47,8 +47,8 @@ export class MCPServer {
   constructor(options: MCPServerOptions = {}) {
     this.app = express();
     
-    // Initialize SSE Handler
-    this.mcpSSEHandler = new MCPSSEHandler();
+    // Initialize SSE Handler with complete tool definitions
+    this.mcpSSEHandler = new MCPSSEHandler(this.getMCPToolSpecs());
     
     // Initialize handlers with proper tokens
     const githubToken = process.env.GITHUB_TOKEN;
@@ -190,7 +190,7 @@ export class MCPServer {
   /**
    * Get MCP tool specifications for all available tools
    */
-  private getMCPToolSpecs() {
+  getMCPToolSpecs() {
     return [
       // Setup Tools
       {

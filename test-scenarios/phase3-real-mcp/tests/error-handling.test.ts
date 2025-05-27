@@ -18,7 +18,8 @@ describe('Phase 3: Real MCP Error Handling', () => {
       
       // Should fail gracefully, not crash
       expect(result.executionTime).toBeLessThan(5000);
-      expect(typeof result.error).toBe('string');
+      expect(result.success).toBe(false); // Should fail with missing params
+      expect(result.error || result.rawOutput).toBeDefined(); // Should have error info
     });
 
     test('should handle invalid tool names', async () => {
@@ -31,7 +32,7 @@ describe('Phase 3: Real MCP Error Handling', () => {
 
   describe('Network Issues', () => {
     test('should handle API failures gracefully', async () => {
-      const result = await mcpClient.executeTool('embed-code', {
+      const result = await mcpClient.executeTool('huggingface_embed_code', { // Actual tool name
         code: 'test code'
       });
       
@@ -44,7 +45,7 @@ describe('Phase 3: Real MCP Error Handling', () => {
     test('should handle large inputs', async () => {
       const largeCode = 'function test() {\n'.repeat(1000) + '}';
       
-      const result = await mcpClient.executeTool('embed-code', {
+      const result = await mcpClient.executeTool('huggingface_embed_code', { // Actual tool name
         code: largeCode
       });
       

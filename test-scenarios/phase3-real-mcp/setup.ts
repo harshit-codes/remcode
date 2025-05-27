@@ -1,47 +1,52 @@
 /**
  * Phase 3 Test Setup
- * Global setup for real MCP Inspector testing
+ * Global setup for real MCP HTTP server testing
  */
 
 import { execSync } from 'child_process';
 import * as path from 'path';
+import RealMCPClient from './helpers/real-mcp-client';
 
-// Extend Jest timeout for real CLI execution
-jest.setTimeout(30000);
+// Global client for cleanup
+let globalMCPClient: RealMCPClient | null = null;
+
+// Extend Jest timeout for real server execution
+jest.setTimeout(60000);
 
 beforeAll(async () => {
-  console.log('🚀 Phase 3: Real MCP Inspector Testing Setup');
+  console.log('🚀 Phase 3: Real MCP HTTP Server Testing Setup');
   
-  // Ensure remcode STDIO bridge exists
-  const stdioPath = path.join(process.cwd(), 'bin', 'remcode-stdio.js');
+  // Check if remcode build exists
+  const distPath = path.join(process.cwd(), 'dist');
   
   try {
-    require.resolve(stdioPath);
-    console.log('✅ Remcode STDIO bridge found');
+    require.resolve(distPath);
+    console.log('✅ Remcode build found');
   } catch (error) {
-    console.error('❌ Remcode STDIO bridge not found at:', stdioPath);
-    console.error('Please run: npm run build');
-    process.exit(1);
-  }
-  
-  // Check if MCP Inspector is available
-  try {
-    execSync('npx @modelcontextprotocol/inspector --version', { stdio: 'ignore' });
-    console.log('✅ MCP Inspector available');
-  } catch (error) {
-    console.warn('⚠️  MCP Inspector not available, installing...');
+    console.log('⚠️  Building remcode...');
     try {
-      execSync('npm install -g @modelcontextprotocol/inspector', { stdio: 'inherit' });
-      console.log('✅ MCP Inspector installed');
-    } catch (installError) {
-      console.error('❌ Failed to install MCP Inspector');
-      console.error('Please install manually: npm install -g @modelcontextprotocol/inspector');
+      execSync('npm run build', { stdio: 'inherit' });
+      console.log('✅ Remcode built successfully');
+    } catch (buildError) {
+      console.error('❌ Failed to build remcode');
+      console.error('Please run: npm run build');
+      process.exit(1);
     }
   }
   
-  console.log('🎯 Starting Phase 3 real MCP testing...\n');
+  // Initialize global client for later cleanup
+  globalMCPClient = new RealMCPClient();
+  
+  console.log('🎯 Starting Phase 3 real MCP HTTP server testing...\n');
 });
 
-afterAll(() => {
-  console.log('\n✅ Phase 3: Real MCP Inspector Testing Complete');
+afterAll(async () => {
+  console.log('\n🧹 Cleaning up Phase 3 testing...');
+  
+  if (globalMCPClient) {
+    await globalMCPClient.cleanup();
+    console.log('✅ MCP server stopped');
+  }
+  
+  console.log('✅ Phase 3: Real MCP HTTP Server Testing Complete');
 });

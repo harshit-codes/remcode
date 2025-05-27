@@ -38,6 +38,11 @@ interface JsonRpcNotification {
 export class MCPSSEHandler {
   private activeConnections: Map<string, Response> = new Map();
   private connectionCounter = 0;
+  private toolDefinitions: any[] = [];
+
+  constructor(toolDefinitions?: any[]) {
+    this.toolDefinitions = toolDefinitions || this.getDefaultToolDefinitions();
+  }
 
   public handleSSEConnection(req: Request, res: Response): void {
     const connectionId = `mcp_sse_${++this.connectionCounter}_${Date.now()}`;
@@ -134,75 +139,88 @@ export class MCPSSEHandler {
   }
 
   private getAllToolDefinitions(): any[] {
+    return this.toolDefinitions.map(tool => ({
+      name: tool.name,
+      description: tool.description,
+      inputSchema: {
+        type: 'object',
+        properties: this.convertParametersToSchema(tool.parameters || {}),
+        required: this.getRequiredParameters(tool.parameters || {})
+      }
+    }));
+  }
+
+  private convertParametersToSchema(parameters: any): any {
+    const properties: any = {};
+    
+    for (const [key, param] of Object.entries(parameters)) {
+      const paramDef = param as any;
+      properties[key] = {
+        type: paramDef.type || 'string',
+        description: paramDef.description || ''
+      };
+      
+      if (paramDef.default !== undefined) {
+        properties[key].default = paramDef.default;
+      }
+    }
+    
+    return properties;
+  }
+
+  private getRequiredParameters(parameters: any): string[] {
+    return Object.entries(parameters)
+      .filter(([_, param]) => !(param as any).optional)
+      .map(([key, _]) => key);
+  }
+
+  private getDefaultToolDefinitions(): any[] {
+    // Fallback tool definitions if none provided
     return [
       {
         name: 'setup-repository',
         description: 'Set up a repository with Remcode configuration and workflows',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: { type: 'string', description: 'Repository owner' },
-            repo: { type: 'string', description: 'Repository name' },
-            confirm: { type: 'boolean', description: 'Confirm setup', default: false }
-          },
-          required: ['owner', 'repo']
+        parameters: {
+          owner: { type: 'string', description: 'Repository owner' },
+          repo: { type: 'string', description: 'Repository name' },
+          confirm: { type: 'boolean', description: 'Confirm setup', default: false, optional: true }
+        }
+      },
+      {
+        name: 'search',
+        description: 'Search for code patterns and functions in the codebase',
+        parameters: {
+          text: { type: 'string', description: 'Search query text' },
+          topK: { type: 'number', description: 'Number of results to return', default: 10, optional: true }
         }
       },
       {
         name: 'huggingface_embed_code',
         description: 'Generate embeddings for code using HuggingFace models',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            code: { type: 'string', description: 'Code content to embed' },
-            model: { type: 'string', description: 'Model to use', default: 'microsoft/codebert-base' }
-          },
-          required: ['code']
+        parameters: {
+          code: { type: 'string', description: 'Code content to embed' },
+          model: { type: 'string', description: 'Model to use', default: 'microsoft/codebert-base', optional: true }
         }
       },
       {
         name: 'huggingface_list_models',
         description: 'List available HuggingFace embedding models',
-        inputSchema: {
-          type: 'object',
-          properties: {},
-          required: []
-        }
+        parameters: {}
       },
       {
         name: 'pinecone_query',
         description: 'Search vectors in Pinecone database',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            text: { type: 'string', description: 'Search text' },
-            topK: { type: 'number', description: 'Number of results', default: 10 }
-          },
-          required: ['text']
+        parameters: {
+          text: { type: 'string', description: 'Search text' },
+          topK: { type: 'number', description: 'Number of results', default: 10, optional: true }
         }
       },
       {
         name: 'github_get_repo',
         description: 'Get repository information from GitHub',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            owner: { type: 'string', description: 'Repository owner' },
-            repo: { type: 'string', description: 'Repository name' }
-          },
-          required: ['owner', 'repo']
-        }
-      },
-      {
-        name: 'search',
-        description: 'Semantic search across codebase',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            query: { type: 'string', description: 'Search query' },
-            topK: { type: 'number', description: 'Number of results', default: 10 }
-          },
-          required: ['query']
+        parameters: {
+          owner: { type: 'string', description: 'Repository owner' },
+          repo: { type: 'string', description: 'Repository name' }
         }
       }
     ];
