@@ -1,64 +1,100 @@
-# MCP-Inspect
+# MCP Inspector Testing Suite - Phase 2: Tool Validation
 
-**Model Context Protocol Inspector Testing for Remcode**
+**Comprehensive tool validation testing for Remcode MCP server using MCP Inspector**
 
-## 🎯 Purpose
+## 🎯 Phase 2 Overview
 
-This directory contains comprehensive testing for Remcode using MCP Inspector CLI. Since Remcode is fundamentally an MCP tool, we test it through the MCP protocol itself for realistic validation.
+Phase 2 focuses on **Tool Validation** - comprehensive individual testing of all 27 MCP tools to ensure they work correctly, handle errors gracefully, and perform within acceptable thresholds.
 
-## 📁 Directory Structure
+## 🛠️ Test Structure
 
 ```
 MCP-Inspect/
-├── README.md              # This file
-├── helpers/                # Test utilities and MCP client
-│   ├── mcp-client.ts      # MCPInspectorClient class
-│   └── test-config.ts     # Configuration and constants
-├── tests/                  # Test suites
-│   ├── connection.test.ts  # Basic connection tests
-│   ├── tool-discovery.test.ts # Tool discovery validation
-│   └── basic-execution.test.ts # Basic tool execution
-├── fixtures/              # Test data and mocks
-│   └── test-data.ts       # Sample data for testing
-└── scripts/               # Test automation scripts
-    ├── run-tests.js       # Test runner
-    └── validate-tools.sh  # Quick validation script
+├── tests/
+│   ├── tools/                   # Individual tool testing
+│   │   ├── setup.test.ts       # Setup tools (5 tools)
+│   │   ├── search.test.ts      # Search tools (2 tools)
+│   │   ├── pinecone.test.ts    # Pinecone tools (6 tools)
+│   │   ├── huggingface.test.ts # HuggingFace tools (3 tools)
+│   │   ├── github.test.ts      # GitHub tools (8 tools)
+│   │   └── processing.test.ts  # Processing tools (3 tools)
+│   ├── performance.test.ts      # Performance benchmarking
+│   ├── error-handling.test.ts   # Error scenario testing
+│   └── integration.test.ts      # End-to-end workflows
+├── helpers/
+│   ├── mcp-client.ts           # MCP Inspector client wrapper
+│   └── test-config.ts          # Test configuration and mock data
+├── scripts/
+│   └── run-phase2-tests.sh     # Test runner script
+├── jest.config.json            # Jest configuration
+└── setup.ts                    # Global test setup
 ```
 
-## 🚀 Phase 1 Implementation Status
+## 🚀 Running Phase 2 Tests
 
-✅ **Core Infrastructure Complete**
-- [x] MCPInspectorClient helper class
-- [x] Test configuration and constants
-- [x] Basic connection testing
-- [x] Tool discovery validation
-- [x] Basic tool execution tests
-
-✅ **Test Categories Implemented**
-- [x] **Connection Testing** - MCP server startup and negotiation
-- [x] **Tool Discovery** - All MCP tools availability and schema validation
-- [x] **Basic Execution** - Core tool functionality testing
-
-## 🛠️ Usage
-
-### Run All MCP Inspector Tests
+### Quick Start
 ```bash
-npm run test:mcp-inspect
+# Run all Phase 2 tests
+./MCP-Inspect/scripts/run-phase2-tests.sh
+
+# Run specific tool category
+npm test -- --testPathPattern="MCP-Inspect/tests/tools/setup.test.ts"
 ```
 
-### Run Specific Test Categories
+### Individual Test Suites
 ```bash
-# Connection tests only
-npm test MCP-Inspect/tests/connection.test.ts
+# Setup tools testing
+npm test MCP-Inspect/tests/tools/setup.test.ts
 
-# Tool discovery tests only  
-npm test MCP-Inspect/tests/tool-discovery.test.ts
+# Search tools testing  
+npm test MCP-Inspect/tests/tools/search.test.ts
 
-# Basic execution tests only
-npm test MCP-Inspect/tests/basic-execution.test.ts
+# Service tools testing
+npm test MCP-Inspect/tests/tools/pinecone.test.ts
+npm test MCP-Inspect/tests/tools/huggingface.test.ts
+npm test MCP-Inspect/tests/tools/github.test.ts
+
+# Performance and integration testing
+npm test MCP-Inspect/tests/performance.test.ts
+npm test MCP-Inspect/tests/integration.test.ts
 ```
 
-### Quick Validation
-```bash
-npm run mcp:validate
-```
+## 📊 Test Coverage
+
+### Tool Categories (27 Total Tools)
+- **Setup Tools (5)**: setup-repository, check-prerequisites, configure-settings, setup-secrets, generate-workflows
+- **Search Tools (2)**: search_code, search_patterns  
+- **Pinecone Tools (6)**: list_indexes, describe_index, search_records, upsert_records, create_index, describe_index_stats
+- **HuggingFace Tools (3)**: list_models, embed_code, embed_query
+- **GitHub Tools (8)**: get_repository, list_branches, create_issue, list_issues, create_pull_request, etc.
+- **Processing Tools (3)**: trigger_processing, get_processing_status, get_workflow_logs
+
+### Test Types
+- **Discovery Tests**: Validate tool presence and schema
+- **Execution Tests**: Test tool functionality with valid parameters
+- **Error Handling**: Test graceful failure with invalid inputs
+- **Performance Tests**: Ensure tools respond within 5-second threshold
+- **Integration Tests**: End-to-end workflow validation
+
+## ✅ Success Criteria
+
+- [ ] **Tool Discovery**: All 27 tools discoverable via MCP Inspector
+- [ ] **Tool Execution**: All tools execute without critical errors
+- [ ] **Parameter Validation**: Proper handling of missing/invalid parameters
+- [ ] **Performance**: All tools respond within 5-second threshold
+- [ ] **Error Handling**: Graceful degradation with helpful error messages
+- [ ] **Integration**: End-to-end workflows function correctly
+
+## 🔧 Configuration
+
+Test configuration is managed in `helpers/test-config.ts`:
+- Mock data for testing scenarios
+- API endpoint configurations
+- Performance thresholds
+- Error simulation parameters
+
+Environment variables for testing:
+- `TEST_PINECONE_API_KEY`
+- `TEST_HUGGINGFACE_TOKEN` 
+- `TEST_GITHUB_TOKEN`
+- `LOG_LEVEL=debug`

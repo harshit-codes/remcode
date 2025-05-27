@@ -1,0 +1,33 @@
+{
+  "displayName": "MCP Inspector Testing Suite",
+  "testMatch": [
+    "**/MCP-Inspect/**/*.test.ts"
+  ],
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "setupFilesAfterEnv": [
+    "<rootDir>/MCP-Inspect/setup.ts"
+  ],
+  "testTimeout": 30000,
+  "verbose": true,
+  "collectCoverage": true,
+  "coverageDirectory": "MCP-Inspect/results/coverage",
+  "coverageReporters": ["text", "lcov", "html"],
+  "collectCoverageFrom": [
+    "MCP-Inspect/**/*.ts",
+    "!MCP-Inspect/**/*.test.ts",
+    "!MCP-Inspect/results/**"
+  ],
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  "testResultsProcessor": "jest-sonar-reporter",
+  "reporters": [
+    "default",
+    ["jest-junit", {
+      "outputDirectory": "MCP-Inspect/results",
+      "outputName": "test-results.xml"
+    }]
+  ]
+}
