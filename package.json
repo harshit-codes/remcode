@@ -60,7 +60,10 @@
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "serve": "ts-node src/index.ts serve",
     "test:scenarios:local": "bash test-scenarios/run-local-tests.sh",
-    "test:scenarios:prepare": "node test-scenarios/prepare-test-environment.js"
+    "test:scenarios:prepare": "node test-scenarios/prepare-test-environment.js",
+    "test:phase3": "bash test-scenarios/phase3-real-mcp/run-phase3-tests.sh",
+    "test:phase3:features": "jest test-scenarios/phase3-real-mcp/features/",
+    "test:phase3:performance": "jest test-scenarios/phase3-real-mcp/tests/performance.test.ts"
   },
   "repository": {
     "type": "git",

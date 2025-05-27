@@ -1,0 +1,20 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "node",
+  "roots": ["<rootDir>/test-scenarios/phase3-real-mcp"],
+  "testMatch": [
+    "**/test-scenarios/phase3-real-mcp/**/*.test.ts"
+  ],
+  "transform": {
+    "^.+\\.ts$": "ts-jest"
+  },
+  "collectCoverageFrom": [
+    "test-scenarios/phase3-real-mcp/**/*.ts",
+    "!test-scenarios/phase3-real-mcp/**/*.test.ts"
+  ],
+  "setupFilesAfterEnv": ["<rootDir>/test-scenarios/phase3-real-mcp/setup.ts"],
+  "testTimeout": 30000,
+  "verbose": true,
+  "detectOpenHandles": true,
+  "forceExit": true
+}

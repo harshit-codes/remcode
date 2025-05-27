@@ -1,0 +1,54 @@
+/**
+ * Phase 3: Real MCP Error Handling Testing
+ * Tests actual error scenarios via CLI
+ */
+
+import RealMCPClient from '../helpers/real-mcp-client';
+
+describe('Phase 3: Real MCP Error Handling', () => {
+  let mcpClient: RealMCPClient;
+  
+  beforeAll(async () => {
+    mcpClient = new RealMCPClient();
+  });
+
+  describe('Invalid Parameters', () => {
+    test('should handle missing required parameters', async () => {
+      const result = await mcpClient.executeTool('setup-repository', {});
+      
+      // Should fail gracefully, not crash
+      expect(result.executionTime).toBeLessThan(5000);
+      expect(typeof result.error).toBe('string');
+    });
+
+    test('should handle invalid tool names', async () => {
+      const result = await mcpClient.executeTool('nonexistent-tool', {});
+      
+      expect(result.success).toBe(false);
+      expect(result.executionTime).toBeLessThan(5000);
+    });
+  });
+
+  describe('Network Issues', () => {
+    test('should handle API failures gracefully', async () => {
+      const result = await mcpClient.executeTool('embed-code', {
+        code: 'test code'
+      });
+      
+      // Should complete even if API is unavailable
+      expect(result.executionTime).toBeLessThan(10000);
+    });
+  });
+
+  describe('Resource Constraints', () => {
+    test('should handle large inputs', async () => {
+      const largeCode = 'function test() {\n'.repeat(1000) + '}';
+      
+      const result = await mcpClient.executeTool('embed-code', {
+        code: largeCode
+      });
+      
+      expect(result.executionTime).toBeLessThan(15000);
+    });
+  });
+});
